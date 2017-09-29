@@ -8,6 +8,7 @@ clarify its purpose and how to use it, even for beginners in a Linux environment
 ## .bashrc
 
 ### Calls and functions
+
 These are the most important functions and aliases included:
 
 * Useful `ls` aliases: `la`, `ll`, `lh`, `lll`, etc.
@@ -40,6 +41,8 @@ Do not use this in a public network or anyone will be able to access your files.
 
 ### Features and configurations
 
+These are the most important functionality changes and improvements:
+
 * Colored fancy prompt.
 * History handled optimally.
 * Window size changed dynamically.
@@ -53,6 +56,6 @@ the alias for our connection. For example, if we run `addssh username@hostname m
 config file, and we will be able to type `ssh m` + TAB which will autocomplete `ssh myserver`, and if we hit ENTER, it will `ssh` into `username@hostname`.
 
 ### List of all new calls
-`la, ll, lh, l, s, sl, lll, lst, lat, llt, lht, lt, lllt, lsg, s1, s2, s3, screen1, screen2, screen3,
+`la, ll, lh, l, s, sl, lll, lst, lat, llt, lht, lt, lllt, lsg, .., ..., ...., ....., ......, s1, s2, s3, screen1, screen2, screen3,
 space, spacef, p, bd, p4, tmp, lines, words, asdf, wisdom, clr, src, start, click, fm, empty,
 server, getip, alert, extract, repeat, mkcd, bu, calc, google, remindme, addssh`
