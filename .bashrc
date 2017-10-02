@@ -1,32 +1,32 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
-# if not running interactively, don't do anything. 
+# If not running interactively, don't do anything. 
 # In general, this prevents executing .bashrc in remote shells
 case $- in
     *i*) ;;
       *) return;;
 esac
 
-# don't put duplicate lines or lines starting with space in the history.
+# Don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
 
-# ignore some commands (used really often) from history: bg, fg, ll, ls, exit
-export HISTIGNORE="&:bg:fg:ll:ls:lh:la:lll:l:exit:clear:clr:pwd:p"
+# Ignore some commands (used really often) from history: bg, fg, ll, ls, exit
+export HISTIGNORE="&:bg:fg:ll:ls:lh:la:lll:l:exit:logout:clear:clr:pwd:p"
 
-# setting history length.
+# Setting history length.
 # At most HISTSIZE history lines are stored from current session.
 # HISTFILESIZE lines are remembered when we end the session: HISTSIZE
 # from last session, plus HISTSIZE from the previous one, etc.
 HISTSIZE=10000
 HISTFILESIZE=20000
 
-# append to the history file, don't overwrite it
+# Append to the history file, don't overwrite it
 shopt -s histappend
 
 # Save all lines of multiline cmd in same history line
 shopt -s cmdhist
 
-# check the window size after each command and, if necessary,
+# Check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
@@ -45,37 +45,37 @@ shopt -s cdspell
 # make vi the default editor
 set -o vi
 
-# must press Ctrl+D 2+1 times to exit shell. Prevents closing shell by accident
+# Must press Ctrl+D 2+1 times to exit shell. Prevents closing shell by accident
 export IGNOREEOF='2'
 
-# make less more friendly for non-text input files, like gzip, bzip2, tgz...
+# Make less more friendly for non-text input files, like gzip, bzip2, tgz...
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# ignore case in searches, long prompt, exit if text fits screen, allow colors ls and grep
+# Ignore case in searches, long prompt, exit if text fits screen, allow colors ls and grep
 export LESS="-iMFXR"
 
-# set variable identifying the chroot you work in (used in the prompt below)
+# Set variable identifying the chroot you work in (used in the prompt below)
 # will only be set if we are in a chrooted debian system inside our system
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# set xterm to xterm-256color unless we are ssh-ing
+# Set XTERM to xterm-256color (colored prompt) unless we are ssh-ing
 if [ -n "$DISPLAY" ]; then
     export TERM=xterm-256color
 fi
 
-# set a fancy color prompt (non-color, unless we "want" color).
+# Set a fancy color prompt (non-color, unless we "want" color).
 # Checks if $TERM is xterm-color, xterm-256color or xterm-16color,
 # and if so, sets color_prompt to yes. See $TERM running 'env | grep TERM'
 case "$TERM" in
     xterm-color|*-256color|*-16color) color_prompt=yes;;
 esac
 
-# uncomment for a colored prompt, if the terminal has the capability
+# Uncomment for a colored prompt, if the terminal has the capability
 #force_color_prompt=yes
 
-# if force_color_prompt is yes and the system can, color will be shown
+# If force_color_prompt is yes and the system can, color will be shown
 if [ -n "$force_color_prompt" ]; then
   if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
     # We have color support; assume it's compliant with Ecma-48
@@ -101,7 +101,7 @@ case "$TERM" in
     *);;
 esac
 
-# enable color support of ls and also add handy aliases.
+# Enable color support of ls and also add handy aliases.
 # Works only if /usr/bin/dircolors exists and is executable
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -112,7 +112,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# colored GCC warnings and errors
+# Colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some ls aliases (including tyos)
@@ -139,7 +139,6 @@ alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 
 # screen aliases. Create a screen with screen1/2/3 and return to it with s1/2/3.
-# Reminder: to detach from screen: Ctrl + A, + D
 alias s1='screen -dr s1'
 alias s2='screen -dr s2'
 alias s3='screen -dr s3'
@@ -147,12 +146,12 @@ alias screen1='screen -S s1'
 alias screen2='screen -S s2'
 alias screen3='screen -S s3'
 
-# set mv and cp to be interactive: ask before overwritting
+# Set mv and cp to be interactive: ask before overwritting
 alias mv='mv -i'
 alias cp='cp -i'
 
-# other aliases
-alias space='du * -csh | sort -hr | less'  # space of files and folders (not subfolders)
+# Other aliases
+alias space='du * -csh .[a-zA-Z0-9_]* | sort -hr | less'  # space of files and folders (not subfolders)
 alias spacef='du -hS | sort -hr | less'  # space taken by every folder and subfolder
 alias p='pwd'
 alias bd='cd "$OLDPWD"'  # go to previous directory
@@ -182,7 +181,7 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-# enable programmable completion features (no need to enable this, if it's
+# Enable programmable completion features (no need to enable this, if it's
 # already enabled in /etc/bash.bashrc and /etc/profile sources /etc/bash.bashrc).
 # Allows auto-completion of shell using TAB key
 if ! shopt -oq posix; then
@@ -202,9 +201,10 @@ bind 'set show-all-if-ambiguous On'
 if [ ! -f $HOME/.ssh/config ]; then
     touch config
 fi
+# TODO: What if ruby does not exist!
 complete -o default -o nospace -W "$(/usr/bin/env ruby -ne 'puts $_.split(/[,\s]+/)[1..-1].reject{|host| host.match(/\*|\?/)} if $_.match(/^\s*Host\s+/);' < $HOME/.ssh/config)" scp sftp ssh
 
-# some useful functions
+# Some useful functions
 # Use: 'extract my_file.zip'
 extract () {  # extract any file into current folder
   if [ -f $1 ] ; then
