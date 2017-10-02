@@ -42,8 +42,10 @@ shopt -s globstar
 # i.e. 'cd ~/Desltop' will bring us to ~/Desktop
 shopt -s cdspell
 
-# make vi the default editor
-set -o vi
+# Make vim the default editor
+export EDITOR=vim  # Normally VISUAL will be called 1st, if it fails EDITOR will be
+export VISUAL=vim  # Normally VISUAL will be called 1st, if it fails EDITOR will be
+set -o vim
 
 # Must press Ctrl+D 2+1 times to exit shell. Prevents closing shell by accident
 export IGNOREEOF='2'
@@ -87,13 +89,23 @@ if [ -n "$force_color_prompt" ]; then
   fi
 fi
 
-# show color  on prompt or not depending on the color_prompt variable
+# Format prompt as user@host:path$
+# Show color on prompt or not depending on the color_prompt variable
+# Create aliases to change between long prompt and short prompt.
+# long shows full path, short shows only current sub-folder
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    # user@host are green(32m), path is light_blue(94m)
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\$ '
+    alias ps1short="PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\W\[\033[00m\]\$ '"
+    alias ps1long="PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\$ '"
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    alias ps1short="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\W\$ '"
+    alias ps1long="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '"
 fi
 unset color_prompt force_color_prompt
+alias pathshort="ps1short"
+alias pathlong="ps1long"
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -162,7 +174,8 @@ alias words='wc -w'  # count words file
 alias asdf='fortune'  # get a fun quote
 alias wisdom='fortune | cowsay -f tux | lolcat'  # get a message by a wise being
 alias clr="clear"
-alias src="source $HOME/.bashrc"
+alias src="source $HOME/.bashrc"  # update source file
+alias vsrc="vim $HOME/.bashrc"  # edit source file
 alias start="xdg-open"  # run a file as if double clicked. Also opens file manager
 alias click="start"  # run a file as if double clicked. Also opens file manager
 alias fm="xdg-open 2>/dev/null ."  # open file manager for current folder
@@ -196,10 +209,15 @@ fi
 bind 'set completion-ignore-case On'
 # Show completion without double tab-ing if there are several options
 bind 'set show-all-if-ambiguous On'
+# Stop bell sound when autocomplete cannot find an answer
+bind 'set bell-style none'
 
-# make SSH automatically complete hostname (if it is in history or config)
-if [ ! -f $HOME/.ssh/config ]; then
-    touch config
+# Make SSH automatically complete hostname (if it is in history or config)
+if [ ! -d $HOME/.ssh ]; then
+  mkdir $HOME/.ssh
+  touch $HOME/.ssh/config
+elif [ ! -f $HOME/.ssh/config ]; then
+  touch $HOME/.ssh/config
 fi
 # TODO: What if ruby does not exist!
 complete -o default -o nospace -W "$(/usr/bin/env ruby -ne 'puts $_.split(/[,\s]+/)[1..-1].reject{|host| host.match(/\*|\?/)} if $_.match(/^\s*Host\s+/);' < $HOME/.ssh/config)" scp sftp ssh
@@ -292,7 +310,7 @@ addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
     if [[ ! -z $hostname_tmp && ! -z $user_tmp ]]; then
       if [[ $hostname == $hostname_tmp && $user == $user_tmp ]]; then
         found=1
-	break
+        break
       fi
       unset user_tmp hostname_tmp
     fi
