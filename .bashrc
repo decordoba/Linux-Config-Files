@@ -45,7 +45,7 @@ shopt -s cdspell
 # Make vim the default editor
 export EDITOR=vim  # Normally VISUAL will be called 1st, if it fails EDITOR will be
 export VISUAL=vim  # Normally VISUAL will be called 1st, if it fails EDITOR will be
-set -o vim
+set -o vi
 
 # Must press Ctrl+D 2+1 times to exit shell. Prevents closing shell by accident
 export IGNOREEOF='2'
@@ -218,7 +218,7 @@ alias mv='mv -i'
 alias cp='cp -i'
 
 # Other aliases
-alias space='du * -csh .[a-zA-Z0-9_]* | sort -hr | less'  # space of files and folders (not subfolders)
+alias space='du -csh * .[!.]* 2>/dev/null | sort -hr | less'  # space of files and folders (not subfolders)
 alias spacef='du -hS | sort -hr | less'  # space taken by every folder and subfolder
 alias p='pwd'
 alias bd='cd "$OLDPWD"'  # go to previous directory
@@ -358,7 +358,7 @@ bu () {  # create backup file
     cp $1 ~/.backup/`basename $1`_`date +%Y%m%d%H%M`.backup ;  # in .backups folder
   fi
 }
-# Use: 'calc \(3^2 + 4^2\)^0.5'  # sorry, parenthesis must be escaped
+# Use: 'calc \(3^2 + 4^2\)^0.5'  # sorry, parenthesis must be escaped, unless formula is surrounded by ""
 calc() {  # create a terminal calculator
     echo "$@" | bc -l
 } 
@@ -374,12 +374,17 @@ google() {  # search something in google (will open a browser)
 
 # Use: 'remindme 10m OMG, the pizza!'
 remindme() {  # show pop up with reminder after time
-  sleep $1 && zenity --info --title Reminder --text "${*:2}  " 2> /dev/null &
+  sleep $1 && notify-send --urgency=normal -i face-monkey "Reminder:   ${*:2}" -t 30000 && zenity --info --title Reminder --text "${*:2}  " 2> /dev/null &
 }
 
 # Use: 'addssh user@example.com ssh_alias' or 'addssh user@example.com'
 addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
   local user hostname host found hostname_tmp user_tmp path_config host_line i
+  if [ $# -lt 1 ]; then
+    echo "Usage: add <user@hostname>               # add SSH user and hostname to .ssh/config. SSH alias is assigned automatically (recommended)"
+    echo "       add <user@hostname>  <ssh_alias>  # add SSH user and hostname to .ssh/confid, and use SSH alias to access it"
+    return
+  fi
   user=${1%%@*}
   hostname=${1#*@}
   path_config=$HOME/.ssh/config
@@ -403,16 +408,16 @@ addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
     fi
   done < $path_config
 
-  host="${hostname}->${user}"
+  host="${hostname}---${user}"
   if [[ ! -z $2 ]]; then
     host="${2}"
   fi
 
   if [[ $found == 0 ]]; then
-    echo >> $path_config
     echo "Host ${host}" >> $path_config
     echo "HostName ${hostname}" >> $path_config
     echo "User ${user}" >> $path_config
+    echo >> $path_config
   else
     # replace host alias
     sed -i "${host_line}s/.*/Host ${host}/" $path_config
