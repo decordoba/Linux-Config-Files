@@ -127,23 +127,78 @@ fi
 # Colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
-# some ls aliases (including tyos)
-alias la='ls -Ah'  # do not ignore entries starting with .
-alias ll='ls -Alh'  # same + long listing format + size in h format (K, M, G)
-alias lh='ls -lh'  # see files in long format, ignoring files starting with .
+# Some ls aliases (including typos)
+# This looks messy, but it's pretty simple: 3 basic commands: ls (or l), ll, lll.
+# ll does ls in long format (one file per line) and lll pipes ll to less.
+# If we add an a to them (lsa (la), lla, llla), we include folders and files starting with .
+# If we add a t to them (lst (lt), llt, lllt), files and folders are sorted by date, not alphabetically
+# If we add a g to them (lsg (lg), llg, lllg), folders will be listed before files
+# We can use 2 or 3 prefixes at the same time, in any order, like llag, lsta, lllgt, latg, etc.
 alias l='ls'  # ls typo
-alias s='ls'  # ls typo
-alias sl='ls'  # ls typo
-alias lll='ll --color=always | less -R'  # ll for many files
+alias ll='ls -lh'  # long listing format + size in human-readable format (K, M, G)
+alias lll='ll --color=always | less -R'  # ll for many files (pipe into less)
+alias lsa='ls -A'  # do not ignore entries starting with .
+alias la='lsa'
+alias lla='ll -A'
+alias llla='lla --color=always | less -R'
 alias lst='ls -tr'  # sort oldest first
-alias lat='la -tr'  # sort oldest first
-alias llt='ll -tr'  # sort oldest first
-alias lht='lh -tr'  # sort oldest first
-alias lt='l -tr'  # sort oldest first
-alias lllt='ll -tr --color=always | less -R'  # sort oldest first
-alias lsg='ll | grep /$'  # search in ls
+alias lt='lst'
+alias llt='ll -tr'
+alias lllt='llt --color=always | less -R'
+alias lsat='lsa -tr'
+alias lsta='lsa -tr'
+alias lat='la -tr'
+alias lta='la -tr'
+alias llat='lla -tr'
+alias llta='lla -tr'
+alias lllat='llat --color=always | less -R'
+alias lllta='llta --color=always | less -R'
+alias lsg='ls --group-directories-first'  # show folders first, then files
+alias lg='lsg'
+alias llg='ll --group-directories-first'
+alias lllg='llg --color=always | less -R'
+alias lsag='lsg -A'
+alias lsga='lsg -A'
+alias lag='lg -A'
+alias lga='lg -A'
+alias llag='llg -A'
+alias llga='llg -A'
+alias lllag='llag --color=always | less -R'
+alias lllga='llga --color=always | less -R'
+alias lstg='lsg -tr'
+alias lsgt='lsg -tr'
+alias ltg='lg -tr'
+alias lgt='lg -tr'
+alias lltg='llg -tr'
+alias llgt='llg -tr'
+alias llltg='lltg --color=always | less -R'
+alias lllgt='llgt --color=always | less -R'
+alias lstga='lstg -A'
+alias ltga='ltg -A'
+alias lltga='lltg -A'
+alias llltga='lltga --color=always | less -R'
+alias lstag='lstg -A'
+alias ltag='ltg -A'
+alias lltag='lltg -A'
+alias llltag='lltga --color=always | less -R'
+alias lsatg='lstg -A'
+alias latg='ltg -A'
+alias llatg='lltg -A'
+alias lllatg='lltga --color=always | less -R'
+alias lsagt='lstg -A'
+alias lagt='ltg -A'
+alias llagt='lltg -A'
+alias lllagt='lltga --color=always | less -R'
+alias lsgat='lstg -A'
+alias lgat='ltg -A'
+alias llgat='lltg -A'
+alias lllgat='lltga --color=always | less -R'
+alias lsgta='lstg -A'
+alias lgta='ltg -A'
+alias llgta='lltg -A'
+alias lllgta='lltga --color=always | less -R'
 
-# aliases to navigate faster
+# Aliases to navigate back faster
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
