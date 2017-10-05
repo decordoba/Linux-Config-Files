@@ -315,11 +315,43 @@ mkcd() {  # create a folder and cd into it with one cmd only
     mkdir -p $1 && cd $1
   fi
 }
+# Use: 'cdn' or 'cdn 3'
+cdn() {
+  local idx re
+  if [ $# -lt 1 ]; then
+    idx=1
+  else
+    idx=$1
+    re='^[0-9]+$'
+    if ! [[ $idx =~ $re ]] || [[ $idx -lt 1 ]] ; then
+      echo "Usage: cdn        # cd into newest folder"
+      echo "       cdn [N]    # cd into Nth newest folder (N should be number > 0)"
+      return
+    fi
+  fi
+  cd "$(ls -trd */ | tail -n $idx | head -n 1)"
+}
+# Use: 'cdo' or 'cdo 3'
+cdo() {
+  local idx re
+  if [ $# -lt 1 ]; then
+    idx=1
+  else
+    idx=$1
+    re='^[0-9]+$'
+    if ! [[ $idx =~ $re ]] || [[ $idx -lt 1 ]] ; then
+      echo "Usage: cdo        # cd into oldest folder"
+      echo "       cdo [N]    # cd into Nth oldest folder (N should be number > 0)"
+      return
+    fi
+  fi
+  cd "$(ls -trd */ | head -n $idx | tail -n 1)"
+}
 # Use: 'bu my_config_file.cfg'
 bu () {  # create backup file 
   if [ $# -lt 1 ]; then
-    echo "Usage: bu <file>             # create backup in current folder"
-    echo "       bu <file> <anything>  # create backup in .backups folder"
+    echo "Usage: bu file             # create backup in current folder"
+    echo "       bu file [anything]  # create backup in .backups folder"
   elif [ $# -lt 2 ]; then
     cp $1 `basename $1`_`date +%Y%m%d%H%M`.backup ;  # in same folder
   else
