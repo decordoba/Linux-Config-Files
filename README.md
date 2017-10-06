@@ -11,8 +11,12 @@ clarify its purpose and how to use it, even for beginners in a Linux environment
 
 These are the most important functions and aliases included:
 
-* Useful `ls` aliases: `la`, `ll`, `lh`, `lll`, etc.
-* Support to `ls` typos: `sl`, `l`, `s`.
+* Organized `ls` aliases: there are 3 basic commands (`ls` or `l`, `ll` and `lll`) whose functionality can be extended with suffixes.
+`ll` shows `ls` in long format (one file/folder per line) and `lll` pipes `ll` to `less`.
+Add an `a` to them (`lsa` or `la`, `lla`, `llla`) to also include folders and files starting with `.`.
+Add a `t` to them (`lst` or `lt`, `llt`, `lllt`) to sort files and folders by date instead of alphabetically.
+Add a `g` to them (`lsg` or `lg`, `llg`, `lllg`) to list folders before files.
+2 or 3 prefixes can be used at the same time, in any order, to stack behaviours. For example, `llag`, `lsta`, `lllgt`, `latg`, `llgta`, etc.
 * Use `..` to run `cd ..`, `...` to run `cd ../..`, etc.
 * Optimal screen use: use `screen1`, `screen2` and `screen3` to create a screen prompt, and `s1`, `s2` and `s3` to reopen them.
 * `space` shows the space taken by the files and folders ONLY in the current folder, and `spacef` shows the space taken by all folders
@@ -23,7 +27,8 @@ AND subfolders, which is great to find what is taking most of the space in the d
 * `tmp` creates a temporary folder (it will disappear on boot) and navigates into it. Great for doing tests without worrying about cleaning up.
 * Easy count functions: `lines` counts the lines in a file, and `words` counts the words.
 * Get some smart quotes and forget about life for a while with `wisdom` and `asdf`.
-* Reload the source file with `src`, instead of doing `. ~/.bashrc`.
+* Reload the source file with `src`, instead of doing `. ~/.bashrc` or `source ~/.bashrc`.
+* Edit the source file from anywhere running `vsrc`.
 * Perform the same action that you would do with a mouse with `click` or `start` (they are equivalent). For example, open a picture with `click my_img.png`.
 * Open the file manager for your current location with `fm`.
 * `empty` shows all the empty folders.
@@ -35,9 +40,11 @@ Do not use this in a public network or anyone will be able to access your files.
 * `extract` will extract any file (`.zip`, `.tar`, `.7z`, `.rar`, etc.) and save it into the current folder. Run it with `extract my_file.zip`.
 * `repeat` repeats the same command N times. Use it like this: `repeat 10 echo You are so beautiful!`.
 * `mkcd` should be a default: makes a new directory and cd's into it. Use it like: `mkcd my_new_folder`.
+* `cdn` will cd into the newest folder available, and `cdo` will cd into the oldest. `cdn N` will cd into the Nth newest folder, and `cdo N` will cd into the Nth newest folder.
 * `bu` creates a backup of a file in the current folder. Use it like `bu important.cfg`. It can also be configured to save backups into a `.backups` folder.
 * Use `calc` to calculate anything from the comand prompt: `calc 2+2`.
 * Use `google` to open a browser and google something: `google how many eyes do spiders have`.
+* Use `pathlong` and `pathshort` to toggle between seeing the whole path in the prompt or just the current folder.
 
 ### Features and configurations
 
@@ -54,6 +61,7 @@ These are the most important functionality changes and improvements:
 * `ssh` completion is enabled based on the `ssh` config file. A new entry can be added to this file with `addssh`, which allows us to choose
 the alias for our connection. For example, if we run `addssh username@hostname myserver`, then the alias `myserver` will be added to the `ssh`
 config file, and we will be able to type `ssh m` + TAB which will autocomplete `ssh myserver`, and if we hit ENTER, it will `ssh` into `username@hostname`.
+* Vim chosen as default editor.
 
 ### List of all new calls
 `la, ll, lh, l, s, sl, lll, lst, lat, llt, lht, lt, lllt, lsg, .., ..., ...., ....., ......, s1, s2, s3, screen1, screen2, screen3,

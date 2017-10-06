@@ -310,13 +310,13 @@ repeat() {  # repeat n times command.
 # Use: 'mkcd my_new_folder'
 mkcd() {  # create a folder and cd into it with one cmd only
   if [ $# != 1 ]; then
-    echo "Usage: mkcd <dir>"
+    echo "Usage: mkcd dir"
   else
     mkdir -p $1 && cd $1
   fi
 }
-# Use: 'cdn' or 'cdn 3'
-cdn() {
+# Use: 'cdn' or 'cdn 3'  # cdn for cd newest
+cdn() {  # cd into newest folder, or into Nth newest folder
   local idx re
   if [ $# -lt 1 ]; then
     idx=1
@@ -331,8 +331,8 @@ cdn() {
   fi
   cd "$(ls -trd */ | tail -n $idx | head -n 1)"
 }
-# Use: 'cdo' or 'cdo 3'
-cdo() {
+# Use: 'cdo' or 'cdo 3'  # cdo for cd oldest
+cdo() {  # cd into oldest folder, or into Nth oldest folder
   local idx re
   if [ $# -lt 1 ]; then
     idx=1
@@ -381,8 +381,8 @@ remindme() {  # show pop up with reminder after time
 addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
   local user hostname host found hostname_tmp user_tmp path_config host_line i
   if [ $# -lt 1 ]; then
-    echo "Usage: add <user@hostname>               # add SSH user and hostname to .ssh/config. SSH alias is assigned automatically (recommended)"
-    echo "       add <user@hostname>  <ssh_alias>  # add SSH user and hostname to .ssh/confid, and use SSH alias to access it"
+    echo "Usage: add user@hostname              # add SSH user and hostname to .ssh/config. SSH alias is assigned automatically (recommended)"
+    echo "       add user@hostname [ssh_alias]  # add SSH user and hostname to .ssh/confid, and use SSH alias to access it"
     return
   fi
   user=${1%%@*}
