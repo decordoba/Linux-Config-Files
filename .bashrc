@@ -315,8 +315,28 @@ mkcd() {  # create a folder and cd into it with one cmd only
     mkdir -p $1 && cd $1
   fi
 }
-# Use: 'cdn' or 'cdn 3'  # cdn for cd newest
-cdn() {  # cd into newest folder, or into Nth newest folder
+# Use: 'newest' or 'newest 3'
+newest() {  # get newest folder, or Nth newest folder
+  local idx re folders
+  if [ $# -lt 1 ]; then
+    idx=1
+  else
+    idx=$1
+    re='^[0-9]+$'
+    if ! [[ $idx =~ $re ]] || [[ $idx -lt 1 ]] ; then
+      echo ""
+      return
+    fi
+  fi
+  # if current directory contains at least one folder
+  if ! [[ "$(find . -maxdepth 0 -empty)" == "." ]] && ! [[ "$(find * -maxdepth 0 -type d)" == "" ]]; then
+    echo "$(ls -trd */ | tail -n $idx | head -n 1)"
+  else
+    echo "."
+  fi
+}
+# Use: 'oldest' or 'oldest 3'
+oldest() {  # get oldest folder, or Nth oldest folder
   local idx re
   if [ $# -lt 1 ]; then
     idx=1
@@ -324,28 +344,126 @@ cdn() {  # cd into newest folder, or into Nth newest folder
     idx=$1
     re='^[0-9]+$'
     if ! [[ $idx =~ $re ]] || [[ $idx -lt 1 ]] ; then
-      echo "Usage: cdn        # cd into newest folder"
-      echo "       cdn [N]    # cd into Nth newest folder (N should be number > 0)"
+      echo ""
       return
     fi
   fi
-  cd "$(ls -trd */ | tail -n $idx | head -n 1)"
+  # if current directory contains at least one folder
+  if ! [[ "$(find . -maxdepth 0 -empty)" == "." ]] && ! [[ "$(find * -maxdepth 0 -type d)" == "" ]]; then
+    echo "$(ls -trd */ | head -n $idx | tail -n 1)"
+  else
+    echo "."
+  fi
+}
+# Use: 'cdn' or 'cdn 3'  # cdn for cd newest
+cdn() {  # cd into newest folder, or cd into Nth newest folder
+  local n
+  n="$(newest $@)"
+  if [[ $n == "" ]]; then
+    echo "Usage: cdn      # cd into newest folder"
+    echo "       cdn [N]  # cd into Nth newest folder (N should be number > 0)"
+    return
+  fi
+  cd $n
 }
 # Use: 'cdo' or 'cdo 3'  # cdo for cd oldest
-cdo() {  # cd into oldest folder, or into Nth oldest folder
-  local idx re
-  if [ $# -lt 1 ]; then
-    idx=1
-  else
-    idx=$1
-    re='^[0-9]+$'
-    if ! [[ $idx =~ $re ]] || [[ $idx -lt 1 ]] ; then
-      echo "Usage: cdo        # cd into oldest folder"
-      echo "       cdo [N]    # cd into Nth oldest folder (N should be number > 0)"
-      return
-    fi
+cdo() {  # cd into oldest folder, or cd into Nth oldest folder
+  local n
+  n="$(oldest $@)"
+  if [[ $n == "" ]]; then
+    echo "Usage: cdo      # cd into oldest folder"
+    echo "       cdo [N]  # cd into Nth oldest folder (N should be number > 0)"
+    return
   fi
-  cd "$(ls -trd */ | head -n $idx | tail -n 1)"
+  cd $n
+}
+# Use: 'rmn' or 'rmn 3'  # rmn for rm newest
+rmn() {  # rm newest folder, or rm Nth newest folder
+  local n
+  n="$(newest $@)"
+  if [[ $n == "" ]]; then
+    echo "Usage: rmn      # rm newest folder"
+    echo "       rmn [N]  # rm Nth newest folder (N should be number > 0)"
+    return
+  fi
+  rm $n -r
+}
+# Use: 'rmo' or 'rmo 3'  # rmo for rm oldest
+rmo() {  # rm oldest folder, or rm Nth oldest folder
+  local n
+  n="$(oldest $@)"
+  if [[ $n == "" ]]; then
+    echo "Usage: rmo      # rm oldest folder"
+    echo "       rmo [N]  # rm Nth oldest folder (N should be number > 0)"
+    return
+  fi
+  rm $n -r
+}
+# Use: 'lsn' or 'lsn 3'  # lsn for ls newest
+lsn() {  # ls into newest folder, or ls into Nth newest folder
+  local n
+  n="$(newest $@)"
+  if [[ $n == "" ]]; then
+    echo "Usage: lsn      # ls into newest folder"
+    echo "       lsn [N]  # ls into Nth newest folder (N should be number > 0)"
+    return
+  fi
+  ls $n
+}
+# Use: 'lso' or 'lso 3'  # lso for ls oldest
+lso() {  # ls into oldest folder, or ls into Nth oldest folder
+  local n
+  n="$(oldest $@)"
+  if [[ $n == "" ]]; then
+    echo "Usage: lso      # ls into oldest folder"
+    echo "       lso [N]  # ls into Nth oldest folder (N should be number > 0)"
+    return
+  fi
+  ls $n
+}
+# Use: 'lln' or 'lln 3'  # lln for ll newest
+lln() {  # ll into newest folder, or ll into Nth newest folder
+  local n
+  n="$(newest $@)"
+  if [[ $n == "" ]]; then
+    echo "Usage: lln      # ll into newest folder"
+    echo "       lln [N]  # ll into Nth newest folder (N should be number > 0)"
+    return
+  fi
+  ll $n
+}
+# Use: 'llo' or 'llo 3'  # llo for ll oldest
+llo() {  # ll into oldest folder, or ll into Nth oldest folder
+  local n
+  n="$(oldest $@)"
+  if [[ $n == "" ]]; then
+    echo "Usage: llo      # ll into oldest folder"
+    echo "       llo [N]  # ll into Nth oldest folder (N should be number > 0)"
+    return
+  fi
+  ll $n
+}
+# Use: 'llln' or 'llln 3'  # llln for lll newest
+llln() {  # lll into newest folder, or lll into Nth newest folder
+  local n
+  n="$(newest $@)"
+  if [[ $n == "" ]]; then
+    echo "Usage: llln      # lll into newest folder"
+    echo "       llln [N]  # lll into Nth newest folder (N should be number > 0)"
+    return
+  fi
+  ll $n --color=always | less -R
+}
+# Use: 'llo' or 'llo 3'  # llo for ll oldest
+lllo() {  # lll into oldest folder, or lll into Nth oldest folder
+  local n
+  n="$(oldest $@)"
+  if [[ $n == "" ]]; then
+    echo "Usage: lllo      # lll into oldest folder"
+    echo "       lllo [N]  # lll into Nth oldest folder (N should be number > 0)"
+    return
+  fi
+  ll $n --color=always | less -R
 }
 # Use: 'bu my_config_file.cfg'
 bu () {  # create backup file 
