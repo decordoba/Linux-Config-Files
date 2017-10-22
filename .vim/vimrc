@@ -1,0 +1,194 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Avalable commands:
+"
+" * Ctrl+N > Switching between relative and absolute line numbers 
+" * ,vsrc > Open vimrc in new tab
+" * ,src > Load (source) vimrc file
+" * :W > Sudo saves
+" * Up/Down > Go up and down line by line visually
+" * j/k > Go up and down line by line (skip visual line breaks)
+" * ,w > Toggle wrap - unwrap lines longer that screen width
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Make vim non-compatible with vi, increasing vim capabilities. This must be 1st!
+set nocompatible  " This will set formatoptions to tcq 
+
+" Set preferred format options
+set textwidth=99      " A line jump will be entered after 99 chars (see fo t, c, l)
+set formatoptions-=t  " No new line added after textwidth chars in line
+set formatoptions+=c  " Insert new line after textwidth when writing comments
+set formatoptions+=r  " Insert comment leader when hitting ENTER in insert mode
+set formatoptions+=o  " Insert comment leader in new line when using o/O in comment
+set formatoptions+=j  " Remove a comment leader when joining lines
+set formatoptions+=l  " If line length > textwidth when insert starts don't break it
+set formatoptions+=q  " Allow formatting of comments with 'gq'
+
+" Allow installation of plugins copying them on ~/.vim/bundle
+execute pathogen#infect()
+
+" Move viminfo into ~/.vim folder
+set viminfo+=n~/.vim/viminfo
+
+" :W sudo saves the file (for handling permission-denied errors)
+command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Leader definitions and uses
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let mapleader = ","    " Set <leader> to comma
+let g:mapleader = ","  " Set <leader> to comma
+
+" Writing <lader>vsrc will open vimrc in a new tab
+map <leader>vsrc :tabe $MYVIMRC<cr>
+" Writing <lader>src will load vimrc changes
+map <leader>src :source $MYVIMRC<cr>
+" Every time vimrc is modified, it is loaded (sourced) again
+autocmd bufwritepost .vimrc source $MYVIMRC
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Select colors
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Select default colorscheme. It is always available and looks pretty nice
+colorscheme default
+" Enable syntax highlighting: text can be shown in different fonts and colors
+if has('syntax') && !exists('g:syntax_on')
+  syntax enable
+endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Spaces and tabs, search, visual and misc setup
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set tabstop=4      " Number of visual spaces per TAB
+set softtabstop=4  " Num spaces tab when editing (if we TAB, we enter N spaces)
+set shiftwidth=4   " Num spaces tab when editing (if we TAB, we enter N spaces)
+set expandtab      " Tabs are spaces (great for python and bash)
+set autoindent     " Copy indent from current line to next when starting new line
+set smarttab       " Insert tabstop spaces when the TAB key is pressed
+set shiftround     " Round indentation to multiple of shiftwidth when shifting
+
+set ignorecase     " Do case insensitive matching
+set smartcase      " Case insensitive match if no uppercase, else case sensitive
+set incsearch      " Incremental search, show the next matching while typing
+set wrapscan       " When we get to end search, go back to beginning
+
+set showmatch      " Highlight matching [{()}]
+set showcmd        " Show command being typed in status bar (bottom right)
+set cursorline     " Highlight current line
+highlight CursorLine cterm=NONE ctermbg=233  " Define style highlight line
+set scrolloff=1    " Set to 9999 to see cursor always in the middle of screen
+set sidescrolloff=5  " Number of columns to keep left and right of cursor
+set display+=lastline  " Always try to show a paragraph’s last line
+set wrap           " Wrap line in multiple lines if it is wider than screen
+set linebreak      " Avoid wrapping a line in the middle of a word
+set laststatus=2   " Always display status bar
+set ruler          " Show cursor position is status bar
+
+set backspace=indent,eol,start  " Backspace removes indents and line jumps
+set lazyredraw     " Vim redraws screen too often, redraw only when we need to
+set autowrite      " Automatically save before commands like :next and :make
+set hidden         " Hide buffers when they are abandoned
+set mouse=a        " Enable mouse usage (all modes). Mouse will move cursor, etc.
+
+filetype on        " Try to recognize filetype
+filetype indent on " Load indent file for filetype detected from ~/.vim/indent
+filetype plugin on " Load plugin file for filetype detected from ~/.vim/ftplugin
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Autocomplete magic 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Select complete options 
+set wildmenu       " Visual autocomplete for command menu
+set complete-=i    " When completing (Ctrl+P, Ctrl+N), ignore included files
+set completeopt=longest,menuone  " complete longest word, show menu if one option
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <C-n> pumvisible() ? '<C-n>' : '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+inoremap <expr> <M-,> pumvisible() ? '<C-n>' : '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Change between wrap and nowrap mode with <leader>w
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Map up and down to navigate visually (following visual line breaks) 
+noremap <silent> <Leader>w :call ToggleWrap()<cr>
+function! ToggleWrap()
+  if &wrap
+    echo "wrap off"
+    setlocal nowrap
+    silent! nunmap <buffer> <Up>
+    silent! nunmap <buffer> <Down>
+    silent! nunmap <buffer> <Home>
+    silent! nunmap <buffer> <End>
+    silent! iunmap <buffer> <Up>
+    silent! iunmap <buffer> <Down>
+    silent! iunmap <buffer> <Home>
+    silent! iunmap <buffer> <End>
+  else
+    echo "wrap on"
+    setlocal wrap linebreak nolist
+    setlocal display+=lastline
+    noremap  <buffer> <silent> <Up>   gk
+    noremap  <buffer> <silent> <Down> gj
+    noremap  <buffer> <silent> <Home> g<Home>
+    noremap  <buffer> <silent> <End>  g<End>
+    inoremap <buffer> <silent> <Up>   <C-o>gk
+    inoremap <buffer> <silent> <Down> <C-o>gj
+    inoremap <buffer> <silent> <Home> <C-o>g<Home>
+    inoremap <buffer> <silent> <End>  <C-o>g<End>
+  endif
+endfunction
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Permanent undo
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Save undo info to allow undo even after reopening file
+if !isdirectory($HOME."/.vim")
+    call mkdir($HOME."/.vim", "", 0770)
+endif
+if !isdirectory($HOME."/.vim/undo-dir")
+    call mkdir($HOME."/.vim/undo-dir", "", 0700)
+endif
+set undodir=~/.vim/undo-dir
+set undofile
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Cursor position remembered
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Jump to last position when reopening a file
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Shared clipboard
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Share vim clipboard and OS clipboard
+set clipboard=unnamed
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Smart line numbers
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" See relative numbers when starting vim
+set relativenumber
+" Functions to toggle absolute or relative numbers
+function! ToggleNumbersOn()
+    set relativenumber!
+    set number
+endfunction
+function! ToggleRelativeOn()
+    set number!
+    set relativenumber
+endfunction
+" See absolute line numbers when console loses focus, switch to relative when back
+autocmd FocusLost * call ToggleNumbersOn()
+autocmd FocusGained * call ToggleRelativeOn()
+" See absolute line numbers on i, see relative line numbers on ESC
+autocmd InsertEnter * call ToggleNumbersOn()
+autocmd InsertLeave * call ToggleRelativeOn()
+" Allow toggling between relative and absolute line numbers with command Ctrl + n
+function! NumberToggle()
+  if(&relativenumber == 1)
+    call ToggleNumbersOn()
+  else
+    call ToggleRelativeOn()
+  endif
+endfunc
+nnoremap <C-n> :call NumberToggle()<cr>
+
