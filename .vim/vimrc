@@ -2,18 +2,48 @@
 " Avalable commands:
 "
 " * Ctrl+N > Switching between relative and absolute line numbers 
+" * Ctrl+M > Stop highlighting after a search 
+" * F12 > Toggle search highlight on and off 
+" * Ctrl+J/K/L/H > Navigate between split layouts
 " * ,vsrc > Open vimrc in new tab
 " * ,src > Load (source) vimrc file
 " * :W > Sudo saves
 " * Up/Down > Go up and down line by line visually
 " * j/k > Go up and down line by line (skip visual line breaks)
 " * ,w > Toggle wrap - unwrap lines longer that screen width
+" * :PluginInstall > Install plugins
 "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vundle (extension/plugin manager) setup
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Make vim non-compatible with vi, increasing vim capabilities. This must be 1st!
 set nocompatible  " This will set formatoptions to tcq 
+filetype off      " Required to use vundle
+" Set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" Let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
 
+" Add all your plugins here
+
+Plugin 'tmhedberg/SimpylFold'  " Folds for Python
+Plugin 'vim-scripts/indentpython.vim'  " Autoindent for Python
+Bundle 'Valloric/YouCompleteMe'  " Autocomplete 
+
+" All of your Plugins must be added before the following line
+
+call vundle#end()  " Load all plugins
+" Enable filetype again
+filetype on        " Try to recognize filetype
+filetype indent on " Load indent file for filetype detected from ~/.vim/indent
+filetype plugin on " Load plugin file for filetype detected from ~/.vim/ftplugin
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Format options, dictates when line breaks are introduced automatically
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set preferred format options
 set textwidth=99      " A line jump will be entered after 99 chars (see fo t, c, l)
 set formatoptions-=t  " No new line added after textwidth chars in line
@@ -24,14 +54,17 @@ set formatoptions+=j  " Remove a comment leader when joining lines
 set formatoptions+=l  " If line length > textwidth when insert starts don't break it
 set formatoptions+=q  " Allow formatting of comments with 'gq'
 
-" Allow installation of plugins copying them on ~/.vim/bundle
-execute pathogen#infect()
-
-" Move viminfo into ~/.vim folder
-set viminfo+=n~/.vim/viminfo
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Shortcuts and key mappings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " :W sudo saves the file (for handling permission-denied errors)
 command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+
+" Navigarte between split layouts (create them with :sp, :vs, :sv)
+nnoremap <C-J> <C-W><C-J>  " Move down with Ctrl+J
+nnoremap <C-K> <C-W><C-K>  " Move up with Ctrl+K
+nnoremap <C-L> <C-W><C-L>  " Move left with Ctrl+L
+nnoremap <C-H> <C-W><C-H>  " Move right with Ctrl+H
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Leader definitions and uses
@@ -62,7 +95,7 @@ if has('syntax') && !exists('g:syntax_on')
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Spaces and tabs, search, visual and misc setup
+" Spaces and tabs, visual and misc setup
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set tabstop=4      " Number of visual spaces per TAB
 set softtabstop=4  " Num spaces tab when editing (if we TAB, we enter N spaces)
@@ -71,11 +104,6 @@ set expandtab      " Tabs are spaces (great for python and bash)
 set autoindent     " Copy indent from current line to next when starting new line
 set smarttab       " Insert tabstop spaces when the TAB key is pressed
 set shiftround     " Round indentation to multiple of shiftwidth when shifting
-
-set ignorecase     " Do case insensitive matching
-set smartcase      " Case insensitive match if no uppercase, else case sensitive
-set incsearch      " Incremental search, show the next matching while typing
-set wrapscan       " When we get to end search, go back to beginning
 
 set showmatch      " Highlight matching [{()}]
 set showcmd        " Show command being typed in status bar (bottom right)
@@ -103,21 +131,34 @@ set ttimeout       " Wait to see if more chars come after cmd, if not run it
 set ttimeoutlen=200  " How may ms to wait before moving on
 set tabpagemax=50  " At most 50 tabs can be opened
 
-filetype on        " Try to recognize filetype
-filetype indent on " Load indent file for filetype detected from ~/.vim/indent
-filetype plugin on " Load plugin file for filetype detected from ~/.vim/ftplugin
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Search configuration
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Best search setup
+set ignorecase     " Do case insensitive matching
+set smartcase      " Case insensitive match if no uppercase, else case sensitive
+set incsearch      " Incremental search, show the next matching while typing
+set wrapscan       " When we get to end search, go back to beginning
+set hlsearch       " Highlight all results in file when searching
+" Use Ctrl+M to clear the highlighting of :set hlsearch
+nnoremap <silent> <C-m> :noh<cr>
+" F12 toggle highlight on and off
+nmap <silent> <F12> :set hls!<CR>
+imap <silent> <F12> <ESC>:set hls!<CR>a
+vmap <silent> <F12> <ESC>:set hls!<CR>gv
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Folding (hiding or showing content)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Select fold mode
-set foldmethod=manual  " Folds are created manually
+set foldmethod=indent  " Folds are created manually
 set foldnestmax=3      " Only fold up to three nested levels
-set nofoldenable       " Disable folding by default. Fold/unfold with za
+"set nofoldenable       " Disable folding by default
 
 " Open fold with space, and create fold with space after visually selecting
-nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+"nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<cr>
 vnoremap <Space> zf
+nnoremap <Space> za
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Autocomplete magic 
@@ -125,21 +166,28 @@ vnoremap <Space> zf
 " Select complete options 
 set wildmenu       " Visual autocomplete for command menu
 set complete-=i    " When completing (Ctrl+P, Ctrl+N), ignore included files
-set completeopt=longest,menuone  " complete longest word, show menu if one option
-
+set completeopt=longest,menuone  " Complete longest word, show menu if one option
+" Enable omni completion
+if has("autocmd") && exists("+omnifunc")
+  autocmd Filetype * if &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+endif 
 " When the menu appears, the 1st completion option gets highlighted automatically
-inoremap <expr> <C-n> pumvisible() ? '<C-n>' : '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-inoremap <expr> <C-p> pumvisible() ? '<C-p>' : '<C-p><C-r>=pumvisible() ? "\<lt>Up>" : ""<CR>'
-
+inoremap <expr> <C-n> pumvisible() ? '<C-n>' : '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<cr>'
+inoremap <expr> <C-p> pumvisible() ? '<C-p>' : '<C-p><C-r>=pumvisible() ? "\<lt>Up>" : ""<cr>'
 " Only useful if we use Omni
-inoremap <expr> <M-,> pumvisible() ? '<C-n>' : '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+inoremap <expr> <M-,> pumvisible() ? '<C-n>' : '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<cr>'
 " Check AutoComplPop and SuperTab plugins
+
+" Ensures autocomplete window goes away when you’re done with it
+let g:ycm_autoclose_preview_window_after_completion=1
+" Map Ctrl+D to go to definition of function
+nmap <C-d> :YcmCompleter GoToDefinitionElseDeclaration<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Change between wrap and nowrap mode with <leader>w
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Map up and down to navigate visually (following visual line breaks) 
-noremap <silent> <Leader>w :call ToggleWrap()<cr>
+nnoremap <silent> <Leader>w :call ToggleWrap()<cr>
 function! ToggleWrap()
   if &wrap
     echo "wrap off"
@@ -156,10 +204,10 @@ function! ToggleWrap()
     echo "wrap on"
     setlocal wrap linebreak nolist
     setlocal display+=lastline
-    noremap  <buffer> <silent> <Up>   gk
-    noremap  <buffer> <silent> <Down> gj
-    noremap  <buffer> <silent> <Home> g<Home>
-    noremap  <buffer> <silent> <End>  g<End>
+    nnoremap <buffer> <silent> <Up>   gk
+    nnoremap <buffer> <silent> <Down> gj
+    nnoremap <buffer> <silent> <Home> g<Home>
+    nnoremap <buffer> <silent> <End>  g<End>
     inoremap <buffer> <silent> <Up>   <C-o>gk
     inoremap <buffer> <silent> <Down> <C-o>gj
     inoremap <buffer> <silent> <Home> <C-o>g<Home>
@@ -170,20 +218,28 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Permanent undo and file management
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Save undo info to allow undo even after reopening file
+" Create folders if necessary
 if !isdirectory($HOME."/.vim")
     call mkdir($HOME."/.vim", "", 0770)
 endif
 if !isdirectory($HOME."/.vim/undo-dir")
     call mkdir($HOME."/.vim/undo-dir", "", 0700)
 endif
+if !isdirectory($HOME."/.vim/swap-file")
+    call mkdir($HOME."/.vim/swap-file", "", 0700)
+endif
+" Move viminfo into ~/.vim folder
+set viminfo+=n~/.vim/viminfo
+" Save undo info to allow undo even after reopening file
 set undodir=$HOME/.vim/undo-dir " Directory undo files
 set undofile                    " Create undo file
 set history=1000                " Increase the undo limit
+" Disable backup file
 set backupdir=$HOME/.vim        " Directory to store backup files
 set nobackup                    " Disable backups
-set dir=$HOME/.vim              " Directory to store swap files
-set noswapfile                  " Disable swap files
+" Move swap files into ~/.vim/swap-file
+set dir=$HOME/.vim/swap-file    " Directory to store swap files
+set swapfile                    " Enable swap files
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Cursor position remembered
