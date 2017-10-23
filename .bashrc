@@ -47,6 +47,9 @@ export EDITOR=vim  # Normally VISUAL will be called 1st, if it fails EDITOR will
 export VISUAL=vim  # Normally VISUAL will be called 1st, if it fails EDITOR will be
 set -o vi
 
+# Swap ESC and CAPS_LOCK keys. Crucial for changing modes in vim faster
+/usr/bin/setxkbmap -option "caps:swapescape"
+
 # Must press Ctrl+D 2+1 times to exit shell. Prevents closing shell by accident
 export IGNOREEOF='2'
 
@@ -231,6 +234,7 @@ alias wisdom='fortune | cowsay -f tux | lolcat'  # get a message by a wise being
 alias clr="clear"
 alias src="source $HOME/.bashrc"  # update source file
 alias vsrc="vim $HOME/.bashrc"  # edit source file
+alias vimrc="vim $HOME/.vim/vimrc"  # edit vim source file
 alias start="xdg-open"  # run a file as if double clicked. Also opens file manager
 alias click="start"  # run a file as if double clicked. Also opens file manager
 alias fm="xdg-open 2>/dev/null ."  # open file manager for current folder
