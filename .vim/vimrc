@@ -15,6 +15,22 @@
 "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+
+if !isdirectory($HOME."/.vim")
+  call mkdir($HOME."/.vim", "", 0770)
+endif
+if !isdirectory($HOME."/.vim/Bundle")
+  call mkdir($HOME."/.vim/Bundle", "", 0770)
+endif
+
+if !isdirectory($HOME."/.vim/bundle/Vundle.vim")
+  echo $HOME."/.vim/bundle/Vundle.vim"
+  echo "---------------------------------------------------------------------------------------"
+  echo "| Vundle not found, run the following command:                                        |"
+  echo "| git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim  |"
+  echo "---------------------------------------------------------------------------------------"
+endif
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Vundle (extension/plugin manager) setup
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -29,9 +45,12 @@ Plugin 'gmarik/Vundle.vim'
 
 " Add all your plugins here
 
-Plugin 'tmhedberg/SimpylFold'  " Folds for Python
-Plugin 'vim-scripts/indentpython.vim'  " Autoindent for Python
-Bundle 'Valloric/YouCompleteMe'  " Autocomplete 
+" Folds for Python
+Plugin 'tmhedberg/SimpylFold'
+" Autoindent for Python
+Plugin 'vim-scripts/indentpython.vim'
+" Autocomplete
+Bundle 'Valloric/YouCompleteMe'
 
 " All of your Plugins must be added before the following line
 
@@ -219,9 +238,6 @@ endfunction
 " Permanent undo and file management
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Create folders if necessary
-if !isdirectory($HOME."/.vim")
-    call mkdir($HOME."/.vim", "", 0770)
-endif
 if !isdirectory($HOME."/.vim/undo-dir")
     call mkdir($HOME."/.vim/undo-dir", "", 0700)
 endif
