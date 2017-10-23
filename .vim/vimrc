@@ -1,9 +1,11 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Avalable commands:
 "
-" * Ctrl+N > Switching between relative and absolute line numbers 
-" * Ctrl+M > Stop highlighting after a search 
-" * F12 > Toggle search highlight on and off 
+" * Ctrl+N > Switching between relative and absolute line numbers
+" * Ctrl+M > Stop highlighting after a search
+" * F10 > Open NERD Tree
+" * F11 > Open Gblame (fugitive)
+" * F12 > Toggle search highlight on and off
 " * Ctrl+J/K/L/H > Navigate between split layouts
 " * ,vsrc > Open vimrc in new tab
 " * ,src > Load (source) vimrc file
@@ -15,20 +17,19 @@
 "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-
 if !isdirectory($HOME."/.vim")
-  call mkdir($HOME."/.vim", "", 0770)
+    call mkdir($HOME."/.vim", "", 0770)
 endif
-if !isdirectory($HOME."/.vim/Bundle")
-  call mkdir($HOME."/.vim/Bundle", "", 0770)
+if !isdirectory($HOME."/.vim/bundle")
+    call mkdir($HOME."/.vim/bundle", "", 0770)
 endif
 
 if !isdirectory($HOME."/.vim/bundle/Vundle.vim")
-  echo $HOME."/.vim/bundle/Vundle.vim"
-  echo "---------------------------------------------------------------------------------------"
-  echo "| Vundle not found, run the following command:                                        |"
-  echo "| git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim  |"
-  echo "---------------------------------------------------------------------------------------"
+    echo $HOME."/.vim/bundle/Vundle.vim"
+    echo "---------------------------------------------------------------------------------------"
+    echo "| Vundle not found, run the following command:                                        |"
+    echo "| git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim  |"
+    echo "---------------------------------------------------------------------------------------"
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -49,8 +50,28 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'tmhedberg/SimpylFold'
 " Autoindent for Python
 Plugin 'vim-scripts/indentpython.vim'
-" Autocomplete
+" Autocomplete (may require extra steps, check https://github.com/Valloric/YouCompleteMe)
 Bundle 'Valloric/YouCompleteMe'
+" Railscasts theme
+Bundle 'jpo/vim-railscasts-theme'
+" Solarized theme
+Bundle 'altercation/vim-colors-solarized'
+" Command-T
+"Bundle 'wincent/Command-T'
+" NERDTree
+Bundle 'scrooloose/nerdtree'
+" ACK for vim
+"Bundle 'mileszs/ack.vim'
+" vim-rails
+"Bundle 'tpope/vim-rails'
+" vim-fugivitve (git)
+"Bundle 'tpope/vim-fugitive'
+" vim-cucumber
+"Bundle 'tpope/vim-cucumber'
+" vim-bufexplorer
+"Bundle 'slack/vim-bufexplorer'
+" tcomment
+"Bundle 'tomtom/tcomment_vim'
 
 " All of your Plugins must be added before the following line
 
@@ -85,6 +106,11 @@ nnoremap <C-K> <C-W><C-K>  " Move up with Ctrl+K
 nnoremap <C-L> <C-W><C-L>  " Move left with Ctrl+L
 nnoremap <C-H> <C-W><C-H>  " Move right with Ctrl+H
 
+" Add plugin shortcuts
+nmap <F10> :NERDTreeToggle<cr>       " Key to open NERDTree in commands mode
+nmap <F11> :Gblame<cr>               " Open git blame
+imap <F10> <Esc>:NERDTreeToggle<cr>  " Key to open NERDTree in insert mode
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Leader definitions and uses
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -106,11 +132,15 @@ colorscheme default
 " Try to use fancier colorscheme, use default if not found
 " silent! colorscheme adam
 " Try to use fancier colorscheme, use default if not found
-" silent! colorscheme CodeFactoryv3
+" silent! colorscheme railcasts
+set background=dark
+let g:solarized_termcolors=256
+colorscheme solarized
+call togglebg#map("")  " Allows to use :ToggleBG to toggle background (light/dark)
 
 " Enable syntax highlighting: text can be shown in different fonts and colors
 if has('syntax') && !exists('g:syntax_on')
-  syntax enable
+    syntax enable
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -127,7 +157,7 @@ set shiftround     " Round indentation to multiple of shiftwidth when shifting
 set showmatch      " Highlight matching [{()}]
 set showcmd        " Show command being typed in status bar (bottom right)
 set cursorline     " Highlight current line
-highlight CursorLine cterm=NONE ctermbg=233  " Define style highlight line
+"highlight CursorLine cterm=NONE ctermbg=233  " Define style highlight line
 set scrolloff=1    " Set to 9999 to see cursor always in the middle of screen
 set sidescrolloff=5  " Number of columns to keep left and right of cursor
 set display+=lastline  " Always try to show a paragraph’s last line
@@ -172,7 +202,7 @@ vmap <silent> <F12> <ESC>:set hls!<CR>gv
 " Select fold mode
 set foldmethod=indent  " Folds are created manually
 set foldnestmax=3      " Only fold up to three nested levels
-"set nofoldenable       " Disable folding by default
+set nofoldenable       " Disable folding by default
 
 " Open fold with space, and create fold with space after visually selecting
 "nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<cr>
@@ -184,11 +214,12 @@ nnoremap <Space> za
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Select complete options 
 set wildmenu       " Visual autocomplete for command menu
+set wildmode=list:longest,full  " Autocomplete in status bar
 set complete-=i    " When completing (Ctrl+P, Ctrl+N), ignore included files
 set completeopt=longest,menuone  " Complete longest word, show menu if one option
 " Enable omni completion
 if has("autocmd") && exists("+omnifunc")
-  autocmd Filetype * if &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+    autocmd Filetype * if &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
 endif 
 " When the menu appears, the 1st completion option gets highlighted automatically
 inoremap <expr> <C-n> pumvisible() ? '<C-n>' : '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<cr>'
@@ -208,7 +239,7 @@ nmap <C-d> :YcmCompleter GoToDefinitionElseDeclaration<cr>
 " Map up and down to navigate visually (following visual line breaks) 
 nnoremap <silent> <Leader>w :call ToggleWrap()<cr>
 function! ToggleWrap()
-  if &wrap
+if &wrap
     echo "wrap off"
     setlocal nowrap
     silent! nunmap <buffer> <Up>
@@ -219,7 +250,7 @@ function! ToggleWrap()
     silent! iunmap <buffer> <Down>
     silent! iunmap <buffer> <Home>
     silent! iunmap <buffer> <End>
-  else
+else
     echo "wrap on"
     setlocal wrap linebreak nolist
     setlocal display+=lastline
@@ -231,7 +262,7 @@ function! ToggleWrap()
     inoremap <buffer> <silent> <Down> <C-o>gj
     inoremap <buffer> <silent> <Home> <C-o>g<Home>
     inoremap <buffer> <silent> <End>  <C-o>g<End>
-  endif
+endif
 endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -291,11 +322,11 @@ autocmd InsertEnter * call ToggleNumbersOn()
 autocmd InsertLeave * call ToggleRelativeOn()
 " Allow toggling between relative and absolute line numbers with command Ctrl + n
 function! NumberToggle()
-  if(&relativenumber == 1)
-    call ToggleNumbersOn()
-  else
-    call ToggleRelativeOn()
-  endif
+    if(&relativenumber == 1)
+        call ToggleNumbersOn()
+    else
+        call ToggleRelativeOn()
+    endif
 endfunc
 nnoremap <C-n> :call NumberToggle()<cr>
 
