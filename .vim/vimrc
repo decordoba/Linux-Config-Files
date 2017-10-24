@@ -2,18 +2,56 @@
 " Avalable commands:
 "
 " * Ctrl+N > Switching between relative and absolute line numbers
-" * Ctrl+M > Stop highlighting after a search
+" * Ctrl+N/P > Show autocomplete
+" * Ctrl+F > Stop highlighting after a search
+" * Ctrl+J/K/L/H > Navigate between split layouts
+" * F3 > Toggle paste mode
+" * F4 > Toggle indentation lines
 " * F10 > Open NERD Tree
 " * F11 > Open Gblame (fugitive)
 " * F12 > Toggle search highlight on and off
-" * Ctrl+J/K/L/H > Navigate between split layouts
 " * ,vsrc > Open vimrc in new tab
 " * ,src > Load (source) vimrc file
+" * ,w > Toggle wrap - unwrap lines longer that screen width
+" * ,bg > Toggle background (light/dark)
+" * ,, > Stop highlighting after a search
 " * :W > Sudo saves
 " * Up/Down > Go up and down line by line visually
-" * j/k > Go up and down line by line (skip visual line breaks)
-" * ,w > Toggle wrap - unwrap lines longer that screen width
+" * J/K > Go up and down line by line (skip visual line breaks)
+"
+" Commands created by plugins:
+"
 " * :PluginInstall > Install plugins
+"
+" * sxy > Search xy sequence and navigate to 1st match seq after cursor
+" * Sxy > Search xy sequence and navigate to 1st match seq before cursor
+" * ; > After sxy, go to next match. We can also jump N seq with N;
+" * ''/Ctrl+O > After sxy and ;'s, go back to first match
+" * s+ENTER > Repeat last search sxy
+"
+" * mx > Toggle mark 'x' and display it in the leftmost column
+" * dmx > Remove mark 'x' where x is a-zA-Z
+" * m, > Place the next available mark
+" * m. > If no mark on line, place the next available mark. Otherwise, remove (first) existing mark.
+" * m- > Delete all marks from the current line
+" * m+SPACE > Delete all marks from the current buffer
+" * ]` > Jump to next mark
+" * [` > Jump to prev mark
+" * ]' > Jump to start of next line containing a mark
+" * [' > Jump to start of prev line containing a mark
+" * `] > Jump by alphabetical order to next mark
+" * `[ > Jump by alphabetical order to prev mark
+" * '] > Jump by alphabetical order to start of next line having a mark
+" * '[ > Jump by alphabetical order to start of prev line having a mark
+" * m/ > Open location list and display marks from current buffer
+" * m[0-9] > Toggle the corresponding marker !@#$%^&*()
+" * m<S-[0-9]> > Remove all markers of the same type
+" * ]- > Jump to next line having a marker of the same type
+" * [- > Jump to prev line having a marker of the same type
+" * ]= > Jump to next line having a marker of any type
+" * [= > Jump to prev line having a marker of any type
+" * m? > Open location list and display markers from current buffer
+" * m+BACKSPACE > Remove all markers
 "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -47,15 +85,17 @@ Plugin 'gmarik/Vundle.vim'
 " Add all your plugins here
 
 " Folds for Python
-Plugin 'tmhedberg/SimpylFold'
+"Plugin 'tmhedberg/SimpylFold'
 " Autoindent for Python
-Plugin 'vim-scripts/indentpython.vim'
+"Plugin 'vim-scripts/indentpython.vim'
 " Autocomplete (may require extra steps, check https://github.com/Valloric/YouCompleteMe)
-Bundle 'Valloric/YouCompleteMe'
+"Bundle 'Valloric/YouCompleteMe'
 " Railscasts theme
 Bundle 'jpo/vim-railscasts-theme'
 " Solarized theme
 Bundle 'altercation/vim-colors-solarized'
+" Gruvbox theme
+Bundle 'morhetz/gruvbox'
 " Command-T
 "Bundle 'wincent/Command-T'
 " NERDTree
@@ -72,6 +112,20 @@ Bundle 'scrooloose/nerdtree'
 "Bundle 'slack/vim-bufexplorer'
 " tcomment
 "Bundle 'tomtom/tcomment_vim'
+" Airline, great status bar
+Bundle 'vim-airline/vim-airline'
+" Navigate doing searches with 2 chars: s+char+char. Next with ;. Start over with ''
+Bundle 'justinmk/vim-sneak'
+" Show indentation levels
+"Bundle 'nathanaelkane/vim-indent-guides'
+" Show indentation levels
+Plugin 'Yggdroot/indentLine'
+" Color parenthesis that go together
+Plugin 'junegunn/rainbow_parentheses.vim'
+" Show to left of numbers line info about what was modified from git
+Plugin 'airblade/vim-gitgutter.git'
+" Toggle, display and navigate marks (jump between interesting parts of the file)
+Plugin 'kshenoy/vim-signature'
 
 " All of your Plugins must be added before the following line
 
@@ -100,16 +154,26 @@ set formatoptions+=q  " Allow formatting of comments with 'gq'
 " :W sudo saves the file (for handling permission-denied errors)
 command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
-" Navigarte between split layouts (create them with :sp, :vs, :sv)
+" Navigarte between split layouts (create them with :sp, :vsp, :vs, :sv)
 nnoremap <C-J> <C-W><C-J>  " Move down with Ctrl+J
 nnoremap <C-K> <C-W><C-K>  " Move up with Ctrl+K
 nnoremap <C-L> <C-W><C-L>  " Move left with Ctrl+L
 nnoremap <C-H> <C-W><C-H>  " Move right with Ctrl+H
 
 " Add plugin shortcuts
-nmap <F10> :NERDTreeToggle<cr>       " Key to open NERDTree in commands mode
-nmap <F11> :Gblame<cr>               " Open git blame
-imap <F10> <Esc>:NERDTreeToggle<cr>  " Key to open NERDTree in insert mode
+nnoremap <F10> :NERDTreeToggle<cr>       " Key to open NERDTree in commands mode
+nnoremap <F11> :Gblame<cr>               " Open git blame
+inoremap <F10> <Esc>:NERDTreeToggle<cr>  " Key to open NERDTree in insert mode
+
+" Enable/disable paste mode (does not indent every line) with F3
+nnoremap <F3> :set paste!<CR>
+inoremap <F3> <ESC>:set paste!<CR>a
+vnoremap <F3> <ESC>:set paste!<CR>gv
+
+" Show/hide indents
+nnoremap <F4> :IndentLinesToggle<CR>
+inoremap <F4> <ESC>:IndentLinesToggle<CR>a
+vnoremap <F4> <ESC>:IndentLinesToggle<CR>gv
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Leader definitions and uses
@@ -118,30 +182,44 @@ let mapleader = ","    " Set <leader> to comma
 let g:mapleader = ","  " Set <leader> to comma
 
 " Writing <lader>vsrc will open vimrc in a new tab
-map <leader>vsrc :tabe $MYVIMRC<cr>
+nnoremap <leader>vsrc :tabe $MYVIMRC<cr>
 " Writing <lader>src will load vimrc changes
-map <leader>src :source $MYVIMRC<cr>
+nnoremap <leader>src :source $MYVIMRC<cr>
 " Every time vimrc is modified, it is loaded (sourced) again
 autocmd bufwritepost .vimrc source $MYVIMRC
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Select colors
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Select default colorscheme, always available
-colorscheme default
-" Try to use fancier colorscheme, use default if not found
-" silent! colorscheme adam
-" Try to use fancier colorscheme, use default if not found
-" silent! colorscheme railcasts
-set background=dark
-let g:solarized_termcolors=256
-colorscheme solarized
-call togglebg#map("")  " Allows to use :ToggleBG to toggle background (light/dark)
-
 " Enable syntax highlighting: text can be shown in different fonts and colors
 if has('syntax') && !exists('g:syntax_on')
     syntax enable
 endif
+" Variable to choose preferred colorscheme
+let color_scheme = "gruvbox"
+colorscheme default
+if color_scheme == "railcasts"
+    " Try to use fancier colorscheme, use default if not found
+    silent! colorscheme railcasts
+elseif color_scheme == "solarized"
+    " Try to use fancier colorscheme, use default if not found
+    let g:solarized_termcolors=256
+    silent! colorscheme solarized
+    call togglebg#map("")  " Allows to use :ToggleBG to toggle background (light/dark)
+elseif color_scheme == "gruvbox"
+    " Try to use fancier colorscheme, use default if not found
+    let g:gruvbox_contrast_dark="hard"
+    let g:gruvbox_contrast_light="hard"
+    let g:gruvbox_number_column="bg1"
+    silent! colorscheme gruvbox
+elseif color_scheme == "default"
+    " Default colorsheme
+    silent! colorscheme default
+endif
+" Choose default background color (light/dark)
+set background=dark
+" Create keymap <leader>bg to toggle background between light/dark
+nnoremap <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Spaces and tabs, visual and misc setup
@@ -190,11 +268,12 @@ set incsearch      " Incremental search, show the next matching while typing
 set wrapscan       " When we get to end search, go back to beginning
 set hlsearch       " Highlight all results in file when searching
 " Use Ctrl+M to clear the highlighting of :set hlsearch
-nnoremap <silent> <C-m> :noh<cr>
+nnoremap <C-F> :noh<CR>
+nnoremap <silent> <Leader><Leader> :noh<CR>
 " F12 toggle highlight on and off
-nmap <silent> <F12> :set hls!<CR>
-imap <silent> <F12> <ESC>:set hls!<CR>a
-vmap <silent> <F12> <ESC>:set hls!<CR>gv
+nnoremap <F12> :set hls!<CR>
+inoremap <F12> <ESC>:set hls!<CR>a
+vnoremap <F12> <ESC>:set hls!<CR>gv
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Folding (hiding or showing content)
@@ -206,32 +285,32 @@ set nofoldenable       " Disable folding by default
 
 " Open fold with space, and create fold with space after visually selecting
 "nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<cr>
-vnoremap <Space> zf
-nnoremap <Space> za
+"vnoremap <Space> zf
+"nnoremap <Space> za
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Autocomplete magic 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Select complete options 
 set wildmenu       " Visual autocomplete for command menu
-set wildmode=list:longest,full  " Autocomplete in status bar
+set wildmode=longest,full  " Autocomplete in status bar
 set complete-=i    " When completing (Ctrl+P, Ctrl+N), ignore included files
 set completeopt=longest,menuone  " Complete longest word, show menu if one option
 " Enable omni completion
 if has("autocmd") && exists("+omnifunc")
     autocmd Filetype * if &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
-endif 
+endif
 " When the menu appears, the 1st completion option gets highlighted automatically
 inoremap <expr> <C-n> pumvisible() ? '<C-n>' : '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<cr>'
 inoremap <expr> <C-p> pumvisible() ? '<C-p>' : '<C-p><C-r>=pumvisible() ? "\<lt>Up>" : ""<cr>'
 " Only useful if we use Omni
 inoremap <expr> <M-,> pumvisible() ? '<C-n>' : '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<cr>'
 " Check AutoComplPop and SuperTab plugins
-
+" YouCompleteMe Plugin config
 " Ensures autocomplete window goes away when you’re done with it
 let g:ycm_autoclose_preview_window_after_completion=1
 " Map Ctrl+D to go to definition of function
-nmap <C-d> :YcmCompleter GoToDefinitionElseDeclaration<cr>
+nnoremap <C-d> :YcmCompleter GoToDefinitionElseDeclaration<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Change between wrap and nowrap mode with <leader>w
@@ -299,6 +378,10 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Share vim clipboard and OS clipboard
 set clipboard=unnamed
+if has('clipboard') == 0
+    echo "Vim is not compiled with the +clipboard feature."
+    echo "You should install a different version to be able to paste your clipboard."
+endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Smart line numbers
@@ -329,4 +412,19 @@ function! NumberToggle()
     endif
 endfunc
 nnoremap <C-n> :call NumberToggle()<cr>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugind config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Airline
+"set noshowmode  " Don't print --INSERT-- in insert mode, info already in status
+
+" Rainbow parentheses
+let g:rainbow#blacklist = [248]  " Blacklist color of comments
+
+" IndentLine
+let g:indentLine_enabled = 0  " Indentation guidelines hidden by default
+
+" GitGutter
+set updatetime=1000  " Updates happen every 1s (default was 4s)
 
