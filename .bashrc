@@ -234,6 +234,7 @@ alias wisdom='fortune | cowsay -f tux | lolcat'  # get a message by a wise being
 alias clr="clear"
 alias src="source $HOME/.bashrc"  # update source file
 alias vsrc="vim $HOME/.bashrc"  # edit source file
+alias bashrc="vsrc"
 alias vimrc="vim $HOME/.vim/vimrc"  # edit vim source file
 alias start="xdg-open"  # run a file as if double clicked. Also opens file manager
 alias click="start"  # run a file as if double clicked. Also opens file manager
