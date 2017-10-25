@@ -8,8 +8,10 @@
         st = status
         br = branch
         hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
-        type = 'cat-file
-        dump = 'cat-file
+        type = cat-file -t # expects hash (number in git hist)
+        dump = cat-file -p # expects hash (number in git hist)
+        # log + blame. Show whole file history commit by commit with author
+        lame = log -p -M --follow --stat -- # expects filename
 
 [core]
         whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
