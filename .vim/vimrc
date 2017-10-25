@@ -21,14 +21,17 @@
 "
 " Commands created by plugins:
 "
+" VUNDLE
 " * :PluginInstall > Install plugins
 "
+" VIM-SNEAK
 " * sxy > Search xy sequence and navigate to 1st match seq after cursor
 " * Sxy > Search xy sequence and navigate to 1st match seq before cursor
 " * ; > After sxy, go to next match. We can also jump N seq with N;
 " * ''/Ctrl+O > After sxy and ;'s, go back to first match
 " * s+ENTER > Repeat last search sxy
 "
+" VIM-SIGNATURE
 " * mx > Toggle mark 'x' and display it in the leftmost column
 " * dmx > Remove mark 'x' where x is a-zA-Z
 " * m, > Place the next available mark
@@ -52,6 +55,25 @@
 " * [= > Jump to prev line having a marker of any type
 " * m? > Open location list and display markers from current buffer
 " * m+BACKSPACE > Remove all markers
+"
+" VIM-FUGITIVE
+" * :Git [args] > Run any git command. i.e. :Git st
+" * :Git add % > Add current file (% means current file, also works with rm, mv, co...)
+" * :Gwrite > Same as git add %
+" * :Git checkout % > Undo all changes since last commit in file, but leave changes in buffer. A
+"                     dialog will pop up saying that the file has changed, and to decide what to do
+" * :Gitread > Load file saved in last commit, trash the contents of buffer
+" * :Gremove > Wipe out buffer and remove current file
+" * :Gmove [new_name] > Move current file to new name (and location), and change buffer name too.
+"                       Adding a / in front of file (:Gmove /file.txt) puts it in root of git repo
+" * :Gcommit > Open split window to write commit message, & Ctrl+N autocomplete (function names, etc.)
+" * :Gblame > See what changes were made when, where, and by who, while maintaining sysntax highlight
+" * :Gdiff > Diff with current file and commited version!
+" * :Gstatus > Show git status, ctrl+N and ctrl+P to cahge between files
+"              Use '-' key to add or reset files (WHAAAT?). Also works in visual mode
+"              Use 'p' key to do git add -p (patch) in a file
+"              Use ENTER to see a file
+"              Use Shift+C to commit
 "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -96,16 +118,18 @@ Bundle 'jpo/vim-railscasts-theme'
 Bundle 'altercation/vim-colors-solarized'
 " Gruvbox theme
 Bundle 'morhetz/gruvbox'
+" Janah theme
+Bundle 'mhinz/vim-janah'
 " Command-T
 "Bundle 'wincent/Command-T'
 " NERDTree
 Bundle 'scrooloose/nerdtree'
 " ACK for vim
-"Bundle 'mileszs/ack.vim'
+Bundle 'mileszs/ack.vim'
 " vim-rails
 "Bundle 'tpope/vim-rails'
-" vim-fugivitve (git)
-"Bundle 'tpope/vim-fugitive'
+" Git support
+Bundle 'tpope/vim-fugitive'
 " vim-cucumber
 "Bundle 'tpope/vim-cucumber'
 " vim-bufexplorer
@@ -126,6 +150,8 @@ Plugin 'junegunn/rainbow_parentheses.vim'
 Plugin 'airblade/vim-gitgutter.git'
 " Toggle, display and navigate marks (jump between interesting parts of the file)
 Plugin 'kshenoy/vim-signature'
+" Fancy start screen for vim, which allows fast access to recent files, etc.
+Plugin 'mhinz/vim-startify'
 
 " All of your Plugins must be added before the following line
 
@@ -212,6 +238,9 @@ elseif color_scheme == "gruvbox"
     let g:gruvbox_contrast_light="hard"
     let g:gruvbox_number_column="bg1"
     silent! colorscheme gruvbox
+elseif color_scheme == "janah"
+    " Try to use fancier colorscheme, use default if not found
+    silent! colorscheme janah
 elseif color_scheme == "default"
     " Default colorsheme
     silent! colorscheme default
@@ -267,6 +296,7 @@ set smartcase      " Case insensitive match if no uppercase, else case sensitive
 set incsearch      " Incremental search, show the next matching while typing
 set wrapscan       " When we get to end search, go back to beginning
 set hlsearch       " Highlight all results in file when searching
+nohlsearch         " Hide last search highlight when we open vim or reload vimrc
 " Use Ctrl+M to clear the highlighting of :set hlsearch
 nnoremap <C-F> :noh<CR>
 nnoremap <silent> <Leader><Leader> :noh<CR>
