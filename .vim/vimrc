@@ -4,9 +4,13 @@
 " * Ctrl+N > Switching between relative and absolute line numbers
 " * Ctrl+N/P > Show autocomplete
 " * Ctrl+F > Stop highlighting after a search
+" * Ctrl+D > Save file
 " * Ctrl+J/K/L/H > Navigate between split layouts
+" * Ctrl+Left/Right > Navigate between tabs (gt and gT should also work)
+" * Ctrl+Up/Down > Move tabs
 " * F3 > Toggle paste mode
 " * F4 > Toggle indentation lines
+" * F8 > Put everyting in buffers in tabs, or put everything in tabs in a buffer
 " * F10 > Open NERD Tree
 " * F11 > Open Gblame (fugitive)
 " * F12 > Toggle search highlight on and off
@@ -14,10 +18,23 @@
 " * ,src > Load (source) vimrc file
 " * ,w > Toggle wrap - unwrap lines longer that screen width
 " * ,bg > Toggle background (light/dark)
+" * ,d > Go to definition function
+" * ,s > In visual mode, sort selected lines alpbabetically
 " * ,, > Stop highlighting after a search
 " * :W > Sudo saves
 " * Up/Down > Go up and down line by line visually
 " * J/K > Go up and down line by line (skip visual line breaks)
+"
+" * :tabedit {file} > edit specified file in a new tab
+" * :tabfind {file} > open a new tab with filename given, searching the 'path' to find it
+" * :tabclose > close current tab
+" * :tabclose {i} > close i-th tab
+" * :tabonly > close all other tabs (show only the current tab)
+" * :tab ball > show each buffer in a tab (up to 'tabpagemax' tabs)
+" * :tab help > open a new help window in its own tab page
+" * :tab drop {file} > open {file} in a new tab, or jump to window/tab containing the file if it exists
+" * :tab split        copy the current window to a new tab of its own
+"
 "
 " Commands created by plugins:
 "
@@ -96,7 +113,7 @@ endif
 " Vundle (extension/plugin manager) setup
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Make vim non-compatible with vi, increasing vim capabilities. This must be 1st!
-set nocompatible  " This will set formatoptions to tcq 
+set nocompatible  " This will set formatoptions to tcq
 filetype off      " Required to use vundle
 " Set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -107,11 +124,11 @@ Plugin 'gmarik/Vundle.vim'
 " Add all your plugins here
 
 " Folds for Python
-"Plugin 'tmhedberg/SimpylFold'
+"Plugin 'tmhedberg/SimpylFold'  "!
 " Autoindent for Python
-"Plugin 'vim-scripts/indentpython.vim'
+"Plugin 'vim-scripts/indentpython.vim'  "?
 " Autocomplete (may require extra steps, check https://github.com/Valloric/YouCompleteMe)
-"Bundle 'Valloric/YouCompleteMe'
+"Bundle 'Valloric/YouCompleteMe'  "!
 " Railscasts theme
 Bundle 'jpo/vim-railscasts-theme'
 " Solarized theme
@@ -121,27 +138,27 @@ Bundle 'morhetz/gruvbox'
 " Janah theme
 Bundle 'mhinz/vim-janah'
 " Command-T
-"Bundle 'wincent/Command-T'
+"Bundle 'wincent/Command-T'  "?
 " NERDTree
 Bundle 'scrooloose/nerdtree'
 " ACK for vim
 Bundle 'mileszs/ack.vim'
 " vim-rails
-"Bundle 'tpope/vim-rails'
+"Bundle 'tpope/vim-rails'  "?
 " Git support
 Bundle 'tpope/vim-fugitive'
 " vim-cucumber
-"Bundle 'tpope/vim-cucumber'
+"Bundle 'tpope/vim-cucumber'  "? (I think only for Ruby)
 " vim-bufexplorer
-"Bundle 'slack/vim-bufexplorer'
+"Bundle 'slack/vim-bufexplorer'  "?
 " tcomment
-"Bundle 'tomtom/tcomment_vim'
+"Bundle 'tomtom/tcomment_vim'  "?
 " Airline, great status bar
 Bundle 'vim-airline/vim-airline'
 " Navigate doing searches with 2 chars: s+char+char. Next with ;. Start over with ''
 Bundle 'justinmk/vim-sneak'
 " Show indentation levels
-"Bundle 'nathanaelkane/vim-indent-guides'
+"Bundle 'nathanaelkane/vim-indent-guides'  "X
 " Show indentation levels
 Plugin 'Yggdroot/indentLine'
 " Color parenthesis that go together
@@ -152,6 +169,21 @@ Plugin 'airblade/vim-gitgutter.git'
 Plugin 'kshenoy/vim-signature'
 " Fancy start screen for vim, which allows fast access to recent files, etc.
 Plugin 'mhinz/vim-startify'
+" Markdown for vim
+Bundle 'gabrielelana/vim-markdown'
+" Syntax checking
+"Plugin 'vim-syntastic/syntastic'  "?
+" Search in file, buffer, mru, tag
+"Plugin 'ctrlpvim/ctrlp.vim'  "?
+" Complete sith TAB
+"Plugin 'ervandew/supertab'
+" Plugin to deal with brakets faster
+"Plugin 'tpope/vim-surround'
+" Others: airline, tagline, nerd commenter, snippets, repeat, tabular, speeddating...
+" Others: https://benmccormick.org/2014/07/21/learning-vim-in-2014-getting-more-from-vim-with-plugins/
+" Others: https://www.fullstackpython.com/vim.html
+" Check other common themes here: https://github.com/vim-airline/vim-airline/wiki/Screenshots
+" Powerline? Airline? Lightline?
 
 " All of your Plugins must be added before the following line
 
@@ -186,6 +218,18 @@ nnoremap <C-K> <C-W><C-K>  " Move up with Ctrl+K
 nnoremap <C-L> <C-W><C-L>  " Move left with Ctrl+L
 nnoremap <C-H> <C-W><C-H>  " Move right with Ctrl+H
 
+" Navigate between tabs (create them with :newtab)
+nnoremap <C-Left> :tabprevious<CR>  " Move to next tab with Ctrl+Left
+nnoremap <C-Right> :tabnext<CR>     " Move to previous tab with Ctrl+Right
+nnoremap <silent> <C-Up> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>   " Move tab left with Alt+U
+nnoremap <silent> <C-Down> :execute 'silent! tabmove ' . (tabpagenr()+1)<CR>  " Move tab right with Alt+R
+
+" F8 shows all buffers in tabs,or puts all tabs in buffers (toggles the behavior)
+let notabs = 0
+nnoremap <silent> <F8> :let notabs=!notabs<Bar>:if notabs<Bar>:tabo<Bar>:else<Bar>:tab ball<Bar>:tabn<Bar>:endif<CR>
+inoremap <silent> <F8> <Esc>:let notabs=!notabs<Bar>:if notabs<Bar>:tabo<Bar>:else<Bar>:tab ball<Bar>:tabn<Bar>:endif<CR>
+vnoremap <silent> <F8> <Esc>:let notabs=!notabs<Bar>:if notabs<Bar>:tabo<Bar>:else<Bar>:tab ball<Bar>:tabn<Bar>:endif<CR>
+
 " Add plugin shortcuts
 nnoremap <F10> :NERDTreeToggle<cr>       " Key to open NERDTree in commands mode
 nnoremap <F11> :Gblame<cr>               " Open git blame
@@ -201,10 +245,48 @@ nnoremap <F4> :IndentLinesToggle<CR>
 inoremap <F4> <ESC>:IndentLinesToggle<CR>a
 vnoremap <F4> <ESC>:IndentLinesToggle<CR>gv
 
+" Map Ctrl+D to save current document
+nnoremap <C-D> :update<CR>
+inoremap <C-D> <ESC>:update<CR>a
+vnoremap <C-D> <ESC>:update<CR>gv
+
+" Using two uppercase letters in insert mode we can navigate faster
+" Go to beginning of line
+inoremap II <Esc>I
+" Go to end of line
+inoremap AA <Esc>A
+" Create new line under current line
+inoremap OO <Esc>o
+" Change what is on the right side of the cursor
+inoremap CC <Esc>C
+" Change the whole line
+inoremap SS <Esc>S
+" Delete the whole line (end in normal mode)
+inoremap DD <Esc>dd
+" Undo
+inoremap UU <Esc>ua
+" Move line down
+inoremap qq <Esc>ddpa
+" Move line up
+inoremap QQ <Esc>dd2kpa
+" Duplicate current line
+inoremap YY <Esc>yypa
+" Navigate word by word like in normal mode
+inoremap WW <Esc><Right>wi
+inoremap EE <Esc><Right>ei
+inoremap BB <Esc><Right>bi
+
+" Visual mappings
+" Sort lines
+vnoremap <Leader>s :sort<CR>
+" Easier moving code blocks (after indenting, don't loose visual mode)
+vnoremap < <gv
+vnoremap > >gv
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Leader definitions and uses
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let mapleader = ","    " Set <leader> to comma
+
 let g:mapleader = ","  " Set <leader> to comma
 
 " Writing <lader>vsrc will open vimrc in a new tab
@@ -212,7 +294,7 @@ nnoremap <leader>vsrc :tabe $MYVIMRC<cr>
 " Writing <lader>src will load vimrc changes
 nnoremap <leader>src :source $MYVIMRC<cr>
 " Every time vimrc is modified, it is loaded (sourced) again
-autocmd bufwritepost .vimrc source $MYVIMRC
+autocmd! bufwritepost .vimrc source $MYVIMRC
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Select colors
@@ -221,6 +303,11 @@ autocmd bufwritepost .vimrc source $MYVIMRC
 if has('syntax') && !exists('g:syntax_on')
     syntax enable
 endif
+" Show whitespace (must go before colorscheme command)
+autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+au InsertLeave * match ExtraWhitespace /\s\+$/
+au InsertEnter * match ExtraWhitespace /\s\+$/
+set t_Co=256
 " Variable to choose preferred colorscheme
 let color_scheme = "gruvbox"
 colorscheme default
@@ -272,6 +359,7 @@ set wrap           " Wrap line in multiple lines if it is wider than screen
 set linebreak      " Avoid wrapping a line in the middle of a word
 set laststatus=2   " Always display status bar
 set ruler          " Show cursor position is status bar
+set colorcolumn=100  " Show column where we go over 100 spaces
 
 set backspace=indent,eol,start  " Backspace removes indents and line jumps
 set lazyredraw     " Vim redraws screen too often, redraw only when we need to
@@ -319,9 +407,9 @@ set nofoldenable       " Disable folding by default
 "nnoremap <Space> za
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Autocomplete magic 
+" Autocomplete magic
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Select complete options 
+" Select complete options
 set wildmenu       " Visual autocomplete for command menu
 set wildmode=longest,full  " Autocomplete in status bar
 set complete-=i    " When completing (Ctrl+P, Ctrl+N), ignore included files
@@ -340,12 +428,12 @@ inoremap <expr> <M-,> pumvisible() ? '<C-n>' : '<C-x><C-o><C-n><C-p><C-r>=pumvis
 " Ensures autocomplete window goes away when you’re done with it
 let g:ycm_autoclose_preview_window_after_completion=1
 " Map Ctrl+D to go to definition of function
-nnoremap <C-d> :YcmCompleter GoToDefinitionElseDeclaration<cr>
+nnoremap <leader>d :YcmCompleter GoToDefinitionElseDeclaration<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Change between wrap and nowrap mode with <leader>w
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Map up and down to navigate visually (following visual line breaks) 
+" Map up and down to navigate visually (following visual line breaks)
 nnoremap <silent> <Leader>w :call ToggleWrap()<cr>
 function! ToggleWrap()
 if &wrap
@@ -373,6 +461,10 @@ else
     inoremap <buffer> <silent> <End>  <C-o>g<End>
 endif
 endfunction
+
+" Make sure key mappings are available when we start vim
+set wrap!
+silent call ToggleWrap()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Permanent undo and file management

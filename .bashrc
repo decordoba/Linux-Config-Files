@@ -239,7 +239,8 @@ alias vimrc="vim $HOME/.vim/vimrc"  # edit vim source file
 alias start="xdg-open"  # run a file as if double clicked. Also opens file manager
 alias click="start"  # run a file as if double clicked. Also opens file manager
 alias fm="xdg-open 2>/dev/null ."  # open file manager for current folder
-alias empty="find . -depth -type d -empty"  # show empty folders
+alias empty="find . -depth -type d -empty"  # show empty folders. Run empty -delete to delete those folders
+alias emptyrm="echo Removing folders: && empty && empty -delete"  # Remove empty folders
 alias server="start http://localhost:8000 && python -m SimpleHTTPServer"  # serve current folder in localhost:8000
 alias getip="ifconfig | grep inet\ addr:"
 
