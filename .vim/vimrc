@@ -12,7 +12,6 @@
 " * F4 > Toggle indentation lines
 " * F8 > Put everyting in buffers in tabs, or put everything in tabs in a buffer
 " * F10 > Open NERD Tree
-" * F11 > Open Gblame (fugitive)
 " * F12 > Toggle search highlight on and off
 " * ,vsrc > Open vimrc in new tab
 " * ,src > Load (source) vimrc file
@@ -92,6 +91,17 @@
 "              Use ENTER to see a file
 "              Use Shift+C to commit
 "
+" PYTHON-MODE
+" * K > show python documentation
+" * ,r > run python code
+" * ,b > Insert/remove breakpoint
+" * Ctrl+C+g > Goto definition
+" * Ctrl+SPACE > Autocomplete
+"
+" PYTHON-FOLDING
+" * f > fold/unfold class
+" * F > fold/unfold all classes
+"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 if !isdirectory($HOME."/.vim")
@@ -154,11 +164,11 @@ Bundle 'tpope/vim-fugitive'
 " tcomment
 "Bundle 'tomtom/tcomment_vim'  "?
 " Airline, great status bar
-Bundle 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline'
+" Airline themes
+Plugin 'vim-airline/vim-airline-themes'
 " Navigate doing searches with 2 chars: s+char+char. Next with ;. Start over with ''
 Bundle 'justinmk/vim-sneak'
-" Show indentation levels
-"Bundle 'nathanaelkane/vim-indent-guides'  "X
 " Show indentation levels
 Plugin 'Yggdroot/indentLine'
 " Color parenthesis that go together
@@ -174,16 +184,17 @@ Bundle 'gabrielelana/vim-markdown'
 " Syntax checking
 "Plugin 'vim-syntastic/syntastic'  "?
 " Search in file, buffer, mru, tag
-"Plugin 'ctrlpvim/ctrlp.vim'  "?
-" Complete sith TAB
+Plugin 'ctrlpvim/ctrlp.vim'
+" Complete with TAB
 "Plugin 'ervandew/supertab'
-" Plugin to deal with brakets faster
-"Plugin 'tpope/vim-surround'
-" Others: airline, tagline, nerd commenter, snippets, repeat, tabular, speeddating...
+" Plugin to deal with brakets faster (allows to do cs'", or ds{, ysiw], yss), etc.)
+Plugin 'tpope/vim-surround'
+" Others: tagline, nerd commenter, snippets, repeat, tabular, speeddating...
 " Others: https://benmccormick.org/2014/07/21/learning-vim-in-2014-getting-more-from-vim-with-plugins/
 " Others: https://www.fullstackpython.com/vim.html
 " Check other common themes here: https://github.com/vim-airline/vim-airline/wiki/Screenshots
-" Powerline? Airline? Lightline?
+" Ultimate plugin for python
+Plugin 'python-mode/python-mode'
 
 " All of your Plugins must be added before the following line
 
@@ -230,9 +241,8 @@ nnoremap <silent> <F8> :let notabs=!notabs<Bar>:if notabs<Bar>:tabo<Bar>:else<Ba
 inoremap <silent> <F8> <Esc>:let notabs=!notabs<Bar>:if notabs<Bar>:tabo<Bar>:else<Bar>:tab ball<Bar>:tabn<Bar>:endif<CR>
 vnoremap <silent> <F8> <Esc>:let notabs=!notabs<Bar>:if notabs<Bar>:tabo<Bar>:else<Bar>:tab ball<Bar>:tabn<Bar>:endif<CR>
 
-" Add plugin shortcuts
+" Add NerdTree shortcut
 nnoremap <F10> :NERDTreeToggle<cr>       " Key to open NERDTree in commands mode
-nnoremap <F11> :Gblame<cr>               " Open git blame
 inoremap <F10> <Esc>:NERDTreeToggle<cr>  " Key to open NERDTree in insert mode
 
 " Enable/disable paste mode (does not indent every line) with F3
@@ -258,7 +268,7 @@ inoremap AA <Esc>A
 " Create new line under current line
 inoremap OO <Esc>o
 " Change what is on the right side of the cursor
-inoremap CC <Esc>C
+inoremap CC <Esc><Right>C
 " Change the whole line
 inoremap SS <Esc>S
 " Delete the whole line (end in normal mode)
@@ -271,10 +281,17 @@ inoremap qq <Esc>ddpa
 inoremap QQ <Esc>dd2kpa
 " Duplicate current line
 inoremap YY <Esc>yypa
+" Remove one character
+inoremap XX <Esc><Right>xi
 " Navigate word by word like in normal mode
 inoremap WW <Esc><Right>wi
 inoremap EE <Esc><Right>ei
 inoremap BB <Esc><Right>bi
+" Navigate around without having to go to the arrow keys
+inoremap JJ <Esc>ja
+inoremap KK <Esc>ka
+inoremap HH <Esc>ha
+inoremap LL <Esc>la
 
 " Visual mappings
 " Sort lines
@@ -324,6 +341,7 @@ elseif color_scheme == "gruvbox"
     let g:gruvbox_contrast_dark="hard"
     let g:gruvbox_contrast_light="hard"
     let g:gruvbox_number_column="bg1"
+    let g:gruvbox_color_column='bg2'
     silent! colorscheme gruvbox
 elseif color_scheme == "janah"
     " Try to use fancier colorscheme, use default if not found
@@ -510,13 +528,14 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " See relative numbers when starting vim
 set relativenumber
+set number
 " Functions to toggle absolute or relative numbers
 function! ToggleNumbersOn()
     set relativenumber!
     set number
 endfunction
 function! ToggleRelativeOn()
-    set number!
+    set number
     set relativenumber
 endfunction
 " See absolute line numbers when console loses focus, switch to relative when back
@@ -539,7 +558,34 @@ nnoremap <C-n> :call NumberToggle()<cr>
 " Plugind config
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Airline
-"set noshowmode  " Don't print --INSERT-- in insert mode, info already in status
+set noshowmode  " Don't print --INSERT-- in insert mode, info already in status
+" Make sure powerline arrows appear (requires installing fonts)
+" Follow this: https://powerline.readthedocs.io/en/latest/installation/linux.html
+" The font will not work unless you add the powerline.conf file into ~/.config/fontconfig/conf.d
+let g:airline_powerline_fonts = 1
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+"let g:airline_left_sep = '»'
+"let g:airline_left_sep = '▶'
+"let g:airline_right_sep = '«'
+"let g:airline_right_sep = '◀'
+"let g:airline_symbols.linenr = '␊'
+"let g:airline_symbols.linenr = '␤'
+"let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+"let g:airline_symbols.paste = 'ρ'
+"let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+"let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+"let g:airline_symbols.linenr = ''
+let g:airline_theme='badwolf'  " Select airline theme
 
 " Rainbow parentheses
 let g:rainbow#blacklist = [248]  " Blacklist color of comments
@@ -550,3 +596,10 @@ let g:indentLine_enabled = 0  " Indentation guidelines hidden by default
 " GitGutter
 set updatetime=1000  " Updates happen every 1s (default was 4s)
 
+"Python-Mode
+let g:pymode_python = 'python3'  " Make python work with python3
+" Make PEP8 allow up to 100 chars
+let g:pymode_options_max_line_length=100
+autocmd FileType python set colorcolumn=100
+" Choose syntax correction config
+let g:pymode_lint_config = '$HOME/.vim/pylint.rc'
