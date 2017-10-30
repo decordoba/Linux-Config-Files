@@ -44,7 +44,7 @@
 " * sxy > Search xy sequence and navigate to 1st match seq after cursor
 " * Sxy > Search xy sequence and navigate to 1st match seq before cursor
 " * ; > After sxy, go to next match. We can also jump N seq with N;
-" * ''/Ctrl+O > After sxy and ;'s, go back to first match
+" * '' / Ctrl+O > After sxy and ;'s, go back to first match
 " * s+ENTER > Repeat last search sxy
 "
 " VIM-SIGNATURE
@@ -97,6 +97,10 @@
 " * ,b > Insert/remove breakpoint
 " * Ctrl+C+g > Goto definition
 " * Ctrl+SPACE > Autocomplete
+" * [[ / ]] > Jump to prev/next class or function (in global level)
+" * [M / ]M > Jump to prev/next function (inside classes too)
+" * aC / iC > Select a class / inner class. Ex: vaC, viC, daC, diC, yaC, yiC, caC ciC
+" * aM / iM > Select a function / inner function. Ex: vaM, daM, yaM, caM, viM, diM, yiM, ciM
 "
 " PYTHON-FOLDING
 " * f > fold/unfold class
@@ -149,16 +153,16 @@ Bundle 'morhetz/gruvbox'
 Bundle 'mhinz/vim-janah'
 " Command-T
 "Bundle 'wincent/Command-T'  "?
-" NERDTree
+" NERDTree (folder explorer)
 Bundle 'scrooloose/nerdtree'
+" Make tabs / layouts work well with NERDTree
+Plugin 'jistr/vim-nerdtree-tabs'
 " ACK for vim
 Bundle 'mileszs/ack.vim'
 " vim-rails
 "Bundle 'tpope/vim-rails'  "?
 " Git support
 Bundle 'tpope/vim-fugitive'
-" vim-cucumber
-"Bundle 'tpope/vim-cucumber'  "? (I think only for Ruby)
 " vim-bufexplorer
 "Bundle 'slack/vim-bufexplorer'  "?
 " tcomment
@@ -218,6 +222,17 @@ set formatoptions+=l  " If line length > textwidth when insert starts don't brea
 set formatoptions+=q  " Allow formatting of comments with 'gq'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Leader definitions and uses
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:mapleader = ","  " Set <leader> to comma
+" Writing <lader>vsrc will open vimrc in a new tab
+nnoremap <leader>vsrc :tabe $MYVIMRC<cr>
+" Writing <lader>src will load vimrc changes
+nnoremap <leader>src :source $MYVIMRC<cr>
+" Every time vimrc is modified, it is loaded (sourced) again
+autocmd! bufwritepost .vimrc source $MYVIMRC
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Shortcuts and key mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " :W sudo saves the file (for handling permission-denied errors)
@@ -260,6 +275,10 @@ nnoremap <C-D> :update<CR>
 inoremap <C-D> <ESC>:update<CR>a
 vnoremap <C-D> <ESC>:update<CR>gv
 
+" Map <leader>e and <leader>E to quit current / all windows
+nnoremap <Leader>e :q<CR>
+nnoremap <Leader>E :qa<CR>
+
 " Using two uppercase letters in insert mode we can navigate faster
 " Go to beginning of line
 inoremap II <Esc>I
@@ -271,16 +290,20 @@ inoremap OO <Esc>o
 inoremap CC <Esc><Right>C
 " Change the whole line
 inoremap SS <Esc>S
-" Delete the whole line (end in normal mode)
-inoremap DD <Esc>dd
+" Delete the whole line
+inoremap DD <Esc>ddi
 " Undo
 inoremap UU <Esc>ua
+" Redo (not replace, because it would do same as XX)
+inoremap RR <Esc><C-R>a
 " Move line down
 inoremap qq <Esc>ddpa
 " Move line up
 inoremap QQ <Esc>dd2kpa
 " Duplicate current line
 inoremap YY <Esc>yypa
+" Paste
+inoremap PP <Esc>pa
 " Remove one character
 inoremap XX <Esc><Right>xi
 " Navigate word by word like in normal mode
@@ -299,19 +322,6 @@ vnoremap <Leader>s :sort<CR>
 " Easier moving code blocks (after indenting, don't loose visual mode)
 vnoremap < <gv
 vnoremap > >gv
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Leader definitions and uses
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:mapleader = ","  " Set <leader> to comma
-
-" Writing <lader>vsrc will open vimrc in a new tab
-nnoremap <leader>vsrc :tabe $MYVIMRC<cr>
-" Writing <lader>src will load vimrc changes
-nnoremap <leader>src :source $MYVIMRC<cr>
-" Every time vimrc is modified, it is loaded (sourced) again
-autocmd! bufwritepost .vimrc source $MYVIMRC
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Select colors
@@ -411,6 +421,19 @@ nnoremap <F12> :set hls!<CR>
 inoremap <F12> <ESC>:set hls!<CR>a
 vnoremap <F12> <ESC>:set hls!<CR>gv
 
+" Use <leader>m to toggle mouse use (right-click paste only works if mouse disabled)
+function! ToggleMouse()
+    if &mouse == 'a'
+        echo "mouse off"
+        set mouse=
+    else
+        echo "mouse on"
+        set mouse=a
+    endif
+endfunc
+nnoremap <Leader>m :call ToggleMouse()<CR>
+vnoremap <Leader>m <ESC>:call ToggleMouse()<CR>
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Folding (hiding or showing content)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -454,30 +477,30 @@ nnoremap <leader>d :YcmCompleter GoToDefinitionElseDeclaration<cr>
 " Map up and down to navigate visually (following visual line breaks)
 nnoremap <silent> <Leader>w :call ToggleWrap()<cr>
 function! ToggleWrap()
-if &wrap
-    echo "wrap off"
-    setlocal nowrap
-    silent! nunmap <buffer> <Up>
-    silent! nunmap <buffer> <Down>
-    silent! nunmap <buffer> <Home>
-    silent! nunmap <buffer> <End>
-    silent! iunmap <buffer> <Up>
-    silent! iunmap <buffer> <Down>
-    silent! iunmap <buffer> <Home>
-    silent! iunmap <buffer> <End>
-else
-    echo "wrap on"
-    setlocal wrap linebreak nolist
-    setlocal display+=lastline
-    nnoremap <buffer> <silent> <Up>   gk
-    nnoremap <buffer> <silent> <Down> gj
-    nnoremap <buffer> <silent> <Home> g<Home>
-    nnoremap <buffer> <silent> <End>  g<End>
-    inoremap <buffer> <silent> <Up>   <C-o>gk
-    inoremap <buffer> <silent> <Down> <C-o>gj
-    inoremap <buffer> <silent> <Home> <C-o>g<Home>
-    inoremap <buffer> <silent> <End>  <C-o>g<End>
-endif
+    if &wrap
+        echo "wrap off"
+        setlocal nowrap
+        silent! nunmap <buffer> <Up>
+        silent! nunmap <buffer> <Down>
+        silent! nunmap <buffer> <Home>
+        silent! nunmap <buffer> <End>
+        silent! iunmap <buffer> <Up>
+        silent! iunmap <buffer> <Down>
+        silent! iunmap <buffer> <Home>
+        silent! iunmap <buffer> <End>
+    else
+        echo "wrap on"
+        setlocal wrap linebreak nolist
+        setlocal display+=lastline
+        nnoremap <buffer> <silent> <Up>   gk
+        nnoremap <buffer> <silent> <Down> gj
+        nnoremap <buffer> <silent> <Home> g<Home>
+        nnoremap <buffer> <silent> <End>  g<End>
+        inoremap <buffer> <silent> <Up>   <C-o>gk
+        inoremap <buffer> <silent> <Down> <C-o>gj
+        inoremap <buffer> <silent> <Home> <C-o>g<Home>
+        inoremap <buffer> <silent> <End>  <C-o>g<End>
+    endif
 endfunction
 
 " Make sure key mappings are available when we start vim
@@ -597,9 +620,17 @@ let g:indentLine_enabled = 0  " Indentation guidelines hidden by default
 set updatetime=1000  " Updates happen every 1s (default was 4s)
 
 "Python-Mode
-let g:pymode_python = 'python3'  " Make python work with python3
+if has('python3') == 0
+    echo "Vim is not compiled with the +python3 feature."
+    echo "You should install a different version to use python3 mode."
+else
+    let g:pymode_python = 'python3'  " Make python work with python3
+endif
 " Make PEP8 allow up to 100 chars
 let g:pymode_options_max_line_length=100
 autocmd FileType python set colorcolumn=100
 " Choose syntax correction config
 let g:pymode_lint_config = '$HOME/.vim/pylint.rc'
+let g:pymode_lint_unmodified = 1  " Every time we save, check code
+" Disable rope (for now)
+let g:pymode_rope=0
