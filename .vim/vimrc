@@ -205,6 +205,8 @@ Plugin 'tpope/vim-surround'
 Plugin 'python-mode/python-mode'
 " Comment / uncomment easily
 Plugin 'scrooloose/nerdcommenter'
+" Trigger completion with TAB
+Plugin 'ervandew/supertab'
 
 " All of your Plugins must be added before the following line
 
