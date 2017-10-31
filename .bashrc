@@ -392,6 +392,7 @@ rmn() {  # rm newest folder, or rm Nth newest folder
     echo "       rmn [N]  # rm Nth newest folder (N should be number > 0)"
     return
   fi
+  echo "Removed folder: $n"
   rm $n -r
 }
 # Use: 'rmo' or 'rmo 3'  # rmo for rm oldest
@@ -403,6 +404,7 @@ rmo() {  # rm oldest folder, or rm Nth oldest folder
     echo "       rmo [N]  # rm Nth oldest folder (N should be number > 0)"
     return
   fi
+  echo "Removed folder: $n"
   rm $n -r
 }
 # Use: 'lsn' or 'lsn 3'  # lsn for ls newest
@@ -414,6 +416,7 @@ lsn() {  # ls into newest folder, or ls into Nth newest folder
     echo "       lsn [N]  # ls into Nth newest folder (N should be number > 0)"
     return
   fi
+  echo "Folder: $n"
   ls $n
 }
 # Use: 'lso' or 'lso 3'  # lso for ls oldest
@@ -425,6 +428,7 @@ lso() {  # ls into oldest folder, or ls into Nth oldest folder
     echo "       lso [N]  # ls into Nth oldest folder (N should be number > 0)"
     return
   fi
+  echo "Folder: $n"
   ls $n
 }
 # Use: 'lln' or 'lln 3'  # lln for ll newest
@@ -436,6 +440,7 @@ lln() {  # ll into newest folder, or ll into Nth newest folder
     echo "       lln [N]  # ll into Nth newest folder (N should be number > 0)"
     return
   fi
+  echo "Folder: $n"
   ll $n
 }
 # Use: 'llo' or 'llo 3'  # llo for ll oldest
@@ -447,6 +452,7 @@ llo() {  # ll into oldest folder, or ll into Nth oldest folder
     echo "       llo [N]  # ll into Nth oldest folder (N should be number > 0)"
     return
   fi
+  echo "Folder: $n"
   ll $n
 }
 # Use: 'llln' or 'llln 3'  # llln for lll newest
@@ -458,6 +464,7 @@ llln() {  # lll into newest folder, or lll into Nth newest folder
     echo "       llln [N]  # lll into Nth newest folder (N should be number > 0)"
     return
   fi
+  echo "Folder: $n"
   ll $n --color=always | less -R
 }
 # Use: 'llo' or 'llo 3'  # llo for ll oldest
@@ -469,10 +476,11 @@ lllo() {  # lll into oldest folder, or lll into Nth oldest folder
     echo "       lllo [N]  # lll into Nth oldest folder (N should be number > 0)"
     return
   fi
+  echo "Folder: $n"
   ll $n --color=always | less -R
 }
 # Use: 'bu my_config_file.cfg'
-bu () {  # create backup file 
+bu () {  # create backup file
   if [ $# -lt 1 ]; then
     echo "Usage: bu file             # create backup in current folder"
     echo "       bu file [anything]  # create backup in .backups folder"
@@ -485,7 +493,7 @@ bu () {  # create backup file
 # Use: 'calc \(3^2 + 4^2\)^0.5'  # sorry, parenthesis must be escaped, unless formula is surrounded by ""
 calc() {  # create a terminal calculator
     echo "$@" | bc -l
-} 
+}
 # Use: 'google who am I?'
 google() {  # search something in google (will open a browser)
   local old s
