@@ -1,10 +1,10 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
-# If not running interactively, don't do anything. 
+# If not running interactively, don't do anything.
 # In general, this prevents executing .bashrc in remote shells
 case $- in
-    *i*) ;;
-      *) return;;
+  *i*) ;;
+    *) return;;
 esac
 
 # Don't put duplicate lines or lines starting with space in the history.
@@ -62,19 +62,19 @@ export LESS="-iMFXR"
 # Set variable identifying the chroot you work in (used in the prompt below)
 # will only be set if we are in a chrooted debian system inside our system
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
+  debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # Set XTERM to xterm-256color (colored prompt) unless we are ssh-ing
 if [ -n "$DISPLAY" ]; then
-    export TERM=xterm-256color
+  export TERM=xterm-256color
 fi
 
 # Set a fancy color prompt (non-color, unless we "want" color).
 # Checks if $TERM is xterm-color, xterm-256color or xterm-16color,
 # and if so, sets color_prompt to yes. See $TERM running 'env | grep TERM'
 case "$TERM" in
-    xterm-color|*-256color|*-16color) color_prompt=yes;;
+  xterm-color|*-256color|*-16color) color_prompt=yes;;
 esac
 
 # Uncomment for a colored prompt, if the terminal has the capability
@@ -97,14 +97,14 @@ fi
 # Create aliases to change between long prompt and short prompt.
 # long shows full path, short shows only current sub-folder
 if [ "$color_prompt" = yes ]; then
-    # user@host are green(32m), path is light_blue(94m)
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\$ '
-    alias ps1short="PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\W\[\033[00m\]\$ '"
-    alias ps1long="PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\$ '"
+  # user@host are green(32m), path is light_blue(94m)
+  PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\$ '
+  alias ps1short="PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\W\[\033[00m\]\$ '"
+  alias ps1long="PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\$ '"
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-    alias ps1short="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\W\$ '"
-    alias ps1long="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '"
+  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+  alias ps1short="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\W\$ '"
+  alias ps1long="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '"
 fi
 unset color_prompt force_color_prompt
 alias pathshort="ps1short"
@@ -112,19 +112,19 @@ alias pathlong="ps1long"
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
-    xterm*|rxvt*) PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1";;
-    *);;
+  xterm*|rxvt*) PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1";;
+  *);;
 esac
 
 # Enable color support of ls and also add handy aliases.
 # Works only if /usr/bin/dircolors exists and is executable
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    alias dir='dir --color=auto'  # same as ls
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
+  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+  alias ls='ls --color=auto'
+  alias dir='dir --color=auto'  # same as ls
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
 fi
 
 # Colored GCC warnings and errors
@@ -252,7 +252,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # Alias definitions. You may put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here.
 if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+  . ~/.bash_aliases
 fi
 
 # Enable programmable completion features (no need to enable this, if it's
