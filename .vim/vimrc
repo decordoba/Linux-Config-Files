@@ -19,6 +19,8 @@
 " * ,bg > Toggle background (light/dark)
 " * ,d > Go to definition function
 " * ,s > In visual mode, sort selected lines alpbabetically
+" * ,e > Close current buffer
+" * ,E > Close all buffers
 " * ,, > Stop highlighting after a search
 " * :W > Sudo saves
 " * Up/Down > Go up and down line by line visually
@@ -146,7 +148,7 @@ Plugin 'gmarik/Vundle.vim'
 " Autoindent for Python
 "Plugin 'vim-scripts/indentpython.vim'  "?
 " Autocomplete (may require extra steps, check https://github.com/Valloric/YouCompleteMe)
-"Bundle 'Valloric/YouCompleteMe'  "!
+Bundle 'Valloric/YouCompleteMe'
 " Railscasts theme
 Bundle 'jpo/vim-railscasts-theme'
 " Solarized theme
@@ -155,6 +157,8 @@ Bundle 'altercation/vim-colors-solarized'
 Bundle 'morhetz/gruvbox'
 " Janah theme
 Bundle 'mhinz/vim-janah'
+" Zenburn theme
+Bundle 'jnurmine/Zenburn'
 " Command-T
 "Bundle 'wincent/Command-T'  "?
 " NERDTree (folder explorer)
@@ -198,6 +202,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 " Plugin to deal with brakets faster (allows to do cs'", or ds{, ysiw], yss), etc.)
 Plugin 'tpope/vim-surround'
 " Others: tagline, nerd commenter, snippets, repeat, tabular, speeddating...
+" Others: Check AutoComplPop plugins
 " Others: https://benmccormick.org/2014/07/21/learning-vim-in-2014-getting-more-from-vim-with-plugins/
 " Others: https://www.fullstackpython.com/vim.html
 " Check other common themes here: https://github.com/vim-airline/vim-airline/wiki/Screenshots
@@ -265,8 +270,8 @@ inoremap <silent> <F8> <Esc>:let notabs=!notabs<Bar>:if notabs<Bar>:tabo<Bar>:el
 vnoremap <silent> <F8> <Esc>:let notabs=!notabs<Bar>:if notabs<Bar>:tabo<Bar>:else<Bar>:tab ball<Bar>:tabn<Bar>:endif<CR>
 
 " Add NerdTree shortcut
-nnoremap <F10> :NERDTreeToggle<cr>       " Key to open NERDTree in commands mode
-inoremap <F10> <Esc>:NERDTreeToggle<cr>  " Key to open NERDTree in insert mode
+nnoremap <F10> :NERDTreeTabsToggle<cr>       " Key to open NERDTree in commands mode
+inoremap <F10> <Esc>:NERDTreeTabsToggle<cr>  " Key to open NERDTree in insert mode
 
 " Enable/disable paste mode (does not indent every line) with F3
 nnoremap <F3> :set paste!<CR>
@@ -296,10 +301,14 @@ inoremap AA <Esc>A
 inoremap OO <Esc>o
 " Change what is on the right side of the cursor
 inoremap CC <Esc><Right>C
+" Change word from cursor
+inoremap cc <Esc><Right>cw
 " Change the whole line
 inoremap SS <Esc>S
 " Delete the whole line
 inoremap DD <Esc>ddi
+" Delete the whole word
+inoremap dd <Esc><Right>ciw
 " Undo
 inoremap UU <Esc>ua
 " Redo (not replace, because it would do same as XX)
@@ -308,6 +317,8 @@ inoremap RR <Esc><C-R>a
 inoremap qq <Esc>ddpa
 " Move line up
 inoremap QQ <Esc>dd2kpa
+" Copy current line
+inoremap yy <C-O>yy
 " Duplicate current line
 inoremap YY <Esc>yypa
 " Paste
@@ -388,11 +399,14 @@ set expandtab      " Tabs are spaces (great for python and bash)
 set autoindent     " Copy indent from current line to next when starting new line
 set smarttab       " Insert tabstop spaces when the TAB key is pressed
 set shiftround     " Round indentation to multiple of shiftwidth when shifting
+au BufNewFile,BufRead *.js, *.html, *.css  " Some files will use 2 space tabs
+    \ set tabstop=2
+    \ set softtabstop=2
+    \ set shiftwidth=2
 
 set showmatch      " Highlight matching [{()}]
 set showcmd        " Show command being typed in status bar (bottom right)
 set cursorline     " Highlight current line
-"highlight CursorLine cterm=NONE ctermbg=233  " Define style highlight line
 set scrolloff=1    " Set to 9999 to see cursor always in the middle of screen
 set sidescrolloff=5  " Number of columns to keep left and right of cursor
 set display+=lastline  " Always try to show a paragraph’s last line
@@ -453,7 +467,8 @@ vnoremap <Leader>m <ESC>:call ToggleMouse()<CR>
 " Select fold mode
 set foldmethod=indent  " Folds are created manually
 set foldnestmax=3      " Only fold up to three nested levels
-set nofoldenable       " Disable folding by default
+set foldenable         " Disable folding by default
+set foldlevel=99       " Disable folds initially
 
 " Open fold with space, and create fold with space after visually selecting
 "nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<cr>
@@ -477,7 +492,6 @@ inoremap <expr> <C-n> pumvisible() ? '<C-n>' : '<C-n><C-r>=pumvisible() ? "\<lt>
 inoremap <expr> <C-p> pumvisible() ? '<C-p>' : '<C-p><C-r>=pumvisible() ? "\<lt>Up>" : ""<cr>'
 " Only useful if we use Omni
 inoremap <expr> <M-,> pumvisible() ? '<C-n>' : '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<cr>'
-" Check AutoComplPop and SuperTab plugins
 " YouCompleteMe Plugin config
 " Ensures autocomplete window goes away when you’re done with it
 let g:ycm_autoclose_preview_window_after_completion=1
@@ -631,6 +645,9 @@ let g:indentLine_enabled = 0  " Indentation guidelines hidden by default
 
 " GitGutter
 set updatetime=1000  " Updates happen every 1s (default was 4s)
+
+" NERDTree
+let NERDTreeIgnore=['\.pyc$', '\~$']  "ignore files in NERDTree
 
 "Python-Mode
 if has('python3') == 0
