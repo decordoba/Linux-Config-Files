@@ -308,7 +308,7 @@ inoremap SS <Esc>S
 " Delete the whole line
 inoremap DD <Esc>ddi
 " Delete the whole word
-inoremap dd <Esc><Right>ciw
+inoremap dd <C-O>ciw
 " Undo
 inoremap UU <Esc>ua
 " Redo (not replace, because it would do same as XX)
@@ -337,8 +337,8 @@ inoremap LL <Esc>la
 " Indent
 inoremap >> <Esc>>>i
 inoremap << <Esc><<i
-" Comment line (requires NERD Commenter)
-imap // <C-O><leader>c<Space>
+" Comment line (requires NERD Commenter) i and go to next
+imap // <C-O><leader>c<Space><C-O>j
 
 " Visual mappings
 " Sort lines
