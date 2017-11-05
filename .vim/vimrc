@@ -36,6 +36,12 @@
 " * :tab drop {file} > open {file} in a new tab, or jump to window/tab containing the file if it exists
 " * :tab split        copy the current window to a new tab of its own
 "
+" * :bn > Next buffer
+" * :bp > Previous buffer
+" * :b # > Show buffer #
+" * :b name > Show buffer of file name
+" * Ctrl+6 > Switch between buffers (the last two buffers used)
+" * # Ctrl+6 > Switch to buffer #
 "
 " Commands created by plugins:
 "
@@ -122,7 +128,6 @@ if !isdirectory($HOME."/.vim/bundle")
 endif
 
 if !isdirectory($HOME."/.vim/bundle/Vundle.vim")
-    echo $HOME."/.vim/bundle/Vundle.vim"
     echo "---------------------------------------------------------------------------------------"
     echo "| Vundle not found, run the following command:                                        |"
     echo "| git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim  |"
@@ -143,32 +148,30 @@ Plugin 'gmarik/Vundle.vim'
 
 " Add all your plugins here
 
-" Folds for Python
-"Plugin 'tmhedberg/SimpylFold'  "!
-" Autoindent for Python
-"Plugin 'vim-scripts/indentpython.vim'  "?
-" Autocomplete (may require extra steps, check https://github.com/Valloric/YouCompleteMe)
-Bundle 'Valloric/YouCompleteMe'
+" Themes (they all work well in terminal mode)
 " Railscasts theme
-Bundle 'jpo/vim-railscasts-theme'
-" Solarized theme
-Bundle 'altercation/vim-colors-solarized'
+Plugin 'jpo/vim-railscasts-theme'
 " Gruvbox theme
-Bundle 'morhetz/gruvbox'
-" Janah theme
-Bundle 'mhinz/vim-janah'
-" Zenburn theme
-Bundle 'jnurmine/Zenburn'
-" Command-T
-"Bundle 'wincent/Command-T'  "?
+Plugin 'morhetz/gruvbox'
+" Wombat256i theme
+Plugin 'dsolstad/vim-wombat256i'
+" Wombat256mmod theme
+Plugin 'michalbachowski/vim-wombat256mod'
+" Badolf theme
+Plugin 'sjl/badwolf'
+
 " NERDTree (folder explorer)
 Bundle 'scrooloose/nerdtree'
-" Make tabs / layouts work well with NERDTree
-Plugin 'jistr/vim-nerdtree-tabs'
+" Show git status in NERDTree
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+" Make tabs / layouts work well with NERDTree (if you need this, you are not using tabs right)
+"Plugin 'jistr/vim-nerdtree-tabs'
+
 " ACK for vim
 Bundle 'mileszs/ack.vim'
-" vim-rails
-"Bundle 'tpope/vim-rails'  "?
+" When opening a file with an incomplete name (vim test.), asks to choose between options
+Plugin 'EinfachToll/DidYouMean'
+
 " Git support
 Bundle 'tpope/vim-fugitive'
 " vim-bufexplorer
@@ -206,12 +209,23 @@ Plugin 'tpope/vim-surround'
 " Others: https://benmccormick.org/2014/07/21/learning-vim-in-2014-getting-more-from-vim-with-plugins/
 " Others: https://www.fullstackpython.com/vim.html
 " Check other common themes here: https://github.com/vim-airline/vim-airline/wiki/Screenshots
+" Folds for Python
+"Plugin 'tmhedberg/SimpylFold'  "!
+" Autoindent for Python
+"Plugin 'vim-scripts/indentpython.vim'  "?
+" Command-T
+"Bundle 'wincent/Command-T'  "?
+" vim-rails
+"Bundle 'tpope/vim-rails'  "?
 " Ultimate plugin for python
 Plugin 'python-mode/python-mode'
 " Comment / uncomment easily
 Plugin 'scrooloose/nerdcommenter'
 " Trigger completion with TAB
 Plugin 'ervandew/supertab'
+" Autocomplete (may require extra steps, check https://github.com/Valloric/YouCompleteMe)
+"Bundle 'Valloric/YouCompleteMe'
+
 
 " All of your Plugins must be added before the following line
 
@@ -270,13 +284,15 @@ inoremap <silent> <F8> <Esc>:let notabs=!notabs<Bar>:if notabs<Bar>:tabo<Bar>:el
 vnoremap <silent> <F8> <Esc>:let notabs=!notabs<Bar>:if notabs<Bar>:tabo<Bar>:else<Bar>:tab ball<Bar>:tabn<Bar>:endif<CR>
 
 " Add NerdTree shortcut
-nnoremap <F10> :NERDTreeTabsToggle<cr>       " Key to open NERDTree in commands mode
-inoremap <F10> <Esc>:NERDTreeTabsToggle<cr>  " Key to open NERDTree in insert mode
+nnoremap <F10> :NERDTreeToggle<cr>       " Key to open NERDTree in commands mode
+inoremap <F10> <Esc>:NERDTreeToggle<cr>  " Key to open NERDTree in insert mode
 
 " Enable/disable paste mode (does not indent every line) with F3
 nnoremap <F3> :set paste!<CR>
 inoremap <F3> <ESC>:set paste!<CR>a
 vnoremap <F3> <ESC>:set paste!<CR>gv
+" Command-T
+"Bundle 'wincent/Command-T'  "?
 
 " Show/hide indents
 nnoremap <F4> :IndentLinesToggle<CR>
@@ -291,6 +307,17 @@ vnoremap <C-D> <ESC>:update<CR>gv
 " Map <leader>e and <leader>E to quit current / all windows
 nnoremap <Leader>e :q<CR>
 nnoremap <Leader>E :qa<CR>
+
+" Map TAB to show last read file. Use this to change fast between buffers
+nnoremap <TAB> <C-^>
+
+" Create tab with Ctrl+T (tabs are just a different layout of all the buffers, not their sustite)
+nnoremap <C-T> :tabnew<Space>%<CR>
+
+" Ctrl+F searches word under cursor in current document, Ctrl+Shift+F searches in project
+"nnoremap <C-F> :execute "grep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
+"nnoremap <C-F> :execute "grep -srnw --binary-files=without-match --exclude-dir=.git --exclude-from=exclude.list . -e " . expand("<cword>") . " " <bar> cwindow<CR>
+
 
 " Using two uppercase letters in insert mode we can navigate faster
 " Go to beginning of line
@@ -360,33 +387,28 @@ au InsertLeave * match ExtraWhitespace /\s\+$/
 au InsertEnter * match ExtraWhitespace /\s\+$/
 set t_Co=256
 " Variable to choose preferred colorscheme
-let color_scheme = "gruvbox"
 colorscheme default
-if color_scheme == "railcasts"
-    " Try to use fancier colorscheme, use default if not found
-    silent! colorscheme railcasts
-elseif color_scheme == "solarized"
-    " Try to use fancier colorscheme, use default if not found
-    let g:solarized_termcolors=256
-    silent! colorscheme solarized
-    call togglebg#map("")  " Allows to use :ToggleBG to toggle background (light/dark)
-elseif color_scheme == "gruvbox"
+" Try to use fancier colorscheme, use default if not found
+let color_scheme = "gruvbox"  " railscasts, gruvbox, wombat256i, wombat256mod, badwolf
+if color_scheme == "gruvbox"
     " Try to use fancier colorscheme, use default if not found
     let g:gruvbox_contrast_dark="hard"
     let g:gruvbox_contrast_light="hard"
     let g:gruvbox_number_column="bg1"
     let g:gruvbox_color_column='bg2'
     silent! colorscheme gruvbox
-elseif color_scheme == "janah"
-    " Try to use fancier colorscheme, use default if not found
-    silent! colorscheme janah
-elseif color_scheme == "default"
-    " Default colorsheme
-    silent! colorscheme default
+    " Choose default background color (light/dark)
+    set background=dark
+elseif color_scheme == "railscasts"
+    silent! colorscheme railscasts
+elseif color_scheme == "wombat256i"
+    silent! colorscheme wombat256i
+elseif color_scheme == "wombat256mod"
+    silent! colorscheme wombat256mod
+elseif color_scheme == "badwolf"
+    silent! colorscheme badwolf
 endif
-" Choose default background color (light/dark)
-set background=dark
-" Create keymap <leader>bg to toggle background between light/dark
+" <leader>bg toggles background between light/dark (may mess up colorscheme, works with gruvbox)
 nnoremap <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -440,8 +462,7 @@ set incsearch      " Incremental search, show the next matching while typing
 set wrapscan       " When we get to end search, go back to beginning
 set hlsearch       " Highlight all results in file when searching
 nohlsearch         " Hide last search highlight when we open vim or reload vimrc
-" Use Ctrl+M to clear the highlighting of :set hlsearch
-nnoremap <C-F> :noh<CR>
+" Use ,, to clear the highlighting of :set hlsearch
 nnoremap <silent> <Leader><Leader> :noh<CR>
 " F12 toggle highlight on and off
 nnoremap <F12> :set hls!<CR>
@@ -460,6 +481,24 @@ function! ToggleMouse()
 endfunc
 nnoremap <Leader>m :call ToggleMouse()<CR>
 vnoremap <Leader>m <ESC>:call ToggleMouse()<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Grep configuration
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" The Silver Searcher
+if executable('ag')
+    " Use ag over grep
+    set grepprg=ag\ --nogroup\ --nocolor
+
+    " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+    " ag is fast enough that CtrlP doesn't need to cache
+    let g:ctrlp_use_caching = 0
+elseif executable('ack')
+    set grepprg=ack\ -s\ -H\ --nogroup\ --nocolor\ --column
+    set grepformat=%f:%l:%c:%m,%f:%l:%m
+endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Folding (hiding or showing content)
@@ -605,7 +644,7 @@ endfunc
 nnoremap <C-n> :call NumberToggle()<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugind config
+" Plugin configuration
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Airline
 set noshowmode  " Don't print --INSERT-- in insert mode, info already in status
@@ -648,6 +687,8 @@ set updatetime=1000  " Updates happen every 1s (default was 4s)
 
 " NERDTree
 let NERDTreeIgnore=['\.pyc$', '\~$']  "ignore files in NERDTree
+" Close vim if only window open left is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 "Python-Mode
 if has('python3') == 0
