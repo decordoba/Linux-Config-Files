@@ -118,6 +118,18 @@
 " NERD COMMENTER
 " * ...
 "
+" VIM-UNPAIRED
+" * ...
+"
+" CTRLP
+" * Ctrl+P > Open file in folder / buffer / recent file
+" * Ctrl+F / Ctrl+B (inside CtrlP panel) > Change mode (folder/buffer/mru)
+" * Ctrl+T (inside CtrlP panel) > Open selected in new TAB
+" * Ctrl+V / Ctrl+X (inside CtrlP panel) > Open selected in split layout (vertical / horizontal)
+" * Ctrl+Y (inside CtrlP panel) > Create a new file (and its parent directories if required)
+" * Ctrl+Z (inside CtrlP panel) > Mark/unmark multiple files
+" * Ctrl+O (inside CtrlP panel) > Open all marked files (in vertical split layouts)
+"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 if !isdirectory($HOME."/.vim")
@@ -148,7 +160,7 @@ Plugin 'gmarik/Vundle.vim'
 
 " Add all your plugins here
 
-" Themes (they all work well in terminal mode)
+""" Themes (they all work well in terminal mode)
 " Railscasts theme
 Plugin 'jpo/vim-railscasts-theme'
 " Gruvbox theme
@@ -160,50 +172,58 @@ Plugin 'michalbachowski/vim-wombat256mod'
 " Badolf theme
 Plugin 'sjl/badwolf'
 
+""" Folder navigation
 " NERDTree (folder explorer)
 Bundle 'scrooloose/nerdtree'
 " Show git status in NERDTree
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-" Make tabs / layouts work well with NERDTree (if you need this, you are not using tabs right)
+" Make tabs/layouts work well with NERDTree (if you need this, you are not using tabs right)
 "Plugin 'jistr/vim-nerdtree-tabs'
+" Open files by name with fuzzy finder (mf1 will open myfile1). Search in files, buffers and mru
+Plugin 'ctrlpvim/ctrlp.vim'
 
-" ACK for vim
-Bundle 'mileszs/ack.vim'
-" When opening a file with an incomplete name (vim test.), asks to choose between options
+""" Vim start-up
+" When opening a file with an incomplete name (vim test.), asks to choose between existing files
 Plugin 'EinfachToll/DidYouMean'
+" Fancy start screen for vim, which allows fast access to recent files, etc.
+Plugin 'mhinz/vim-startify'
 
-" Git support
-Bundle 'tpope/vim-fugitive'
-" vim-bufexplorer
-"Bundle 'slack/vim-bufexplorer'  "?
-" tcomment
-"Bundle 'tomtom/tcomment_vim'  "?
+""" Bottom fancy status bar
 " Airline, great status bar
 Plugin 'vim-airline/vim-airline'
 " Airline themes
 Plugin 'vim-airline/vim-airline-themes'
-" Navigate doing searches with 2 chars: s+char+char. Next with ;. Start over with ''
-Bundle 'justinmk/vim-sneak'
-" Show indentation levels
+
+""" Visual enhancements
+" Show (and hide) indentation levels
 Plugin 'Yggdroot/indentLine'
 " Color parenthesis that go together
 Plugin 'junegunn/rainbow_parentheses.vim'
 " Show to left of numbers line info about what was modified from git
 Plugin 'airblade/vim-gitgutter.git'
-" Toggle, display and navigate marks (jump between interesting parts of the file)
+
+""" New functionalities (via new shortcuts)
+" Navigate doing searches with 2 chars: s+char+char. Next with ;. Start over with ''
+Bundle 'justinmk/vim-sneak'
+" Toggle, display and navigate marks with m (jump between interesting parts of the file)
 Plugin 'kshenoy/vim-signature'
-" Fancy start screen for vim, which allows fast access to recent files, etc.
-Plugin 'mhinz/vim-startify'
+" Deal with brakets faster (allows to do cs'", or ds{, ysiw], yss), etc.)
+Plugin 'tpope/vim-surround'
+" Comment / uncomment easily with <leader>c. and <leader>cc
+Plugin 'scrooloose/nerdcommenter'
+
+" Add shortcuts for many functions using the [ and ] prefixes
+Plugin 'tpope/vim-unimpaired'
+" Git support
+Bundle 'tpope/vim-fugitive'
+" vim-bufexplorer
+"Bundle 'slack/vim-bufexplorer'  "?
 " Markdown for vim
-Bundle 'gabrielelana/vim-markdown'
+"Bundle 'gabrielelana/vim-markdown'
 " Syntax checking
 "Plugin 'vim-syntastic/syntastic'  "?
-" Search in file, buffer, mru, tag
-Plugin 'ctrlpvim/ctrlp.vim'
 " Complete with TAB
 "Plugin 'ervandew/supertab'
-" Plugin to deal with brakets faster (allows to do cs'", or ds{, ysiw], yss), etc.)
-Plugin 'tpope/vim-surround'
 " Others: tagline, nerd commenter, snippets, repeat, tabular, speeddating...
 " Others: Check AutoComplPop plugins
 " Others: https://benmccormick.org/2014/07/21/learning-vim-in-2014-getting-more-from-vim-with-plugins/
@@ -217,15 +237,16 @@ Plugin 'tpope/vim-surround'
 "Bundle 'wincent/Command-T'  "?
 " vim-rails
 "Bundle 'tpope/vim-rails'  "?
+" ACK for vim
+"Bundle 'mileszs/ack.vim'
 " Ultimate plugin for python
 Plugin 'python-mode/python-mode'
-" Comment / uncomment easily
-Plugin 'scrooloose/nerdcommenter'
 " Trigger completion with TAB
 Plugin 'ervandew/supertab'
 " Autocomplete (may require extra steps, check https://github.com/Valloric/YouCompleteMe)
 "Bundle 'Valloric/YouCompleteMe'
-
+" Search words in whole project, and substitute them easily
+"Plugin 'dyng/ctrlsf.vim'
 
 " All of your Plugins must be added before the following line
 
@@ -315,9 +336,7 @@ nnoremap <TAB> <C-^>
 nnoremap <C-T> :tabnew<Space>%<CR>
 
 " Ctrl+F searches word under cursor in current document, Ctrl+Shift+F searches in project
-"nnoremap <C-F> :execute "grep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
-"nnoremap <C-F> :execute "grep -srnw --binary-files=without-match --exclude-dir=.git --exclude-from=exclude.list . -e " . expand("<cword>") . " " <bar> cwindow<CR>
-
+nnoremap <C-F> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 " Using two uppercase letters in insert mode we can navigate faster
 " Go to beginning of line
@@ -334,8 +353,8 @@ inoremap cc <Esc><Right>cw
 inoremap SS <Esc>S
 " Delete the whole line
 inoremap DD <Esc>ddi
-" Delete the whole word
-inoremap dd <C-O>ciw
+" Delete the whole current word, including space after it (map does not make sense, I know)
+inoremap FF <Esc><Right>diwxi
 " Undo
 inoremap UU <Esc>ua
 " Redo (not replace, because it would do same as XX)
@@ -364,8 +383,9 @@ inoremap LL <Esc>la
 " Indent
 inoremap >> <Esc>>>i
 inoremap << <Esc><<i
-" Comment line (requires NERD Commenter) i and go to next
+" Comment line (requires NERD Commenter) and go down to next line
 imap // <C-O><leader>c<Space><C-O>j
+" Available still: TT, GG, ZZ, VV, NN, MM
 
 " Visual mappings
 " Sort lines
@@ -495,6 +515,10 @@ if executable('ag')
 
     " ag is fast enough that CtrlP doesn't need to cache
     let g:ctrlp_use_caching = 0
+    " bind \ (backward slash) to grep shortcut
+    command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+    nnoremap \ :Ag<SPACE>
+
 elseif executable('ack')
     set grepprg=ack\ -s\ -H\ --nogroup\ --nocolor\ --column
     set grepformat=%f:%l:%c:%m,%f:%l:%m
@@ -677,7 +701,9 @@ let g:airline_symbols.readonly = ''
 let g:airline_theme='badwolf'  " Select airline theme
 
 " Rainbow parentheses
-let g:rainbow#blacklist = [248]  " Blacklist color of comments
+let g:rainbow#blacklist = [248, 241, 243, 223, 229]  " Blacklist color with low contrast (gruvbox)
+au VimEnter * RainbowParentheses            " Toggle rainbow parentheses on
+let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}'], ['<', '>']]
 
 " IndentLine
 let g:indentLine_enabled = 0  " Indentation guidelines hidden by default
