@@ -139,13 +139,6 @@ if !isdirectory($HOME."/.vim/bundle")
     call mkdir($HOME."/.vim/bundle", "", 0770)
 endif
 
-if !isdirectory($HOME."/.vim/bundle/Vundle.vim")
-    echo "---------------------------------------------------------------------------------------"
-    echo "| Vundle not found, run the following command:                                        |"
-    echo "| git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim  |"
-    echo "---------------------------------------------------------------------------------------"
-endif
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Vundle (extension/plugin manager) setup
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -255,6 +248,13 @@ call vundle#end()  " Load all plugins
 filetype on        " Try to recognize filetype
 filetype indent on " Load indent file for filetype detected from ~/.vim/indent
 filetype plugin on " Load plugin file for filetype detected from ~/.vim/ftplugin
+
+if !isdirectory($HOME."/.vim/bundle/Vundle.vim")
+    echo "---------------------------------------------------------------------------------------"
+    echo "| Vundle not found, run the following command:                                        |"
+    echo "| git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim  |"
+    echo "---------------------------------------------------------------------------------------"
+endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Format options, dictates when line breaks are introduced automatically
@@ -677,29 +677,31 @@ set noshowmode  " Don't print --INSERT-- in insert mode, info already in status
 " Make sure powerline arrows appear (requires installing fonts)
 " Follow this: https://powerline.readthedocs.io/en/latest/installation/linux.html
 " The font will not work unless you add the powerline.conf file into ~/.config/fontconfig/conf.d
-let g:airline_powerline_fonts = 1
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
+let g:airline_powerline_fonts = 1  " Comment this to use default font (no special characters)
+if get(g:, 'airline_powerline_fonts', 0) == 1
+    if !exists('g:airline_symbols')
+        let g:airline_symbols = {}
+    endif
+    "let g:airline_left_sep = '»'
+    "let g:airline_left_sep = '▶'
+    "let g:airline_right_sep = '«'
+    "let g:airline_right_sep = '◀'
+    "let g:airline_symbols.linenr = '␊'
+    "let g:airline_symbols.linenr = '␤'
+    "let g:airline_symbols.linenr = '¶'
+    let g:airline_symbols.branch = '⎇'
+    "let g:airline_symbols.paste = 'ρ'
+    "let g:airline_symbols.paste = 'Þ'
+    let g:airline_symbols.paste = '∥'
+    let g:airline_symbols.whitespace = 'Ξ'
+    let g:airline_left_sep = ''
+    let g:airline_left_alt_sep = ''
+    let g:airline_right_sep = ''
+    let g:airline_right_alt_sep = ''
+    "let g:airline_symbols.branch = ''
+    let g:airline_symbols.readonly = ''
+    "let g:airline_symbols.linenr = ''
 endif
-"let g:airline_left_sep = '»'
-"let g:airline_left_sep = '▶'
-"let g:airline_right_sep = '«'
-"let g:airline_right_sep = '◀'
-"let g:airline_symbols.linenr = '␊'
-"let g:airline_symbols.linenr = '␤'
-"let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-"let g:airline_symbols.paste = 'ρ'
-"let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
-let g:airline_symbols.whitespace = 'Ξ'
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-"let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-"let g:airline_symbols.linenr = ''
 let g:airline_theme='badwolf'  " Select airline theme
 
 " Rainbow parentheses
