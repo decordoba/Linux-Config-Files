@@ -101,14 +101,17 @@ if [ "$color_prompt" = yes ]; then
   PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\$ '
   alias ps1short="PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\W\[\033[00m\]\$ '"
   alias ps1long="PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\$ '"
+  alias ps1line="PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\n\$ '"
 else
   PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
   alias ps1short="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\W\$ '"
   alias ps1long="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '"
+  alias ps1line="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\n\$ '"
 fi
 unset color_prompt force_color_prompt
 alias pathshort="ps1short"
 alias pathlong="ps1long"
+alias pathline="ps1line"
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
