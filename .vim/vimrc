@@ -471,6 +471,7 @@ set nomodeline     " Ignore file’s mode lines, use vimrc config instead
 set ttimeout       " Wait to see if more chars come after cmd, if not run it
 set ttimeoutlen=200  " How may ms to wait before moving on
 set tabpagemax=50  " At most 50 tabs can be opened
+set wildignore=*.swp,*.bak,*.pyc,*.class  " Ignore these files
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Search configuration
@@ -483,12 +484,13 @@ set wrapscan       " When we get to end search, go back to beginning
 set hlsearch       " Highlight all results in file when searching
 nohlsearch         " Hide last search highlight when we open vim or reload vimrc
 " Use ,, to clear the highlighting of :set hlsearch
-nnoremap <silent> <Leader><Leader> :noh<CR>
+nnoremap <Leader><Leader> :noh<CR>
+inoremap <Leader><Leader> <Esc>:noh<CR>a
+vnoremap <Leader><Leader> <Esc>:noh<CR>gv
 " F12 toggle highlight on and off
 nnoremap <F12> :set hls!<CR>
 inoremap <F12> <ESC>:set hls!<CR>a
 vnoremap <F12> <ESC>:set hls!<CR>gv
-
 " Use <leader>m to toggle mouse use (right-click paste only works if mouse disabled)
 function! ToggleMouse()
     if &mouse == 'a'
