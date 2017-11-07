@@ -312,8 +312,6 @@ inoremap <F10> <Esc>:NERDTreeToggle<cr>  " Key to open NERDTree in insert mode
 nnoremap <F3> :set paste!<CR>
 inoremap <F3> <ESC>:set paste!<CR>a
 vnoremap <F3> <ESC>:set paste!<CR>gv
-" Command-T
-"Bundle 'wincent/Command-T'  "?
 
 " Show/hide indents
 nnoremap <F4> :IndentLinesToggle<CR>
@@ -337,6 +335,10 @@ nnoremap <C-T> :tabnew<Space>%<CR>
 
 " Ctrl+F searches word under cursor in current document, Ctrl+Shift+F searches in project
 nnoremap <C-F> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+nnoremap gr :grep <cword> *<CR>
+nnoremap Gr :grep <cword> %:p:h/*<CR>
+nnoremap gR :grep '\b<cword>\b' *<CR>
+nnoremap GR :grep '\b<cword>\b' %:p:h/*<CR>
 
 " Using two uppercase letters in insert mode we can navigate faster
 " Go to beginning of line
@@ -487,6 +489,10 @@ nohlsearch         " Hide last search highlight when we open vim or reload vimrc
 nnoremap <Leader><Leader> :noh<CR>
 inoremap <Leader><Leader> <Esc>:noh<CR>a
 vnoremap <Leader><Leader> <Esc>:noh<CR>gv
+" Use \\ to search current word in current document (like * but stay in same postition)
+nnoremap \\ :keepjumps normal! mi*`i<CR>
+inoremap \\ <Esc>:keepjumps normal! mi*`i<CR>a
+vnoremap \\ <Esc>:keepjumps normal! mi*`i<CR>gv
 " F12 toggle highlight on and off
 nnoremap <F12> :set hls!<CR>
 inoremap <F12> <ESC>:set hls!<CR>a
