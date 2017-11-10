@@ -713,7 +713,7 @@ let g:airline_theme='badwolf'  " Select airline theme
 " Rainbow parentheses
 let g:rainbow#blacklist = [248, 241, 243, 223, 229]  " Blacklist color with low contrast (gruvbox)
 au VimEnter * RainbowParentheses            " Toggle rainbow parentheses on
-let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}'], ['<', '>']]
+let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
 
 " IndentLine
 let g:indentLine_enabled = 0  " Indentation guidelines hidden by default
