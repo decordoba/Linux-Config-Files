@@ -113,6 +113,9 @@ alias pathshort="ps1short"
 alias pathlong="ps1long"
 alias pathline="ps1line"
 
+# In some monitors the blue used for folders is too dark and hard to read, change it to light_blue
+LS_COLORS=$LS_COLORS:'di=1;94:' ; export LS_COLORS
+
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
   xterm*|rxvt*) PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1";;
@@ -222,6 +225,16 @@ alias screen3='screen -S s3'
 # Set mv and cp to be interactive: ask before overwritting
 alias mv='mv -i'
 alias cp='cp -i'
+
+# Fast navigation aliases
+alias cdDc='cd $HOME/Documents'
+alias cdDw='cd $HOME/Downloads'
+alias cdDe='cd $HOME/Desktop'
+alias cdD=cdDc
+alias cdM='cd $HOME/Music'
+alias cdV='cd $HOME/Videos'
+alias cdP='cd $HOME/Pictures'
+alias cdL='cd $HOME/Documents/Linux-Config-Files'
 
 # Other aliases
 alias space='du -csh * .[!.]* 2>/dev/null | sort -hr | less'  # space of files and folders (not subfolders)
