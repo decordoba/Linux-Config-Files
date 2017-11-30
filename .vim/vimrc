@@ -1,5 +1,5 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Avalable commands:
+" Available commands:
 "
 " * Ctrl+N > Switching between relative and absolute line numbers
 " * Ctrl+N/P > Show autocomplete
@@ -10,6 +10,7 @@
 " * Ctrl+Up/Down > Move tabs
 " * F3 > Toggle paste mode
 " * F4 > Toggle indentation lines
+" * F5 > Remove trailing spaces (extra spaces at the beginning and end of the line)
 " * F8 > Put everyting in buffers in tabs, or put everything in tabs in a buffer
 " * F10 > Open NERD Tree
 " * F12 > Toggle search highlight on and off
@@ -21,6 +22,8 @@
 " * ,s > In visual mode, sort selected lines alpbabetically
 " * ,e > Close current buffer
 " * ,E > Close all buffers
+" * ,m > Toggle mouse (controlled by vim or by terminal)
+" * ,n > Toggle column on the left, (copy with cursor after ,m without copying numbers)
 " * ,, > Stop highlighting after a search
 " * :W > Sudo saves
 " * Up/Down > Go up and down line by line visually
@@ -42,6 +45,10 @@
 " * :b name > Show buffer of file name
 " * Ctrl+6 > Switch between buffers (the last two buffers used)
 " * # Ctrl+6 > Switch to buffer #
+"
+" Insert mode commands:
+" * AA, II, OO, CC, SS, DD, BB, TT, FF, VV, UU, RR, qq, QQ, yy, YY, PP, XX, WW, EE, BB, JJ, KK,
+"   HH, LL, >>, <<, //, \\
 "
 " Commands created by plugins:
 "
@@ -205,7 +212,7 @@ Plugin 'tpope/vim-surround'
 " Comment / uncomment easily with <leader>c. and <leader>cc
 Plugin 'scrooloose/nerdcommenter'
 
-" Add shortcuts for many functions using the [ and ] prefixes
+" Add shortcuts for many functions using the '[' and ']' prefixes
 Plugin 'tpope/vim-unimpaired'
 " Git support
 Bundle 'tpope/vim-fugitive'
@@ -318,6 +325,11 @@ nnoremap <F4> :IndentLinesToggle<CR>
 inoremap <F4> <ESC>:IndentLinesToggle<CR>a
 vnoremap <F4> <ESC>:IndentLinesToggle<CR>gv
 
+" Remove all trailing spaces
+nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+inoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+vnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+
 " Map Ctrl+D to save current document
 nnoremap <C-D> :update<CR>
 inoremap <C-D> <ESC>:update<CR>a
@@ -349,14 +361,14 @@ inoremap AA <Esc>A
 inoremap OO <Esc>o
 " Change what is on the right side of the cursor
 inoremap CC <Esc><Right>C
-" Change word from cursor
-inoremap cc <Esc><Right>cw
 " Change the whole line
 inoremap SS <Esc>S
 " Delete the whole line
 inoremap DD <Esc>ddi
-" Delete the whole current word, including space after it (map does not make sense, I know)
-inoremap FF <Esc><Right>diwxi
+" Delete current word TT before idx, FF all word, VV after idx
+inoremap TT <Esc><Right>dwi
+inoremap FF <Esc><Right>diwi
+inoremap VV <Esc><Right>dbi
 " Undo
 inoremap UU <Esc>ua
 " Redo (not replace, because it would do same as XX)
@@ -387,7 +399,7 @@ inoremap >> <Esc>>>i
 inoremap << <Esc><<i
 " Comment line (requires NERD Commenter) and go down to next line
 imap // <C-O><leader>c<Space><C-O>j
-" Available still: TT, GG, ZZ, VV, NN, MM
+" Available still: GG, ZZ, NN, MM
 
 " Visual mappings
 " Sort lines
