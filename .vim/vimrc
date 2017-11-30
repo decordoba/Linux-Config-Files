@@ -684,8 +684,25 @@ function! NumberToggle()
     else
         call ToggleRelativeOn()
     endif
-endfunc
+endfunction
 nnoremap <C-n> :call NumberToggle()<cr>
+function! ToggleNumbersColumn()
+    if(&number == 1)
+        set norelativenumber
+        set nonumber
+        call gitgutter#disable()
+        if b:sig_enabled
+            call signature#utils#Toggle()
+        endif
+    else
+        call ToggleRelativeOn()
+        call gitgutter#enable()
+        if !b:sig_enabled
+            call signature#utils#Toggle()
+        endif
+    endif
+endfunction
+nnoremap <Leader>n :call ToggleNumbersColumn()<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin configuration
