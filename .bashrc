@@ -384,7 +384,7 @@ cdn() {  # cd into newest folder, or cd into Nth newest folder
   if [[ $n == "" ]]; then
     echo "Usage: cdn      # cd into newest folder"
     echo "       cdn [N]  # cd into Nth newest folder (N should be number > 0)"
-    return
+    return 1
   fi
   cd $n
 }
@@ -395,7 +395,7 @@ cdo() {  # cd into oldest folder, or cd into Nth oldest folder
   if [[ $n == "" ]]; then
     echo "Usage: cdo      # cd into oldest folder"
     echo "       cdo [N]  # cd into Nth oldest folder (N should be number > 0)"
-    return
+    return 1
   fi
   cd $n
 }
@@ -406,7 +406,7 @@ rmn() {  # rm newest folder, or rm Nth newest folder
   if [[ $n == "" ]]; then
     echo "Usage: rmn      # rm newest folder"
     echo "       rmn [N]  # rm Nth newest folder (N should be number > 0)"
-    return
+    return 1
   fi
   echo "Removed folder: $n"
   rm $n -r
@@ -418,7 +418,7 @@ rmo() {  # rm oldest folder, or rm Nth oldest folder
   if [[ $n == "" ]]; then
     echo "Usage: rmo      # rm oldest folder"
     echo "       rmo [N]  # rm Nth oldest folder (N should be number > 0)"
-    return
+    return 1
   fi
   echo "Removed folder: $n"
   rm $n -r
@@ -430,7 +430,7 @@ lsn() {  # ls into newest folder, or ls into Nth newest folder
   if [[ $n == "" ]]; then
     echo "Usage: lsn      # ls into newest folder"
     echo "       lsn [N]  # ls into Nth newest folder (N should be number > 0)"
-    return
+    return 1
   fi
   echo "Folder: $n"
   ls $n
@@ -442,7 +442,7 @@ lso() {  # ls into oldest folder, or ls into Nth oldest folder
   if [[ $n == "" ]]; then
     echo "Usage: lso      # ls into oldest folder"
     echo "       lso [N]  # ls into Nth oldest folder (N should be number > 0)"
-    return
+    return 1
   fi
   echo "Folder: $n"
   ls $n
@@ -454,7 +454,7 @@ lln() {  # ll into newest folder, or ll into Nth newest folder
   if [[ $n == "" ]]; then
     echo "Usage: lln      # ll into newest folder"
     echo "       lln [N]  # ll into Nth newest folder (N should be number > 0)"
-    return
+    return 1
   fi
   echo "Folder: $n"
   ll $n
@@ -466,7 +466,7 @@ llo() {  # ll into oldest folder, or ll into Nth oldest folder
   if [[ $n == "" ]]; then
     echo "Usage: llo      # ll into oldest folder"
     echo "       llo [N]  # ll into Nth oldest folder (N should be number > 0)"
-    return
+    return 1
   fi
   echo "Folder: $n"
   ll $n
@@ -478,7 +478,7 @@ llln() {  # lll into newest folder, or lll into Nth newest folder
   if [[ $n == "" ]]; then
     echo "Usage: llln      # lll into newest folder"
     echo "       llln [N]  # lll into Nth newest folder (N should be number > 0)"
-    return
+    return 1
   fi
   echo "Folder: $n"
   ll $n --color=always | less -R
@@ -490,7 +490,7 @@ lllo() {  # lll into oldest folder, or lll into Nth oldest folder
   if [[ $n == "" ]]; then
     echo "Usage: lllo      # lll into oldest folder"
     echo "       lllo [N]  # lll into Nth oldest folder (N should be number > 0)"
-    return
+    return 1
   fi
   echo "Folder: $n"
   ll $n --color=always | less -R
@@ -531,7 +531,7 @@ addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
   if [ $# -lt 1 ]; then
     echo "Usage: add user@hostname              # add SSH user and hostname to .ssh/config. SSH alias is assigned automatically (recommended)"
     echo "       add user@hostname [ssh_alias]  # add SSH user and hostname to .ssh/confid, and use SSH alias to access it"
-    return
+    return 1
   fi
   user=${1%%@*}
   hostname=${1#*@}
@@ -574,4 +574,71 @@ addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
 
   source $HOME/.bashrc
   ssh $1
+}
+
+# Make accessible or inaccessible (encrypted) an encripted hard drive partition
+# The device should have been previously encrypted with cryptsetup
+# See: https://askubuntu.com/questions/500981/how-to-encrypt-external-devices
+# It is assumed that there is a /$hdd_name folder, if it doesn't exist the device won't be mounted
+# Use: 'hddunlock' or 'hddunlock /dev/sdb1' or 'hddunlock /dev/sdb1 folder_name'
+hddunlock() {
+  if [ $# -lt 1 ]; then
+    device='/dev/sdc1'
+  else
+    device=$1
+  fi
+  if [ $# -lt 2 ]; then
+    hdd_name='data'
+  else
+    hdd_name=$2
+  fi
+  folder=/$hdd_name
+  hdd_name=${hdd_name//\//_}
+  if [ ! -d $folder ]; then
+    echo The folder $folder does not exist. Create it to mount $device there.
+    return 1
+  fi
+  echo Unlocking device $device, naming it $hdd_name...
+  sudo cryptsetup luksOpen $device $hdd_name
+  if [ $? -ne 0 ]; then
+    echo Failed to unlock $device.
+    return 1
+  fi
+  echo Mounting $device to folder $folder...
+  sudo mount /dev/mapper/$hdd_name $folder
+  if [ $? -ne 0 ]; then
+    echo Failed to mount folder $folder. Re-locking device $device.
+    # relock device if there was any error
+    sudo cryptsetup luksClose $hdd_name
+    if [ $? -ne 0 ]; then
+      echo Failed to re-lock $device.
+      return 1
+    fi
+    echo Re-locked!
+    return 1
+  fi
+  echo Unlocked!
+}
+# Use: 'hddlock' or 'hddlock folder_name' (expects a folder unlocked with hddunlock)
+hddlock() {
+  if [ $# -lt 1 ]; then
+    hdd_name='data'
+  else
+    hdd_name=$1
+  fi
+  folder=/$hdd_name
+  hdd_name=${hdd_name//\//_}
+  echo Unmounting $folder...
+  sudo umount $folder
+  if [ $? -ne 0 ]; then
+    echo Failed to mount $folder. Make sure no terminal or file manager are inside $folder.
+    return 1
+  fi
+  echo Locking $hdd_name...
+  sudo cryptsetup luksClose $hdd_name
+  if [ $? -ne 0 ]; then
+    echo Failed to lock $hdd_name. Lock it manually running: 'sudo cryptsetup luksClose (TAB)'
+    return 1
+  fi
+  echo Locked!
 }
