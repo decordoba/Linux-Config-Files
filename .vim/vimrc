@@ -6,6 +6,8 @@
 " * Ctrl+F > Stop highlighting after a search
 " * Ctrl+D > Save file
 " * Ctrl+J/K/L/H > Navigate between split layouts
+" * Ctrl+A/X > Go to next number and add/substract 1 to it
+" * ,Ctrl+A/X > Go to previous number and add/substract 1 to it
 " * Ctrl+Left/Right > Navigate between tabs (gt and gT should also work)
 " * Ctrl+Up/Down > Move tabs
 " * F3 > Toggle paste mode
@@ -126,7 +128,10 @@
 " * ...
 "
 " VIM-UNPAIRED
-" * ...
+" * ]/[+e > Move current line up/down
+" * ]/[+b > Move to next/prev buffer
+" * ]/[+Space > Create new white line
+" ...
 "
 " CTRLP
 " * Ctrl+P > Open file in folder / buffer / recent file
