@@ -100,7 +100,7 @@ alias pathline="ps1line"
 # In some monitors the blue used for folders is too dark and hard to read, change it to light_blue
 LS_COLORS=$LS_COLORS:'di=1;94:' ; export LS_COLORS
 
-# If this is an xterm set the title to user@host:dir
+# If this is an xterm set the title (the text on top of the terminal window) to user@host:dir
 case "$TERM" in
   xterm*|rxvt*) PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1";;
   *);;
@@ -123,10 +123,10 @@ fi
 # Some ls aliases (including typos)
 # This looks messy, but it's pretty simple: 3 basic commands: ls (or l), ll, lll.
 # ll does ls in long format (one file per line) and lll pipes ll to less.
-# If we add an a to them (lsa (la), lla, llla), we include folders and files starting with .
+# If we add an a to them (lsa (la), lla, llla), we include folders and files starting with a dot (.)
 # If we add a t to them (lst (lt), llt, lllt), files and folders are sorted by date, not alphabetically
 # If we add a g to them (lsg (lg), llg, lllg), folders will be listed before files
-# We can use 2 or 3 prefixes at the same time, in any order, like llag, lsta, lllgt, latg, etc.
+# We can use 2 or 3 suffixes at the same time, in any order, like llag, lsta, lllgt, latg, etc.
 alias l='ls'  # ls typo
 alias ll='ls -lh'  # long listing format + size in human-readable format (K, M, G)
 alias lll='ll --color=always | less -R'  # ll for many files (pipe into less)
@@ -198,13 +198,15 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 
-# screen aliases. Create a screen with screen1/2/3 and return to it with s1/2/3.
+# Screen aliases. Create a screen with screen1/2/3/4 and return to it with s1/2/3/4
 alias s1='screen -dr s1'
 alias s2='screen -dr s2'
 alias s3='screen -dr s3'
+alias s4='screen -dr s4'
 alias screen1='screen -S s1'
 alias screen2='screen -S s2'
 alias screen3='screen -S s3'
+alias screen4='screen -S s4'
 
 # Set mv and cp to be interactive: ask before overwritting
 alias mv='mv -i'
