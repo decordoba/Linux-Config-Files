@@ -65,10 +65,9 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
   debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# Set XTERM to xterm-256color (colored prompt) unless we are ssh-ing
-if [ -n "$DISPLAY" ]; then
-  export TERM=xterm-256color
-fi
+# Set XTERM to xterm-256color (colored prompt, highly recommended)
+# Comment this to use your system's default prompt
+export TERM=xterm-256color
 
 # Set a fancy color prompt (non-color, unless we "want" color).
 # Checks if $TERM is xterm-color, xterm-256color or xterm-16color,
@@ -77,25 +76,10 @@ case "$TERM" in
   xterm-color|*-256color|*-16color) color_prompt=yes;;
 esac
 
-# Uncomment for a colored prompt, if the terminal has the capability
-#force_color_prompt=yes
-
-# If force_color_prompt is yes and the system can, color will be shown
-if [ -n "$force_color_prompt" ]; then
-  if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-    # We have color support; assume it's compliant with Ecma-48
-    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-    # a case would tend to support setf rather than setaf.)
-    color_prompt=yes
-  else
-    color_prompt=
-  fi
-fi
-
 # Format prompt as user@host:path$
 # Show color on prompt or not depending on the color_prompt variable
-# Create aliases to change between long prompt and short prompt.
-# long shows full path, short shows only current sub-folder
+# Create aliases to change between long prompt, short prompt and two lines prompt
+# long shows full path, short shows only current sub-folder, line adds new line after path
 if [ "$color_prompt" = yes ]; then
   # user@host are green(32m), path is light_blue(94m)
   PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\$ '
@@ -108,7 +92,7 @@ else
   alias ps1long="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '"
   alias ps1line="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\n\$ '"
 fi
-unset color_prompt force_color_prompt
+unset color_prompt
 alias pathshort="ps1short"
 alias pathlong="ps1long"
 alias pathline="ps1line"
