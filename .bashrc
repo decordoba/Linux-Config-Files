@@ -30,17 +30,37 @@ shopt -s cmdhist
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files, directories and subdirectories. Acts like * but
-# also matches subdirectories
+# Interprets [a-d] as [abcd]. To match a literal -, include it as 1st or last char
+shopt -s globasciiranges
+
+# The pattern "**" used in a pathname expansion context will match all files,
+# directories and subdirectories. Acts like * but also matches subdirectories.
+# Example use: 'ls **' (instead of 'ls *') shows all directories and subdirectories
 shopt -s globstar
-#shopt -s extglob
+
+# Composite patterns may be formed using  one  or  more  of  the sub-patterns:
+# ?(pattern-list) = Matches zero or one occurrence of the given patterns
+# *(pattern-list) = Matches zero or more occurrences of the given patterns
+# +(pattern-list) = Matches one or more occurrences of the given patterns
+# @(pattern-list) = Matches one of the given patterns
+# !(pattern-list) = Matches anything except one of the given patterns
+# Example: 'ls +(ab|def)*+(.jpg|.gif)' shows all JPG and GIF files starting with ab and def
+# Example: 'ls ?????*.[ch]' shows all .c and .h files with at least 5 chars in their name
+# Example: 'ls !(*.jpg|*.gif)' shows all files except JPG and GIF files
+shopt -s extglob
+
+# Uncomment to include dotfiles when matching globs
 #shopt -s dotglob
+# Uncomment to expand non-matching globs to zero arguments instead of to themselves
 #shopt -s nullglob
 
 # Minor errors in path spelling are corrected automatically
 # i.e. 'cd ~/Desltop' will bring us to ~/Desktop
 shopt -s cdspell
+
+# A command name that is the name of a directory is executed as if it were the argument to the cd command
+# Type a folder name to cd automatically to it, no need to write cd before it
+shopt -s autocd
 
 # Make vim the default editor
 export EDITOR=vim  # Normally VISUAL will be called 1st, if it fails EDITOR will be
