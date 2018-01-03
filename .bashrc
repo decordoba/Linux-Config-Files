@@ -501,6 +501,86 @@ lllo() {  # lll into oldest folder, or lll into Nth oldest folder
   echo "Folder: $n"
   ll $n --color=always | less -R
 }
+# Use: 'cpn' or 'cpn 3'  # cpn for cp newest
+cpn() {  # cp newest folder, or cp Nth newest folder
+  local n re args
+  re='^[0-9]+$'
+  if ! [[ $1 =~ $re ]] ; then
+    n="$(newest)"
+    args="$@"
+  else
+    n="$(newest $1)"
+    args="${@:2}"
+  fi
+  if [[ $n == "" ]] || [[ $args == "" ]] ; then
+    echo "Usage:   cpn location      # cp newest folder into location"
+    echo "         cpn [N] location  # cp Nth newest folder into location (N should be number > 0)"
+    echo "Warning: if location is a number, the argument N is mandatory."
+    return 1
+  fi
+  echo "Running: cp $n $args -r"
+  cp $n $args -r
+}
+# Use: 'cpo' or 'cpo 3'  # cpo for cp oldest
+cpo() {  # cp oldest folder, or cp Nth oldest folder
+  local n re args
+  re='^[0-9]+$'
+  if ! [[ $1 =~ $re ]] ; then
+    n="$(oldest)"
+    args="$@"
+  else
+    n="$(oldest $1)"
+    args="${@:2}"
+  fi
+  if [[ $n == "" ]] || [[ $args == "" ]] ; then
+    echo "Usage:   cpo location      # cp oldest folder into location"
+    echo "         cpo [N] location  # cp Nth oldest folder into location (N should be number > 0)"
+    echo "Warning: if location is a number, the argument N is mandatory."
+    return 1
+  fi
+  echo "Running: cp $n $args -r"
+  cp $n $args -r
+}
+# Use: 'mvn' or 'mvn 3'  # mvn for mv newest
+mvn() {  # mv newest folder, or mv Nth newest folder
+  local n re args
+  re='^[0-9]+$'
+  if ! [[ $1 =~ $re ]] ; then
+    n="$(newest)"
+    args="$@"
+  else
+    n="$(newest $1)"
+    args="${@:2}"
+  fi
+  if [[ $n == "" ]] || [[ $args == "" ]] ; then
+    echo "Usage:   mvn location      # mv newest folder into location"
+    echo "         mvn [N] location  # mv Nth newest folder into location (N should be number > 0)"
+    echo "Warning: if location is a number, the argument N is mandatory."
+    return 1
+  fi
+  echo "Running: mv $n $args"
+  mv $n $args
+}
+# Use: 'mvo' or 'mvo 3'  # mvo for mv oldest
+mvo() {  # mv oldest folder, or mv Nth oldest folder
+  local n re args
+  re='^[0-9]+$'
+  if ! [[ $1 =~ $re ]] ; then
+    n="$(oldest)"
+    args="$@"
+  else
+    n="$(oldest $1)"
+    args="${@:2}"
+  fi
+  if [[ $n == "" ]] || [[ $args == "" ]] ; then
+    echo "Usage:   mvo location      # mv oldest folder into location"
+    echo "         mvo [N] location  # mv Nth oldest folder into location (N should be number > 0)"
+    echo "Warning: if location is a number, the argument N is mandatory."
+    return 1
+  fi
+  echo "Running: mv $n $args -r"
+  mv $n $args -r
+}
 # Use: 'bu my_config_file.cfg'
 bu () {  # create backup file
   if [ $# -lt 1 ]; then
