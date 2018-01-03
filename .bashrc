@@ -578,8 +578,8 @@ mvo() {  # mv oldest folder, or mv Nth oldest folder
     echo "Warning: if location is a number, the argument N is mandatory."
     return 1
   fi
-  echo "Running: mv $n $args -r"
-  mv $n $args -r
+  echo "Running: mv $n $args"
+  mv $n $args
 }
 # Use: 'bu my_config_file.cfg'
 bu () {  # create backup file
