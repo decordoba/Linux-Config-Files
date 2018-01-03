@@ -117,9 +117,6 @@ alias pathshort="ps1short"
 alias pathlong="ps1long"
 alias pathline="ps1line"
 
-# In some monitors the blue used for folders is too dark and hard to read, change it to light_blue
-LS_COLORS=$LS_COLORS:'di=1;94:' ; export LS_COLORS
-
 # If this is an xterm set the title (the text on top of the terminal window) to user@host:dir
 case "$TERM" in
   xterm*|rxvt*) PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1";;
@@ -136,6 +133,9 @@ if [ -x /usr/bin/dircolors ]; then
   alias fgrep='fgrep --color=auto'
   alias egrep='egrep --color=auto'
 fi
+
+# In some monitors the blue used for folders is too dark and hard to read, change it to light_blue
+LS_COLORS=$LS_COLORS:'di=1;94:' ; export LS_COLORS
 
 # Colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
@@ -582,19 +582,21 @@ addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
   ssh $1
 }
 
-# Make accessible or inaccessible (encrypted) an encripted hard drive partition
+# Make accessible or inaccessible (encrypted) an encrypted hard drive partition
 # The device should have been previously encrypted with cryptsetup
 # See: https://askubuntu.com/questions/500981/how-to-encrypt-external-devices
 # It is assumed that there is a /$hdd_name folder, if it doesn't exist the device won't be mounted
 # Use: 'hddunlock' or 'hddunlock /dev/sdb1' or 'hddunlock /dev/sdb1 folder_name'
+default_hdd_name='data'
+default_device='/dev/sdc1'
 hddunlock() {
   if [ $# -lt 1 ]; then
-    device='/dev/sdc1'
+    device=default_device
   else
     device=$1
   fi
   if [ $# -lt 2 ]; then
-    hdd_name='data'
+    hdd_name=default_hdd_name
   else
     hdd_name=$2
   fi
@@ -628,7 +630,7 @@ hddunlock() {
 # Use: 'hddlock' or 'hddlock folder_name' (expects a folder unlocked with hddunlock)
 hddlock() {
   if [ $# -lt 1 ]; then
-    hdd_name='data'
+    hdd_name=default_hdd_name
   else
     hdd_name=$1
   fi
