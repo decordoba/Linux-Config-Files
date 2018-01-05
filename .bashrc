@@ -135,7 +135,7 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # In some monitors the blue used for folders is too dark and hard to read, change it to light_blue
-LS_COLORS=$LS_COLORS:'di=1;94:' ; export LS_COLORS
+LS_COLORS=$LS_COLORS'di=1;94:' ; export LS_COLORS
 
 # Colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
@@ -327,6 +327,7 @@ extract () {  # extract any file into current folder
     echo "'$1' is not a valid file"
   fi
 }
+
 #Use: 'repeat 10 cd ..'
 repeat() {  # repeat n times command.
   local i max
@@ -335,6 +336,7 @@ repeat() {  # repeat n times command.
     eval "$@";
   done
 }
+
 # Use: 'mkcd my_new_folder'
 mkcd() {  # create a folder and cd into it with one cmd only
   if [ $# != 1 ]; then
@@ -581,6 +583,7 @@ mvo() {  # mv oldest folder, or mv Nth oldest folder
   echo "Running: mv $n $args"
   mv $n $args
 }
+
 # Use: 'bu my_config_file.cfg'
 bu () {  # create backup file
   if [ $# -lt 1 ]; then
@@ -592,6 +595,7 @@ bu () {  # create backup file
     cp $1 ~/.backup/`basename $1`_`date +%Y%m%d%H%M`.backup ;  # in .backups folder
   fi
 }
+
 # Use: 'calc \(3^2 + 4^2\)^0.5'  # sorry, parenthesis must be escaped, unless formula is surrounded by ""
 calc() {  # create a terminal calculator
     echo "$@" | bc -l
