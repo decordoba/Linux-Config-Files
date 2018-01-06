@@ -345,6 +345,29 @@ mkcd() {  # create a folder and cd into it with one cmd only
     mkdir -p $1 && cd $1
   fi
 }
+# Use: 'cpcd my_old_location my_new_location_where_I_will_cd'
+cpcd () {  # copy a file or folder and cd into the destination directory
+  cp "$@"
+  if [ $? -eq 0 ]; then
+    if [ -d "$2" ];then
+      cd $2
+    else
+      cd $(dirname $2)
+    fi
+  fi
+}
+# Use: 'mvcd my_old_location my_new_location_where_I_will_cd'
+mvcd () {  # move a file or folder and cd into the destination directory
+  mv "$@"
+  if [ $? -eq 0 ]; then
+    if [ -d "$2" ];then
+      cd $2
+    else
+      cd $(dirname $2)
+    fi
+  fi
+}
+
 # Use: 'newest' or 'newest 3'
 newest() {  # get newest folder, or Nth newest folder
   local idx re folders
