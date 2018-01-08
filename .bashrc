@@ -778,7 +778,7 @@ cd_func () {  # Navigate to folders in history with cd_func -3 (3rd most recent 
   # if 'cd -N', extract Nth most recent directory from dirs history
   if [[ ${new_dir:0:1} == '-' ]]; then
     n=${new_dir:1}
-    [[ -z $n ]] && index=1
+    [[ -z $n ]] && n=1
     n=$(dirs +$n)  # returns nth element in dirs and prints it
     [[ -z $n ]] && return 1
     new_dir=$n
