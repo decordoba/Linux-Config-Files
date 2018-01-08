@@ -13,6 +13,8 @@
         dump = cat-file -p # expects hash (number in git hist)
         # log + blame. Show whole file history commit by commit with author
         lame = log -p -M --follow --stat -- # expects filename
+        # show files in repo and count number of lines
+        lines = ls-files | xargs wc -l'
 
 [core]
         whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
