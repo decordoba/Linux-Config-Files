@@ -217,6 +217,12 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
+alias ~="cd ~"  # `cd` is probably faster to type though
+alias -- -='cd -'  # go to previous directory
+alias bd='cd "$OLDPWD"'  # go to previous directory (like cd -)
+alias cd='cd_func'
+alias -- --='cd --'
+alias cd..='cd ..'
 
 # Screen aliases. Create a screen with screen1/2/3/4 and return to it with s1/2/3/4
 alias s1='screen -dr s1'
@@ -246,7 +252,6 @@ alias cdL='cd $HOME/Documents/Linux-Config-Files'
 alias space='du -csh * .[!.]* 2>/dev/null | sort -hr | less'  # space of files and folders (not subfolders)
 alias spacef='du -hS | sort -hr | less'  # space taken by every folder and subfolder
 alias p='pwd'
-alias bd='cd "$OLDPWD"'  # go to previous directory
 alias p4='ping 4.2.2.2 -c 4'  # check if we have access to the internet
 alias tmp='pushd $(mktemp -d)'  # create tmp dir (removed on boot) and cd into it
 alias lines='wc -l'  # count lines file
@@ -756,4 +761,45 @@ hddlock() {
     return 1
   fi
   echo Locked!
+}
+
+# Use: 'cd_func --' or 'cd_func -3' or 'cd_func my_folder'. Can be safely aliased as cd
+cd_func () {  # Navigate to folders in history with cd_func -3 (3rd most recent folder), or see history with cd_func --
+  local new_dir n  # strings
+  local -i i  # integers
+  # print numbered directories history if 'cd --'
+  if [[ $1 ==  "--" ]]; then
+    dirs -v
+    return 0
+  fi
+  # save the first argument, if $1 is null or empty save $HOME
+  new_dir=$1
+  [[ -z $1 ]] && new_dir=$HOME
+  # if 'cd -N', extract Nth most recent directory from dirs history
+  if [[ ${new_dir:0:1} == '-' ]]; then
+    n=${new_dir:1}
+    [[ -z $n ]] && index=1
+    n=$(dirs +$n)  # returns nth element in dirs and prints it
+    [[ -z $n ]] && return 1
+    new_dir=$n
+  fi
+  # substitute '~' by ${HOME} (necessary to remove old occurrences)
+  [[ ${new_dir:0:1} == '~' ]] && new_dir="${HOME}${new_dir:1}"
+  # change to new_dir and add it to the top of the stack
+  pushd "${new_dir}" > /dev/null  # adds new_dir to dirs and navigates there
+  [[ $? -ne 0 ]] && return 1
+  new_dir=$(pwd)
+  # remove any other occurrence of this dir, skipping the top of the stack
+  for ((i=1; i<=10; i++)); do
+    n=$(dirs +${i} 2>/dev/null)
+    [[ $? -ne 0 ]] && continue
+    [[ ${n:0:1} == '~' ]] && n="${HOME}${n:1}"
+    if [[ "${n}" == "${new_dir}" ]]; then
+      popd -n +$i 2>/dev/null 1>/dev/null
+      i=i-1
+    fi
+  done
+  # trim down everything beyond 11th entry
+  popd -n +11 2>/dev/null 1>/dev/null
+  return 0
 }
