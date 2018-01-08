@@ -217,12 +217,22 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
+alias cd..='cd ..'
 alias ~="cd ~"  # `cd` is probably faster to type though
 alias -- -='cd -'  # go to previous directory
 alias bd='cd "$OLDPWD"'  # go to previous directory (like cd -)
-alias cd='cd_func'
-alias -- --='cd --'
-alias cd..='cd ..'
+alias cd='cd_func'  # allow to do cd -N to cd to folder in history
+alias -- --='cd --'  # show cd history
+alias -- -1='cd -1'  # cd to 1st most recently visited folder
+alias -- -2='cd -2'  # cd to 2nd most recently visited folder
+alias -- -3='cd -3'  # cd to 3rd most recently visited folder
+alias -- -4='cd -4'  # cd to 4th most recently visited folder
+alias -- -5='cd -5'  # cd to 5th most recently visited folder
+alias -- -6='cd -6'  # cd to 6th most recently visited folder
+alias -- -7='cd -7'  # cd to 7th most recently visited folder
+alias -- -8='cd -8'  # cd to 8th most recently visited folder
+alias -- -9='cd -9'  # cd to 9th most recently visited folder
+alias -- -10='cd -10'  # cd to 10th most recently visited folder
 
 # Screen aliases. Create a screen with screen1/2/3/4 and return to it with s1/2/3/4
 alias s1='screen -dr s1'
