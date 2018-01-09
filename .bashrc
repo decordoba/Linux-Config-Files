@@ -60,7 +60,7 @@ shopt -s cdspell
 
 # A command name that is the name of a directory is executed as if it were the argument to the cd command
 # Type a folder name to cd automatically to it, no need to write cd before it
-shopt -s autocd
+shopt -s autocd  # warning! new directory will not be saved to cd history if used
 
 # Make vim the default editor
 export EDITOR=vim  # Normally VISUAL will be called 1st, if it fails EDITOR will be
@@ -638,6 +638,18 @@ bu () {  # create backup file
 calc() {  # create a terminal calculator
     echo "$@" | bc -l
 }
+
+# Use: 'clock'
+clock () {  # show a real time bash clock in the terminal
+  local clockstr
+  while true; do
+    clockstr="============\n| $(date +%T) |\n============\n";
+    clear;
+    printf "$clockstr";
+    sleep 1;
+  done
+}
+
 # Use: 'google who am I?'
 google() {  # search something in google (will open a browser)
   local old s
