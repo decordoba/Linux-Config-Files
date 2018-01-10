@@ -8,7 +8,10 @@
         cim = commit -m
         st = status
         br = branch
-        hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+        # show git log but nicer, run with -p to see changes in every commit
+        lg = log --graph --pretty=format:'%C(yellow)%h%Creset%C(yellow bold)%d%Creset %s %C(green bold)(%cr) %C(cyan)[%an]%Creset' --abbrev-commit
+        hist = log --pretty=format:'%C(yellow bold)%h%Creset %C(yellow)%ad%Creset %C(red)|%Creset %s%C(green bold)%d%Creset %C(cyan)[%an]%Creset' --graph --date=short
+        # get info from a hash
         type = cat-file -t # expects hash (number in git hist)
         dump = cat-file -p # expects hash (number in git hist)
         # log + blame. Show whole file history commit by commit with author
