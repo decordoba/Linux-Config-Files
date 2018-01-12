@@ -126,7 +126,7 @@ esac
 # Enable color support of ls and also add handy aliases.
 # Works only if /usr/bin/dircolors exists and is executable
 if [ -x /usr/bin/dircolors ]; then
-  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+  test -r $HOME/.dircolors && eval "$(dircolors -b $HOME/.dircolors)" || eval "$(dircolors -b)"
   alias ls='ls --color=auto'
   alias dir='dir --color=auto'  # same as ls
   alias grep='grep --color=auto'
@@ -134,8 +134,14 @@ if [ -x /usr/bin/dircolors ]; then
   alias egrep='egrep --color=auto'
 fi
 
+# Make sure links are painted cyan, which is not the default in the trapd00r/LS_COLORS repo
 # In some monitors the blue used for folders is too dark and hard to read, change it to light_blue
-LS_COLORS=$LS_COLORS'di=1;94:' ; export LS_COLORS
+# Paint python files in green bold, and .pyc files in gray
+LS_COLORS=$LS_COLORS'ln=1;36:'
+LS_COLORS=$LS_COLORS'di=1;94:'
+LS_COLORS=$LS_COLORS'*.py=38;5;41:'
+LS_COLORS=$LS_COLORS'*.pyc=38;5;240:'
+export LS_COLORS
 
 # Colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
@@ -277,7 +283,7 @@ alias start="xdg-open"  # run a file as if double clicked. Also opens file manag
 alias click="start"  # run a file as if double clicked. Also opens file manager
 alias fm="xdg-open 2>/dev/null ."  # open file manager for current folder
 alias empty="find . -depth -type d -empty"  # show empty folders. Run empty -delete to delete those folders
-alias emptyrm="echo Removing folders: && empty && empty -delete"  # Remove empty folders
+alias emptyrm="echo Removing folders: && empty && empty -delete"  # remove empty folders
 alias server="start http://localhost:8000 && python -m SimpleHTTPServer"  # serve current folder in localhost:8000
 alias getip="ifconfig | grep inet\ addr:"
 
