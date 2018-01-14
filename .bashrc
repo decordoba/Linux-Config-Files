@@ -232,10 +232,10 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
-alias cd..='cd ..'
+alias cd..='cd ..'  # I always forget to add a SPACE between cd and ..
 alias ~="cd ~"  # `cd` is probably faster to type though
 alias -- -='cd -'  # go to previous directory
-alias bd='cd "$OLDPWD"'  # go to previous directory (like cd -)
+alias bd='cd "$OLDPWD"'  # go to previous directory
 alias cd='cd_func'  # allow to do cd -N to cd to folder in history
 alias -- --='cd --'  # show cd history
 alias -- -1='cd -1'  # cd to 1st most recently visited folder
@@ -273,31 +273,63 @@ alias cdV='cd $HOME/Videos'
 alias cdP='cd $HOME/Pictures'
 alias cdL='cd $HOME/Documents/Linux-Config-Files'
 
-# Other aliases
+# Space aliases: show the space that files and folders take, find empty folders, etc.
 alias space='du -csh * .[!.]* 2>/dev/null | sort -hr | less'  # space of files and folders (not subfolders)
 alias spacef='du -hS | sort -hr | less'  # space taken by every folder and subfolder
-alias p='pwd'
-alias p4='ping 4.2.2.2 -c 4'  # check if we have access to the internet
-alias tmp='pushd $(mktemp -d)'  # create tmp dir (removed on boot) and cd into it
+alias empty="find . -depth -type d -empty"  # show empty folders. Run empty -delete to delete those folders
+alias emptyrm="echo Removing folders: && empty && empty -delete"  # remove empty folders
+
+# Count aliases
 alias lines='wc -l'  # count lines file
 alias words='wc -w'  # count words file
+
+# Fortune aliases
 alias asdf='fortune'  # get a fun quote
 alias wisdom='fortune | cowsay -f tux | lolcat'  # get a message by a wise being
-alias clr="clear"
-alias src="source $HOME/.bashrc"  # update source file
+
+# Short aliases for common functions
+alias p='pwd'
+alias clr='clear'
+alias src="source $HOME/.bashrc"  # update source file, really useful
+
+# Aliases to edit common dotfiles
 alias vsrc="vim $HOME/.bashrc"  # edit source file
 alias bashrc="vsrc"
 alias vimrc="vim $HOME/.vim/vimrc"  # edit vim source file
+alias gitconfig="vim $HOME/.gitconfig"  # edit gitconfig file
+
+# Xdg-open aliases (open anything with its default program, and start graphical file manager)
 alias start="xdg-open"  # run a file as if double clicked. Also opens file manager
 alias click="start"  # run a file as if double clicked. Also opens file manager
 alias fm="xdg-open 2>/dev/null ."  # open file manager for current folder
-alias empty="find . -depth -type d -empty"  # show empty folders. Run empty -delete to delete those folders
-alias emptyrm="echo Removing folders: && empty && empty -delete"  # remove empty folders
-alias server="start http://localhost:8000 && python -m SimpleHTTPServer"  # serve current folder in localhost:8000
-alias getip="ifconfig | grep inet\ addr:"
 
-# Add an "alert" alias for long running commands. It will show a pop-up informing
-# that the task is over. Pretty cool!
+# Sudo related aliases
+alias sudo='sudo '  # sudo aliases not available as root
+alias please='sudo'  # write please instead of sudo, be polite!
+alias fuck='sudo $(history -p \!\!)'  # rerun last command with sudo
+
+# Aliases to print stuff
+alias path='echo -e ${PATH//:/\\n}'  # print each PATH entry on a separate line
+alias lscolors='echo -e ${LS_COLORS//:/\\n}'  # print each entry in LS_COLORS on a separate line
+alias hr="printf '%*s\n' \"${COLUMNS:-$(tput cols)}\" '' | tr ' ' ="  # print a separator line
+
+# IP related aliases
+alias p4='ping 4.2.2.2 -c 4'  # check if we have access to the internet
+alias getip="ifconfig | grep inet\ addr:"
+alias getippublic='curl -s "http://v4.ipv6-test.com/api/myip.php"'
+alias getipprivate='getip'
+
+# Other aliases
+alias tmp='pushd $(mktemp -d)'  # create tmp dir (removed on boot) and cd into it
+alias server="start http://localhost:8000 && python -m SimpleHTTPServer"  # serve current folder in localhost:8000
+alias bell='tput bel && tput flash'  # play bell sound and show flash in terminal
+
+# Copy and paste aliases pbcopy and pbpaste like in MAC OS (requires xclip installed)
+XCLIP=$(command -v xclip)
+[[ $XCLIP ]] && alias pbcopy="$XCLIP -selection clipboard" && alias pbpaste="$XCLIP -selection clipboard -o"
+;;
+
+# Add an "alert" alias for long running commands. It will show a pop-up once the task is over
 # Use: 'sleep 10; alert' or 'python slow_script.py args; alert'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
