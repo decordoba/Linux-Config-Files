@@ -123,6 +123,15 @@ case "$TERM" in
   *);;
 esac
 
+# Use 256 colors LS_COLORS definitions, to color around 300 different file extensions
+# Will download repo: trapd00r/LS_COLORS in ~/.dircolors if ~/.dircolors does not exist
+if ![ -r $HOME/.dircolors ]; then
+  case "$TERM" in
+    *-256color)
+      wget https://raw.github.com/trapd00r/LS_COLORS/master/LS_COLORS -O $HOME/.dircolors
+  esac
+fi
+
 # Enable color support of ls and also add handy aliases.
 # Works only if /usr/bin/dircolors exists and is executable
 if [ -x /usr/bin/dircolors ]; then
@@ -789,6 +798,92 @@ hddlock() {
     return 1
   fi
   echo Locked!
+}
+
+# Use: 'showcolors' or 'showcolors 255'
+showcolors() {  # Show available colors in terminal
+  local numcolors
+  if [ $# -lt 1 ]; then
+    numcolors=15
+  else
+    numcolors=$1
+  fi
+  if (( numcolors > 255 )); then
+    numcolors=255
+  fi
+  for((i=0; i<=$numcolors; i++)); do
+    printf "\e[48;5;${i}m%03d" $i;
+    printf "\e[0m";
+    if (( i == 7 )) || (( i == 15 )) || ((( i > 15 )) && (( (i-15) % 6 == 0 ))); then
+      printf "\n";
+    else
+      printf " ";
+      if (( numcolors == i )); then
+        printf "\n";
+      fi
+    fi
+  done
+}
+# Use: 'showlscolors'
+showlscolors() {  # Show available LS_COLORS and formats and their numbers
+  printf 'Effects\n'
+  printf "  \e[1m%3d\e[0m  \e[%sm%s\e[0m\n" 0 0 "Default colour"
+  printf "  \e[1m%3d\e[0m  \e[%sm%s\e[0m\n" 1 1 "Bold"
+  printf "  \e[1m%3d\e[0m  \e[%sm%s\e[0m\n" 4 4 "Underlined"
+  printf "  \e[1m%3d\e[0m  \e[%sm%s\e[0m\n" 5 5 "Blink"
+  printf "  \e[1m%3d\e[0m  \e[%sm%s\e[0m\n" 7 7 "Reversed"
+  printf "  \e[1m%3d\e[0m  \e[%sm%s\e[0m\n" 8 8 "Concealed"
+  printf '\nColours\n'
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 30 30 "Black" 30 "Black" "Black"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 31 31 "Red" 31 "Red" "Red"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 32 32 "Green" 32 "Green" "Green"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 33 33 "Orange" 33 "Orange" "Orange"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 34 34 "Blue" 34 "Blue" "Blue"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 35 35 "Purple" 35 "Purple" "Purple"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 36 36 "Cyan" 36 "Cyan" "Cyan"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 37 37 "Gray" 37 "Gray" "Gray"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 90 90 "Dark Gray" 90 "Dark Gray" "Dark Gray"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 91 91 "Light Red" 91 "Light Red" "Light Red"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 92 92 "Light Green" 92 "Light Green" "Light Green"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 93 93 "Yellow" 93 "Yellow" "Yellow"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 94 94 "Light Blue" 94 "Light Blue" "Light Blue"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 95 95 "Light Purple" 95 "Light Purple" "Light Purple"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 96 96 "Turquoise" 96 "Turquoise" "Turquoise"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 97 97 "White" 97  "White" "White"
+  printf '\nBackgrounds\n'
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 40 40 "Black" 40 "Black" "Black"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 41 41 "Red" 41 "Red" "Red"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 42 42 "Green" 42 "Green" "Green"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 43 43 "Orange" 43 "Orange" "Orange"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 44 44 "Blue" 44 "Blue" "Blue"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 45 45 "Purple" 45 "Purple" "Purple"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 46 46 "Cyan" 46 "Cyan" "Cyan"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 47 47 "Gray" 47 "Gray" "Gray"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 100 100 "Dark Gray" 100 "Dark Gray" "Dark Gray"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 101 101 "Light Red" 101 "Light Red" "Light Red"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 102 102 "Light Green" 102 "Light Green" "Light Green"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 103 103 "Yellow" 103 "Yellow" "Yellow"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 104 104 "Light Blue" 104 "Light Blue" "Light Blue"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 105 105 "Light Purple" 105 "Light Purple" "Light Purple"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 106 106 "Turquoise" 106 "Turquoise" "Turquoise"
+  printf "  \e[1m%3d\e[0m  \e[%sm%-13s\e[0m  \e[1;%sm%-13s\e[0m  (%s)\n" 107 107 "White" 107 "White" "White"
+  printf '\nExample uses (including the 256 colours palette; run \e[4;32mshowcolors 256\e[0m to see full palette)\n'
+  printf '             \e[1m\\e[1;31;42m\e[0m  \e[1;31;42mBOLD (1) RED text (31) on GREEN background (42)                         \e[0m\n'
+  printf '            \e[1m\\e[4;35;103m\e[0m  \e[4;35;103mUNDERLINED (4) PURPLE text (35) on YELLOW background (103)              \e[0m\n'
+  printf '  \e[1m\\e[0;38;5;208;48;5;56m\e[0m  \e[0;38;5;208;48;5;56mDEFAULT (0) ORANGE_208 text (38;5;208) on VIOLET_56 background (48;5;56)\e[0m\n'
+}
+
+showextensions () {
+  ( # Run in a subshell so it won't crash current color settings
+    dircolors -b >/dev/null
+    IFS=:
+    for ls_color in ${LS_COLORS[@]}; do # For all colors
+      color=${ls_color##*=}
+      ext=${ls_color%%=*}
+      echo -en "\E[${color}m${ext}\E[0m " # echo color and extension
+    done
+    echo
+  )
 }
 
 # Use: 'cd_func --' or 'cd_func -3' or 'cd_func my_folder'. Can be safely aliased as cd
