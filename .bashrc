@@ -149,7 +149,7 @@ fi
 # Make sure gitconfig is in bold, same as viminfo and rc files
 # Use the function 'showextensions' to see the colors used
 LS_COLORS=$LS_COLORS'ln=1;36:'
-LS_COLORS=$LS_COLORS'di=1;94:'
+LS_COLORS=$LS_COLORS'di=1;38;5;33:'
 LS_COLORS=$LS_COLORS'*.py=38;5;41:'
 LS_COLORS=$LS_COLORS'*.pyc=38;5;240:'
 LS_COLORS=$LS_COLORS'*.m=38;5;213:'
