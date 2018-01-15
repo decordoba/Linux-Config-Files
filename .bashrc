@@ -125,7 +125,7 @@ esac
 
 # Use 256 colors LS_COLORS definitions, to color around 300 different file extensions
 # Will download repo: trapd00r/LS_COLORS in ~/.dircolors if ~/.dircolors does not exist
-if ![ -r $HOME/.dircolors ]; then
+if ! [ -r $HOME/.dircolors ]; then
   case "$TERM" in
     *-256color)
       wget https://raw.github.com/trapd00r/LS_COLORS/master/LS_COLORS -O $HOME/.dircolors
@@ -145,11 +145,15 @@ fi
 
 # Make sure links are painted cyan, which is not the default in the trapd00r/LS_COLORS repo
 # In some monitors the blue used for folders is too dark and hard to read, change it to light_blue
-# Paint python files in green bold, and .pyc files in gray
+# Paint files I use the most (.py, .m, etc.) in the colors I like
+# Make sure gitconfig is in bold, same as viminfo and rc files
+# Use the function 'showextensions' to see the colors used
 LS_COLORS=$LS_COLORS'ln=1;36:'
 LS_COLORS=$LS_COLORS'di=1;94:'
 LS_COLORS=$LS_COLORS'*.py=38;5;41:'
 LS_COLORS=$LS_COLORS'*.pyc=38;5;240:'
+LS_COLORS=$LS_COLORS'*.m=38;5;213:'
+LS_COLORS=$LS_COLORS'*.gitconfig=1:'
 export LS_COLORS
 
 # Colored GCC warnings and errors
@@ -316,18 +320,17 @@ alias hr="printf '%*s\n' \"${COLUMNS:-$(tput cols)}\" '' | tr ' ' ="  # print a 
 # IP related aliases
 alias p4='ping 4.2.2.2 -c 4'  # check if we have access to the internet
 alias getip="ifconfig | grep inet\ addr:"
-alias getippublic='curl -s "http://v4.ipv6-test.com/api/myip.php"'
+alias getippublic='curl -s "http://v4.ipv6-test.com/api/myip.php" && echo'
 alias getipprivate='getip'
+
+# pbcopy and pbpaste aliases like in MAC OS (requires xclip)
+alias pbcopy="xclip -selection clipboard"
+alias pbpaste="xclip -selection clipboard -o"
 
 # Other aliases
 alias tmp='pushd $(mktemp -d)'  # create tmp dir (removed on boot) and cd into it
 alias server="start http://localhost:8000 && python -m SimpleHTTPServer"  # serve current folder in localhost:8000
 alias bell='tput bel && tput flash'  # play bell sound and show flash in terminal
-
-# Copy and paste aliases pbcopy and pbpaste like in MAC OS (requires xclip installed)
-XCLIP=$(command -v xclip)
-[[ $XCLIP ]] && alias pbcopy="$XCLIP -selection clipboard" && alias pbpaste="$XCLIP -selection clipboard -o"
-;;
 
 # Add an "alert" alias for long running commands. It will show a pop-up once the task is over
 # Use: 'sleep 10; alert' or 'python slow_script.py args; alert'
