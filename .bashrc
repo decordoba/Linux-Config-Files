@@ -145,15 +145,23 @@ fi
 
 # Make sure links are painted cyan, which is not the default in the trapd00r/LS_COLORS repo
 # In some monitors the blue used for folders is too dark and hard to read, change it to light_blue
+# Paint sticky folders in bold, (folders should always be bold)
 # Paint files I use the most (.py, .m, etc.) in the colors I like
 # Make sure gitconfig is in bold, same as viminfo and rc files
 # Use the function 'showextensions' to see the colors used
-LS_COLORS=$LS_COLORS'ln=1;36:'
-LS_COLORS=$LS_COLORS'di=1;38;5;33:'
-LS_COLORS=$LS_COLORS'*.py=38;5;41:'
-LS_COLORS=$LS_COLORS'*.pyc=38;5;240:'
-LS_COLORS=$LS_COLORS'*.m=38;5;213:'
-LS_COLORS=$LS_COLORS'*.gitconfig=1:'
+LS_COLORS=$LS_COLORS'ln=1;36:'  # bold cyan
+LS_COLORS=$LS_COLORS'di=1;38;5;33:'  # bold blue
+LS_COLORS=$LS_COLORS'ow=1;38;5;63:'  # bold purple, close to di blue but differentiable
+LS_COLORS=$LS_COLORS'st=1;38;5;86;48;5;235:'  # bold cyan, gray background
+LS_COLORS=$LS_COLORS'tw=1;38;5;139;48;5;235:'  # bold pink, gray background
+LS_COLORS=$LS_COLORS'ex=1;32:'  # bold green
+LS_COLORS=$LS_COLORS'*.py=38;5;41:'  # green
+LS_COLORS=$LS_COLORS'*.pyc=38;5;240:'  # dark gray
+LS_COLORS=$LS_COLORS'*.m=38;5;213:'  # pink
+LS_COLORS=$LS_COLORS'*.gitconfig=1:'  # white
+color=196  # bright red
+LS_COLORS=$LS_COLORS"*.7z=38;5;$color:*.a=38;5;$color:*.arj=38;5;$color:*.bz2=38;5;$color:*.cpio=38;5;$color:*.gz=38;5;$color:*.lrz=38;5;$color:*.lz=38;5;$color:*.lzma=38;5;$color:*.lzo=38;5;$color:*.rar=38;5;$color:*.s7z=38;5;$color:*.sz=38;5;$color:*.tar=38;5;$color:*.tgz=38;5;$color:*.xz=38;5;$color:*.z=38;5;$color:*.Z=38;5;$color:*.zip=38;5;$color:*.zipx=38;5;$color:*.zoo=38;5;$color:*.zpaq=38;5;$color:*.zz=38;5;$color:"
+unset color
 export LS_COLORS
 
 # Colored GCC warnings and errors
@@ -742,7 +750,6 @@ addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
         found=1
         break
       fi
-      unset user_tmp hostname_tmp
     fi
   done < $path_config
 
