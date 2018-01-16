@@ -961,3 +961,27 @@ cd_func () {  # Navigate to folders in history with cd_func -3 (3rd most recent 
   popd -n +11 2>/dev/null 1>/dev/null
   return 0
 }
+
+# Use: 'welcome'
+welcome() {  # Display welcome message with username, calendar, up time, etc.
+  # make sure figlet fits in screen
+  if [[ -x "$(command -v figlet)" ]] && [[ "$(figlet " welcome  $USER ! " | wc -L)" -le "$(tput cols)" ]]; then
+    if [[ -x "$(command -v lolcat)" ]]; then
+      figlet " welcome  $USER ! " | lolcat
+    else
+      figlet " welcome  $USER ! "
+    fi
+  else
+    echo -e ""
+    printf "\e[1mWelcome \e[32m$USER\e[0m\e[1m! \e[0m\n"
+    echo -e ""
+  fi
+  printf "Today is \e[1m$(date)\e[0m\n"
+  echo -e ""
+  cal  # print calendar
+  printf "The system has been up for \e[1m$(echo $(uptime --pretty) | sed 's/up //')\e[0m\n"
+  echo -e ""
+  printf "Connected users: \n\e[1m$(who)\e[0m\n"
+  echo -e ""
+}
+welcome  # See welcome message every time the bashrc is loaded
