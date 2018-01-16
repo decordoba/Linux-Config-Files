@@ -319,9 +319,9 @@ alias hr="printf '%*s\n' \"${COLUMNS:-$(tput cols)}\" '' | tr ' ' ="  # print a 
 
 # IP related aliases
 alias p4='ping 4.2.2.2 -c 4'  # check if we have access to the internet
-alias getip="ifconfig | grep inet\ addr:"
+alias getip="ifconfig | grep inet\  -B 1 | egrep 'Link encap:|HWaddr|inet addr:|Bcast:|Mask:|Loopback|inet |netmask|broadcast' -A 1 -B 1"
 alias getippublic='curl -s "http://v4.ipv6-test.com/api/myip.php" && echo'
-alias getipprivate='getip'
+alias getipprivate="ifconfig | grep 'inet ' | awk -F'[: ]+' '{ if (\$4 ~ /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/) { print \$4 } else { print \$3 }}'"
 
 # pbcopy and pbpaste aliases like in MAC OS (requires xclip)
 alias pbcopy="xclip -selection clipboard"
