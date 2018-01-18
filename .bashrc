@@ -339,6 +339,7 @@ alias pbpaste="xclip -selection clipboard -o"
 alias tmp='pushd $(mktemp -d)'  # create tmp dir (removed on boot) and cd into it
 alias server="start http://localhost:8000 && python -m SimpleHTTPServer"  # serve current folder in localhost:8000
 alias bell='tput bel && tput flash'  # play bell sound and show flash in terminal
+alias man='man_func'  # allow colored manuals
 
 # Add an "alert" alias for long running commands. It will show a pop-up once the task is over
 # Use: 'sleep 10; alert' or 'python slow_script.py args; alert'
@@ -975,6 +976,18 @@ cd_func () {  # Navigate to folders in history with cd_func -3 (3rd most recent 
   # trim down everything beyond 11th entry
   popd -n +11 2>/dev/null 1>/dev/null
   return 0
+}
+
+# Use: 'man_func grep'
+man_func () {  # Show colored man pages
+  env LESS_TERMCAP_mb=$'\E[01;31m' \  # start blink
+  LESS_TERMCAP_md=$'\E[01;38;5;74m' \  # start bold
+  LESS_TERMCAP_me=$'\E[0m' \  # turn off bold, blink and underline
+  LESS_TERMCAP_se=$'\E[0m' \  # stop standout
+  LESS_TERMCAP_so=$'\E[38;5;164m' \  # start standout
+  LESS_TERMCAP_ue=$'\E[0m' \  # stop underline
+  LESS_TERMCAP_us=$'\E[04;38;5;146m' \  # start underline
+  man "$@"
 }
 
 # Use: 'welcome'
