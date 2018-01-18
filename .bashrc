@@ -699,11 +699,19 @@ calc() {  # create a terminal calculator
 
 # Use: 'clock'
 clock () {  # show a real time bash clock in the terminal
-  local clockstr
+  local clockstr figletinstalled toiletinstalled
+  figletinstalled="$(command -v figlet)"
+  toiletinstalled="$(command -v toilet)"
   while true; do
-    clockstr="============\n| $(date +%T) |\n============\n";
-    clear;
-    printf "$clockstr";
+    clear
+    if [[ -x $toiletinstalled ]]; then
+      toilet -f smblock -F border " $(date +%H) : $(date +%M) : $(date +%S) "
+    elif [[ -x $figletinstalled ]]; then
+      figlet -f big " $(date +%H) : $(date +%M) : $(date +%S) "
+    else
+      clockstr=" ============\n | $(date +%T) |\n ============\n"
+      printf "$clockstr"
+    fi
     sleep 1;
   done
 }
