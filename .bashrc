@@ -980,14 +980,29 @@ cd_func () {  # Navigate to folders in history with cd_func -3 (3rd most recent 
 
 # Use: 'man_func grep'
 man_func () {  # Show colored man pages
-  env LESS_TERMCAP_mb=$'\E[01;31m' \  # start blink
-  LESS_TERMCAP_md=$'\E[01;38;5;74m' \  # start bold
-  LESS_TERMCAP_me=$'\E[0m' \  # turn off bold, blink and underline
-  LESS_TERMCAP_se=$'\E[0m' \  # stop standout
-  LESS_TERMCAP_so=$'\E[38;5;164m' \  # start standout
-  LESS_TERMCAP_ue=$'\E[0m' \  # stop underline
-  LESS_TERMCAP_us=$'\E[04;38;5;146m' \  # start underline
-  man "$@"
+  local mb md me se se ue us
+  mb=$LESS_TERMCAP_mb
+  md=$LESS_TERMCAP_md
+  me=$LESS_TERMCAP_me
+  se=$LESS_TERMCAP_se
+  so=$LESS_TERMCAP_so
+  ue=$LESS_TERMCAP_ue
+  us=$LESS_TERMCAP_us
+  export LESS_TERMCAP_mb=$'\E[1;38;5;196m'  # start blink (red bold)
+  export LESS_TERMCAP_md=$'\E[1;38;5;46m'  # start bold (green bold)
+  export LESS_TERMCAP_me=$'\E[0m'  # turn off bold, blink and underline
+  export LESS_TERMCAP_se=$'\E[0m'  # stop standout
+  export LESS_TERMCAP_so=$'\E[1;48;5;52;38;5;226m'  # start standout (bold yellow, red background)
+  export LESS_TERMCAP_ue=$'\E[0m'  # stop underline
+  export LESS_TERMCAP_us=$'\E[1;4;38;5;39m'  # start underline (blue bold underlined)
+  \man -P 'less -s -M +Gg' "$@"  # Make pager show percentage
+  export LESS_TERMCAP_mb=$mb
+  export LESS_TERMCAP_md=$md
+  export LESS_TERMCAP_me=$me
+  export LESS_TERMCAP_se=$se
+  export LESS_TERMCAP_so=$so
+  export LESS_TERMCAP_ue=$ue
+  export LESS_TERMCAP_us=$us
 }
 
 # Use: 'welcome'
