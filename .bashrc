@@ -345,6 +345,7 @@ alias pbpaste="xclip -selection clipboard -o"
 alias tmp='pushd $(mktemp -d)'  # create tmp dir (removed on boot) and cd into it
 alias server="start http://localhost:8000 && python -m SimpleHTTPServer"  # serve current folder in localhost:8000
 alias bell='tput bel && tput flash'  # play bell sound and show flash in terminal
+alias man='man_func'  # allow colored manuals
 
 # Add an "alert" alias for long running commands. It will show a pop-up once the task is over
 # Use: 'sleep 10; alert' or 'python slow_script.py args; alert'
@@ -705,11 +706,19 @@ calc() {  # create a terminal calculator
 
 # Use: 'clock'
 clock () {  # show a real time bash clock in the terminal
-  local clockstr
+  local clockstr figletinstalled toiletinstalled
+  figletinstalled="$(command -v figlet)"
+  toiletinstalled="$(command -v toilet)"
   while true; do
-    clockstr="============\n| $(date +%T) |\n============\n";
-    clear;
-    printf "$clockstr";
+    clear
+    if [[ -x $toiletinstalled ]]; then
+      toilet -f smblock -F border " $(date +%H) : $(date +%M) : $(date +%S) "
+    elif [[ -x $figletinstalled ]]; then
+      figlet -f big " $(date +%H) : $(date +%M) : $(date +%S) "
+    else
+      clockstr=" ============\n | $(date +%T) |\n ============\n"
+      printf "$clockstr"
+    fi
     sleep 1;
   done
 }
@@ -973,6 +982,33 @@ cd_func () {  # Navigate to folders in history with cd_func -3 (3rd most recent 
   # trim down everything beyond 11th entry
   popd -n +11 2>/dev/null 1>/dev/null
   return 0
+}
+
+# Use: 'man_func grep'
+man_func () {  # Show colored man pages
+  local mb md me se se ue us
+  mb=$LESS_TERMCAP_mb
+  md=$LESS_TERMCAP_md
+  me=$LESS_TERMCAP_me
+  se=$LESS_TERMCAP_se
+  so=$LESS_TERMCAP_so
+  ue=$LESS_TERMCAP_ue
+  us=$LESS_TERMCAP_us
+  export LESS_TERMCAP_mb=$'\E[1;38;5;196m'  # start blink (red bold)
+  export LESS_TERMCAP_md=$'\E[1;38;5;46m'  # start bold (green bold)
+  export LESS_TERMCAP_me=$'\E[0m'  # turn off bold, blink and underline
+  export LESS_TERMCAP_se=$'\E[0m'  # stop standout
+  export LESS_TERMCAP_so=$'\E[1;48;5;52;38;5;226m'  # start standout (bold yellow, red background)
+  export LESS_TERMCAP_ue=$'\E[0m'  # stop underline
+  export LESS_TERMCAP_us=$'\E[1;4;38;5;39m'  # start underline (blue bold underlined)
+  \man -P 'less -s -M +Gg' "$@"  # Make pager show percentage
+  export LESS_TERMCAP_mb=$mb
+  export LESS_TERMCAP_md=$md
+  export LESS_TERMCAP_me=$me
+  export LESS_TERMCAP_se=$se
+  export LESS_TERMCAP_so=$so
+  export LESS_TERMCAP_ue=$ue
+  export LESS_TERMCAP_us=$us
 }
 
 # Use: 'welcome'
