@@ -30,13 +30,9 @@ shopt -s cmdhist
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# Interprets [a-d] as [abcd]. To match a literal -, include it as 1st or last char
-shopt -s globasciiranges
-
-# The pattern "**" used in a pathname expansion context will match all files,
-# directories and subdirectories. Acts like * but also matches subdirectories.
-# Example use: 'ls **' (instead of 'ls *') shows all directories and subdirectories
-shopt -s globstar
+# Minor errors in path spelling are corrected automatically
+# i.e. 'cd ~/Desltop' will bring us to ~/Desktop
+shopt -s cdspell
 
 # Composite patterns may be formed using  one  or  more  of  the sub-patterns:
 # ?(pattern-list) = Matches zero or one occurrence of the given patterns
@@ -54,13 +50,23 @@ shopt -s extglob
 # Uncomment to expand non-matching globs to zero arguments instead of to themselves
 #shopt -s nullglob
 
-# Minor errors in path spelling are corrected automatically
-# i.e. 'cd ~/Desltop' will bring us to ~/Desktop
-shopt -s cdspell
+bash_version="${BASH_VERSINFO[0]}${BASH_VERSINFO[1]}"
+if [ $bash_version -ge 40 ]; then
+  # Interprets [a-d] as [abcd]. To match a literal -, include it as 1st or last char
+  if [ $bash_version -ge 43 ]; then
+    shopt -s globasciiranges  # Requires bash 4.3
+  fi
 
-# A command name that is the name of a directory is executed as if it were the argument to the cd command
-# Type a folder name to cd automatically to it, no need to write cd before it
-shopt -s autocd  # warning! new directory will not be saved to cd history if used
+  # The pattern "**" used in a pathname expansion context will match all files,
+  # directories and subdirectories. Acts like * but also matches subdirectories.
+  # Example use: 'ls **' (instead of 'ls *') shows all directories and subdirectories
+  shopt -s globstar  # Requires bash 4.0
+
+  # A command name that is the name of a directory is executed as if it were the argument to the cd command
+  # Type a folder name to cd automatically to it, no need to write cd before it
+  shopt -s autocd  # warning! new directory will not be saved to cd history if used
+fi
+unset bash_version
 
 # Make vim the default editor
 export EDITOR=vim  # Normally VISUAL will be called 1st, if it fails EDITOR will be
