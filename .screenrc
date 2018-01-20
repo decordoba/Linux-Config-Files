@@ -186,21 +186,21 @@ Split horizontally (F6) and vertically (F7) [gnome-terminal]
 bindkey "^[OU" split
 bindkey "^[OV" split -v
 Split horizontally (F6) and vertically (F7) [putty]
-bindkey "^[[16~" split
-bindkey "^[[17~" split -v
+bindkey "^[[17~" split
+bindkey "^[[18~" split -v
 
 # F8, F9
 Remove single split (F8) and remove all splits (F9) [gnome-terminal]
 bindkey "^[OW" remove
 bindkey "^[OX" only
 Remove single split (F8) and remove all splits (F9) [putty]
-bindkey "^[[18~" remove
-bindkey "^[[19~" only
+bindkey "^[[19~" remove
+bindkey "^[[20~" only
 
 # F10 kills current window [gnome-terminal]
 bindkey "^[OY" kill
 # F10 kills current window [putty]
-bindkey "^[[20~" kill
+bindkey "^[[21~" kill
 
 # # Switch layouts with Ctrl+F3 (prev layout) and Ctrl+F4 (next) [gnome-terminal]
 # bindkey "^[O1;5R" layout prev
