@@ -1,4 +1,7 @@
-# Screen basic commands
+################################################################
+# SCREEN BASIC COMMANDS (WHEN USING THIS .screenrc)
+################################################################
+
 # leader (default is ctrl-c): gets you in screen mode
 # leader ?: see available commands
 # leader c: create new window
@@ -26,23 +29,11 @@
 # leader P: open Python shell
 # leader R: open su shell
 
-# No welcome message
-startup_message off
+################################################################
+# STATUS LINE (EXPLAINED!)
+################################################################
 
-# Huge scrollback buffer
-defscrollback 10000
-
-# Allow scrolling with mouse (it is a bit buggy if hardstatus enabled and it changes too often)
-termcapinfo xterm* ti@:te@
-
-# Bind Shift+PgUp/PgDn to scroll
-bindkey -m "^[[5;2~" stuff ^b
-bindkey -m "^[[6;2~" stuff ^f
-
-# Show any one line information next to your hostname in the status bar
-# backtick 1 5 5 $HOME/bin/my_script.sh
-
-# The following two lines give a two-line status, with the current window highlighted
+# Create status line always in the last line
 hardstatus alwayslastline
 # hardstatus string '%{= kg}[ %{G}%H%? %1`%? %{g}][%= %{W}%-w%{+b Yk} %n %t%?(%u)%? %{-}%+w %=%{g}][ %{B}%c %{g}]'
 # %{= kg} clears all attributes, and paints green on black background
@@ -50,15 +41,53 @@ hardstatus alwayslastline
 # %1`%? %{g}] shows a %1 argument if it exists
 # [%= adds padding so that the status fills the line
 # %{W}%-w% shows window numbers and names up to the current window in white
-# {+b Yk} %n*%t shows the current window and number in yellow background
+# {+b Yk} %n %t shows the current window and number in yellow background
 # %?(%u)%? prints all other users in the window (still in yellow background)
-# %{-}%+w shows window numebrs and names after the current window in white
+# %{-}%+w shows window numbers and names after the current window in white
 # %=%{g}] adds padding to fill line
 # [ %{B}%c %{g}] shows the time in blue
 hardstatus string '%{= g}[ %{G}%H%? %1`%? %{g}][%= %{r}%-w%{+b R} %n %t%?(%u)%? %{-}%+w %=%{g}][ %{y}Load: %l %{g}][ %{B}%Y-%m-%d %{W}%c %{g}]'
+# %{= g} clears all attributes, and paints dark green the following text (here [)
+# [ %{G}%H%? writes the hostname in bright green
+# %1`%? %{g}] shows a %1 argument if it exists
+# [%= adds padding so that the status fills the line
+# %{r}%-w% shows window numbers and names up to the current window in dark red
+# {+b R} %n %t shows the current window and number in bold bright red
+# %?(%u)%? prints all other users in the window (still in bold bright red)
+# %{-}%+w shows window numbers and names after the current window in white
+# %=%{g}] adds padding to fill line
+# [ %{y}Load: %l %{g}] shows the load in yellow
+# [ %{B}%c %{g}] shows the time in blue
+
+# Show any one line information next to your hostname in the status bar
+# backtick 1 5 5 $HOME/bin/my_script.sh
+
+################################################################
+# SCREEN CONFIGURATION
+################################################################
 
 # Instead of using ctrl-a as leader, use ctrl-k
 # escape ^Kk
+
+# No welcome message
+startup_message off
+
+# Huge scrollback buffer (too big and you might have memory issues for many screens)
+defscrollback 10000
+
+# Allow scrolling with mouse
+# It can be bit buggy if hardstatus enabled or screen in split in regions
+# In those cases use leader ESC or leader [
+termcapinfo xterm* ti@:te@
+
+# Make screen messages stand out more: black on bright green
+sorendition "+b kG"
+
+# Turn visual bell on
+vbell on
+vbell_msg "  !! Something interesting has happened !!  "
+activity "%c activity -> %n%f %t"
+bell "%c bell -> %n%f %t^G"
 
 # Full screen programs like vim are not there when we scroll
 altscreen on
@@ -66,20 +95,24 @@ altscreen on
 # Mouse tracking allows to switch region focus by clicking
 mousetrack on
 
-# Autodetach session on hangup instead of terminating screen completely
+# Autodetach session on hangup instead of terminating screen completely. Never, ever turn this off!
 autodetach on
 
-# Start window numbering from 1, leader 0 loads screen 11
+# Start window numbering from 1, leader 0 loads screen 10
 select 1
 bind c screen 1 # window numbering starts at 1 not 0
 bind 0 select 10
 
 # Time a message is displayed if screen is not disturbed by
-# other activity. The dafault is 5 seconds
-msgwait 15
+# other activity. The default is 5 seconds
+msgwait 10
 
 # Set default new window title instead of bash
 shelltitle "Shell"
+
+################################################################
+# LEADER (CTRL-C) KEYBINDINGS
+################################################################
 
 # leader R creates a su window and calls it Root
 bind R screen -t Root sudo bash
@@ -90,22 +123,92 @@ bind P screen -t iPython ipython3
 # Split can be done with leader s, the shortcut overwritten (xoff) is useless anyway
 bind s split
 
-# Navigating regions with Ctrl-arrows
+# Show or hide the status bar with leader I and O (never used logon and logoff anyway)
+bind I hardstatus ignore
+bind O hardstatus alwayslastline
+
+################################################################
+# GENERAL KEYBINDINGS
+################################################################
+
+# Bind Shift+PgUp/PgDn to scroll
+bindkey -m "^[[5;2~" stuff ^b
+bindkey -m "^[[6;2~" stuff ^f
+
+# Tip: find out the symbols used in your terminal for every command with cat > /dev/null
+# Navigating regions with Ctrl-arrows [gnome-terminal]
 bindkey "^[[1;5D" focus left
 bindkey "^[[1;5C" focus right
 bindkey "^[[1;5A" focus up
 bindkey "^[[1;5B" focus down
+# Navigating regions with Ctrl-arrows [putty]
+bindkey "^[[D" focus left
+bindkey "^[[C" focus right
+bindkey "^[[A" focus up
+bindkey "^[[B" focus down
 
-# Switch windows with F3 (prev) and F4 (next)
+# Switch windows with Ctrl-Alt-Left/Right [gnome-terminal]
+bindkey ^[[1;7C prev
+bindkey ^[[1;7D next
+# Switch windows with Ctrl-Alt-Left/Right [putty]
+bindkey ^[^[[D prev
+bindkey ^[^[[C next
+
+################################################################
+# FUNCTION (F1, F2, F3...) KEYBINDINGS
+################################################################
+
+# F1 writes paste buffer to file [gnome-terminal]
+bindkey "^[OP" writebuf
+# F1 writes paste buffer to file [putty]
+bindkey "^[[11~" writebuf
+
+# F2 creates new tab [gnome-terminal]
+bindkey "^[OQ" screen
+# F2 creates new tab [putty]
+bindkey "^[[12~" screen
+
+# F3, F4
+# Switch windows with F3 (prev) and F4 (next) [gnome-terminal]
 bindkey "^[OR" prev
 bindkey "^[OS" next
+# Switch windows with F3 (prev) and F4 (next) [putty]
+bindkey "^[[13~" prev
+bindkey "^[[14~" next
 
-# Switch layouts with Ctrl+F3 (prev layout) and Ctrl+F4 (next)
-bindkey "^[O1;5R" layout prev
-bindkey "^[O1;5S" layout next
+# F5 puts screen into resize mode. Regions are resized using hjkl keys [gnome-terminal]
+bindkey "^[OT" eval "command -c rsz" # enter resize mode
+# F5 puts screen into resize mode. Regions are resized using hjkl keys [putty]
+bindkey "^[[15~" eval "command -c rsz" # enter resize mode
 
-# F2 puts Screen into resize mode. Regions are resized using hjkl keys
-bindkey "^[OQ" eval "command -c rsz" # enter resize mode
+# F6, F7
+Split horizontally (F6) and vertically (F7) [gnome-terminal]
+bindkey "^[OU" split
+bindkey "^[OV" split -v
+Split horizontally (F6) and vertically (F7) [putty]
+bindkey "^[[16~" split
+bindkey "^[[17~" split -v
+
+# F8, F9
+Remove single split (F8) and remove all splits (F9) [gnome-terminal]
+bindkey "^[OW" remove
+bindkey "^[OX" only
+Remove single split (F8) and remove all splits (F9) [putty]
+bindkey "^[[18~" remove
+bindkey "^[[19~" only
+
+# F10 kills current window [gnome-terminal]
+bindkey "^[OY" kill
+# F10 kills current window [putty]
+bindkey "^[[20~" kill
+
+# # Switch layouts with Ctrl+F3 (prev layout) and Ctrl+F4 (next) [gnome-terminal]
+# bindkey "^[O1;5R" layout prev
+# bindkey "^[O1;5S" layout next
+
+################################################################
+# RESIZE MODE KEYBINDINGS
+################################################################
 
 # Use hjkl keys to resize regions
 bind -c rsz h eval "resize -h -1" "command -c rsz"
@@ -123,13 +226,18 @@ bind -c rsz -k kd eval "focus down" "command -c rsz" # Down
 # Make all regions same height and width with = when in resize mode
 bind -c rsz = eval "resize =" "command -c rsz"
 
-# Resize the current region with leader =,+,-. The space will be removed from or
+# Resize the current region with leader =,+,-,/. The space will be removed from or
 # added to the region below or if there's not enough space from the region above.
 bind = resize =
 bind + resize +1
 bind - resize -1
+bind / resize max
 
-# # Start everytime with 4 regions in one window
+################################################################
+# LAYOUT CONFIGURATION: SHELLS AND REGIONS SHOWN ON START
+################################################################
+
+# # Start everytime with 4 regions in one window and several shells
 # screen -t Shell-A  1 bash
 # screen -t Shell-B  2 bash
 # screen -t Python  3 ipython3
@@ -156,3 +264,43 @@ bind - resize -1
 # select 4
 # focus up
 
+################################################################
+# THINGS I HAVE TO TEST
+################################################################
+
+# # always use a login shell
+# shell -$SHELL
+# 
+# # allows you to keep what was displayed on your terminal when exiting things like man, less rather than having your terminal cleared
+# altscreen on
+# 
+# # shows your sessions in utmp
+# deflogin on
+# 
+# # The vt100 description does not mention "dl". *sigh*
+# termcapinfo vt100 dl=5\E[M
+# 
+# # Set the hardstatus prop on gui terms to set the titlebar/icon title
+# termcapinfo xterm*|rxvt*|kterm*|Eterm* hs:ts=\E]0;:fs=\007:ds=\E]0;\007
+# 
+# # An alternative hardstatus to display a bar at the bottom listing the
+# # windownames and highlighting the current windowname in blue. (This is only
+# # enabled if there is no hardstatus setting for your terminal)
+# hardstatus alwayslastline '%{= kG}[ %{G}%H %{g}][%= %{=kw}%?%-Lw%?%{r}(%{W}%n*%f %t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{G}%l %{W}%c %{g}]'
+# 
+# # set these terminals up to be 'optimal' instead of vt100
+# termcapinfo xterm*|linux*|rxvt*|Eterm* OP
+# 
+# # Change the xterm initialization string from is2=\E[!p\E[?3;4l\E[4l\E>
+# # (This fixes the "Aborted because of window size change" konsole symptoms found
+# #  in bug #134198)
+# termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
+# 
+# # To get screen to add lines to xterm's scrollback buffer, uncomment the
+# # following termcapinfo line which tells xterm to use the normal screen buffer
+# # (which has scrollback), not the alternate screen buffer.
+# #
+# #termcapinfo xterm|xterms|xs|rxvt ti@:te@
+# 
+# # Enable non-blocking mode to better cope with flaky ssh connections.
+# defnonblock on 
