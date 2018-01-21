@@ -112,12 +112,24 @@ screen -t "Shell" 1 bash
 bind c screen 1 # window numbering starts at 1 not 0
 bind 0 select 10
 
-# Time a message is displayed if screen is not disturbed by
-# other activity. The default is 5 seconds
-msgwait 10
+################################################################
+# LOGGING (leader H) AND HARDCOPY (leader h) CONFIGURARION
+################################################################
 
-# Set default new window title instead of bash
-shelltitle "Shell"
+# Make sure the folder .screen exists
+exec bash -c "mkdir -p $HOME/.screen"
+
+# Change directory where hardcopies are saved
+# Hardcopies are saved with leader h
+hardcopydir "$HOME/.screen"
+
+# Save log files as screenlog.date.time.shell_number
+# Log files are created with leader H
+logfile "$HOME/.screen/screenlog.%Y%m%d.%c.%n"
+
+# Add timestamp to logging every 10min of inactivity
+logtstamp on
+logtstamp after 600
 
 ################################################################
 # LEADER (CTRL-C) KEYBINDINGS
