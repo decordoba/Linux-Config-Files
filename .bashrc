@@ -408,13 +408,24 @@ extract () {  # extract any file into current folder
   fi
 }
 
-#Use: 'repeat 10 cd ..'
-repeat() {  # repeat n times command.
-  local i max
-  max=$1; shift;
+#Use: 'repeat 10 cd ..' or 'repeat 0 "echo 'hello world' && sleep 1"'
+repeat() {  # repeat a command n times. If n is 0, repeat forever
+  local i max funcname=${FUNCNAME[0]}
+  if [ $# -lt 2 ]; then
+    echo "Usage: $funcname <N> <command>  # Repeat command N times"
+    echo "Usage: $funcname 0 <command>    # Repeat command forever"
+    return 1
+  fi
+  max=$1
+  shift
   for ((i=1; i <= max ; i++)); do  # --> C-like syntax
-    eval "$@";
+    eval "$@"
   done
+  if [ $max -eq 0 ]; then
+    while true; do
+      eval "$@"
+    done
+  fi
 }
 
 # Use: 'mkcd my_new_folder'
