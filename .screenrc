@@ -4,6 +4,7 @@
 
 # leader (default is ctrl-c): gets you in screen mode
 # leader ?: see available commands
+# leader :: enter screen command line
 # leader c: create new window
 # leader n: go to next window
 # leader p: go to previous window
@@ -11,12 +12,16 @@
 # leader BACKSPACE: go to previous window
 # leader NUMBER: got to Nth window
 # leader ": switch between windows using list
-# leader d: detach from screen
-# leader H: create a running log session (LOG EVERYTHING)
+# leader ': show prompt to switch window by number
+# leader d: detach from screen (leave screen, jobs will continue running)
+# leader z: suspend from screen (leave screen pausing jobs)
+# leader h: write a hardcopy of the current window to the file 'hardcopy.n'
+# leader H: create a running log session or the current window to 'screenlog.n'
 # leader M: flash alert (even if in another window) when new output in screen
 # leader _: flash alert (even if in another window) when screen goes to silence (no output)
-# leader A: change title window (the name seen in the status bar)
-# leader S: split window horizontally (create new region)
+# leader m: repeat the last message displayed in the message line
+# leader A: change window title (the name seen in the status bar)
+# leader s: split window horizontally (create new region)
 # leader |: split window vertically (create new region)
 # * after splitting, you need to go to new region and start session with leader c
 # leader Q: unsplit everything in current window, go back to only one region
@@ -26,8 +31,31 @@
 # leader a: send ctrl-a to current window
 # leader X: close current region
 # leader K: kill window
+# leader \: quit (kill all windows)
 # leader P: open Python shell
 # leader R: open su shell
+# leader C: clear screen
+# leader l: fully refresh the current window
+# leader x: lock terminal (require password to use it)
+
+# F1,F2,F3...: explained below (TODO, show explanation here)
+
+# * in resize mode, move like in VIM:
+# SPACE/ENTER: start and stop copying. Add a before the last space to append instead of exit copy mode
+# h,j,k,l: move the cursor line by line or column by column
+# 0,^,$: move to the leftmost column, to the 1st, or to the last non-whitespace char in the line
+# H,M,L: move the cursor to the leftmost column of the top, center or bottom line of the window
+# +,-: move the cursor to the leftmost column of the next or previous line
+# G: move to the specified absolute line (default: end of buffer)
+# |: move to the specified absolute column
+# w,b,e: move the cursor word by word
+# B,E: move the cursor WORD by WORD (as in vi, cursor goes to spaces between words)
+# C-u,C-d: scroll display up/down by specified amount of lines while preserving cursor position (default: half screen)
+# C-b,C-f: move the cursor up/down a full screen
+# g: move to the beginning of the buffer
+# %: jump to the specified percentage of the buffer
+# /,?: vi-like search forward/backward
+# C-s,C-r: emacs style incremental search forward/backward
 
 ################################################################
 # STATUS LINE (EXPLAINED!)
@@ -298,9 +326,6 @@ bind / resize max
 # # always use a login shell
 # shell -$SHELL
 # 
-# # allows you to keep what was displayed on your terminal when exiting things like man, less rather than having your terminal cleared
-# altscreen on
-# 
 # # shows your sessions in utmp
 # deflogin on
 # 
@@ -331,3 +356,72 @@ bind / resize max
 # 
 # # Enable non-blocking mode to better cope with flaky ssh connections.
 # defnonblock on 
+# 
+# # http://robotsrule.us/vim/
+# attrcolor b ".I"
+# termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+# defbce "on"
+# 
+# # http://robotsrule.us/vim/
+# attrcolor b ".I"
+# termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+# defbce "on"
+# 
+# bind i screen -t    'iostat'   7  iostat -dkt 5
+# bind v screen -t    'vmstat'   8  vmstat 5
+# bind t screen -t    'top'      9  top
+# bind r screen -t 'rmsm' 10 /tmp/rmsm.sh
+# 
+# # Yet another hack:
+# # Prepend/append register [/] to the paste if ^a^] is pressed.
+# # This lets me have autoindent mode in vi.
+# register [ "\033:se noai\015a"
+# register ] "\033:se ai\015a"
+# bind ^] paste [.]
+# 
+# # http://www.jukie.net/~bart/blog/screen-ssh-agent
+# unsetenv SSH_AUTH_SOCK
+# setenv SSH_AUTH_SOCK "$HOME/.screen/ssh-auth-sock.$HOSTNAME"
+# 
+# #xterm understands both im/ic and doesn't have a status line.
+# #Note: Do not specify im and ic in the real termcap/info file as
+# #some programs (e.g. vi) will not work anymore.
+# termcap  xterm hs@:cs=\E[%i%d;%dr:im=\E[4h:ei=\E[4l
+# terminfo xterm hs@:cs=\E[%i%p1%d;%p2%dr:im=\E[4h:ei=\E[4l
+# #80/132 column switching must be enabled for ^AW to work
+# #change init sequence to not switch width
+# termcapinfo  xterm Z0=\E[?3h:Z1=\E[?3l:is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l
+# # Make the output buffer large for (fast) xterms.
+# termcapinfo xterm* OL=10000
+# # tell screen that xterm can switch to dark background and has function
+# # keys.
+# termcapinfo xterm 'VR=\E[?5h:VN=\E[?5l'
+# termcapinfo xterm 'k1=\E[11~:k2=\E[12~:k3=\E[13~:k4=\E[14~'
+# termcapinfo xterm 'kh=\E[1~:kI=\E[2~:kD=\E[3~:kH=\E[4~:kP=\E[H:kN=\E[6~'
+# # special xterm hardstatus: use the window title.
+# termcapinfo xterm 'hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007'
+# termcapinfo xterm 'hs:ts=\E]2;:fs=\007:ds=\E]1;screen\007'
+# #terminfo xterm 'vb=\E[?5h$<200/>\E[?5l'
+# termcapinfo xterm 'vi=\E[?25l:ve=\E[34h\E[?25h:vs=\E[34l'
+# # emulate part of the 'K' charset
+# termcapinfo   xterm 'XC=K%,%\E(B,[\304,\\\\\326,]\334,{\344,|\366,}\374,~\337'
+# # xterm-52 tweaks:
+# # - uses background color for delete operations
+# termcapinfo xterm ut
+# # pgup pgdn for xterm
+# termcapinfo xterm*|rxvt* 'ti@:te@'
+# 
+# #wyse-75-42 must have flow control (xo = "terminal uses xon/xoff")
+# #essential to have it here, as this is a slow terminal.
+# termcapinfo wy75-42 xo:hs@
+# # New termcap sequences for cursor application mode.
+# termcapinfo wy* CS=\E[?1h:CE=\E[?1l:vi=\E[?25l:ve=\E[?25h:VR=\E[?5h:VN=\E[?5l:cb=\E[1K:CD=\E[1J
+# 
+# #make hp700 termcap/info better
+# termcapinfo  hp700 'Z0=\E[?3h:Z1=\E[?3l:hs:ts=\E[62"p\E[0$~\E[2$~\E[1$}:fs=\E[0}\E[61"p:ds=\E[62"p\E[1$~\E[61"p:ic@'
+# # Extend the vt100 desciption by some sequences.
+# termcap  vt100* ms:AL=\E[%dL:DL=\E[%dM:UP=\E[%dA:DO=\E[%dB:LE=\E[%dD:RI=\E[%dC
+# terminfo vt100* ms:AL=\E[%p1%dL:DL=\E[%p1%dM:UP=\E[%p1%dA:DO=\E[%p1%dB:LE=\E[%p1%dD:RI=\E[%p1%dC
+# 
+# multiuser on
+# acladd shopqi
