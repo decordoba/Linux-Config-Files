@@ -78,16 +78,18 @@ defscrollback 10000
 # Allow scrolling with mouse
 # It can be bit buggy if hardstatus enabled or screen in split in regions
 # In those cases use leader ESC or leader [
-termcapinfo xterm* ti@:te@
+termcapinfo xterm*|rxvt* ti@:te@
 
-# Make screen messages stand out more: black on bright green
+# Make screen messages stand out: black on bright green
 sorendition "+b kG"
 
 # Turn visual bell on
 vbell on
 vbell_msg "  !! Something interesting has happened !!  "
-activity "%c activity -> %n%f %t"
 bell "%c bell -> %n%f %t^G"
+
+# Set message shown when monitoring (leader M, leader _)
+activity "[%c:%s] activity in %n (%t)"
 
 # Full screen programs like vim are not there when we scroll
 altscreen on
@@ -98,8 +100,15 @@ mousetrack on
 # Autodetach session on hangup instead of terminating screen completely. Never, ever turn this off!
 autodetach on
 
+# Time a message is displayed if screen is not disturbed by other activity (default=5s)
+msgwait 10
+
+# Set default new window title instead of bash
+shelltitle "Shell"
+
 # Start window numbering from 1, leader 0 loads screen 10
 select 1
+screen -t "Shell" 1 bash
 bind c screen 1 # window numbering starts at 1 not 0
 bind 0 select 10
 
