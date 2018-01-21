@@ -136,15 +136,21 @@ logtstamp after 600
 ################################################################
 
 # leader R creates a su window and calls it Root
-bind R screen -t Root sudo bash
+bind R screen -t Root 1 sudo bash
 
 # leader P creates an iPython window and calls it iPython
-bind P screen -t iPython ipython3
+bind P screen -t iPython 1 ipython3
+
+# leader T creates a top window
+bind T screen -t Top 1 top
+
+# leader W watches used GPUs (leader W is quite useless anyway)
+bind G screen -t GPUs 1 watch nvidia-smi
 
 # Split can be done with leader s, the shortcut overwritten (xoff) is useless anyway
 bind s split
 
-# Show or hide the status bar with leader I and O (never used logon and logoff anyway)
+# Show or hide the status bar with leader I/O (logoff and logon can be done with leader L anyway)
 bind I hardstatus ignore
 bind O hardstatus alwayslastline
 
@@ -169,11 +175,11 @@ bindkey "^[[A" focus up
 bindkey "^[[B" focus down
 
 # Switch windows with Ctrl-Alt-Left/Right [gnome-terminal]
-bindkey ^[[1;7C prev
-bindkey ^[[1;7D next
+bindkey "^[[1;7C" prev
+bindkey "^[[1;7D" next
 # Switch windows with Ctrl-Alt-Left/Right [putty]
-bindkey ^[^[[D prev
-bindkey ^[^[[C next
+bindkey "^[^[[D" prev
+bindkey "^[^[[C" next
 
 ################################################################
 # FUNCTION (F1, F2, F3...) KEYBINDINGS
@@ -203,18 +209,18 @@ bindkey "^[OT" eval "command -c rsz" # enter resize mode
 bindkey "^[[15~" eval "command -c rsz" # enter resize mode
 
 # F6, F7
-Split horizontally (F6) and vertically (F7) [gnome-terminal]
+# Split horizontally (F6) and vertically (F7) [gnome-terminal]
 bindkey "^[OU" split
 bindkey "^[OV" split -v
-Split horizontally (F6) and vertically (F7) [putty]
+# Split horizontally (F6) and vertically (F7) [putty]
 bindkey "^[[17~" split
 bindkey "^[[18~" split -v
 
 # F8, F9
-Remove single split (F8) and remove all splits (F9) [gnome-terminal]
+# Remove single split (F8) and remove all splits (F9) [gnome-terminal]
 bindkey "^[OW" remove
 bindkey "^[OX" only
-Remove single split (F8) and remove all splits (F9) [putty]
+# Remove single split (F8) and remove all splits (F9) [putty]
 bindkey "^[[19~" remove
 bindkey "^[[20~" only
 
