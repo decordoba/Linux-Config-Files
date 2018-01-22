@@ -7,7 +7,7 @@ case $- in
     *) return;;
 esac
 
-# Don't put duplicate lines or lines starting with space in the history.
+# Don't put duplicate lines or lines starting with space in the history
 HISTCONTROL=ignoreboth
 
 # Ignore some commands (used really often) from history: bg, fg, ll, ls, exit
@@ -19,6 +19,9 @@ export HISTIGNORE="&:bg:fg:ll:ls:lh:la:lll:l:exit:logout:clear:clr:pwd:p"
 # from last session, plus HISTSIZE from the previous one, etc.
 HISTSIZE=10000
 HISTFILESIZE=20000
+
+# Save date and time when commands were used in history
+HISTTIMEFORMAT="%F %T "
 
 # Append to the history file, don't overwrite it
 shopt -s histappend
@@ -429,13 +432,18 @@ repeat() {  # repeat a command n times. If n is 0, repeat forever
 }
 
 # Use: 'mkcd my_new_folder'
-mkcd() {  # create a folder and cd into it with one cmd only
-  if [ $# != 1 ]; then
-    echo "Usage: mkcd dir"
+mkcd() {  # create folder(s) and cd into the last one
+  local funcname=${FUNCNAME[0]}
+  if [ $# < 1 ]; then
+    echo "Usage: $funcname <dir(cd here)>"
+    echo "Usage: $funcname <dir1> [dir2] [dir3(cd here)]"
   else
-    mkdir -p $1 && cd $1
+    mkdir -p "$@" || return
+    shift $(($# - 1))  # put last argument in $1
+    cd "$1"
   fi
 }
+
 # Use: 'cpcd my_old_location my_new_location_where_I_will_cd'
 cpcd () {  # copy a file or folder and cd into the destination directory
   cp "$@"
