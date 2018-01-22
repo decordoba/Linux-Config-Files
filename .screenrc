@@ -37,6 +37,9 @@
 # leader C: clear screen
 # leader l: fully refresh the current window
 # leader x: lock terminal (require password to use it)
+# leader <: readbuffer, reads the content of ~/.screen/exchange and puts them into paste buffer
+# leader >: writebuffer, writes the paste buffer to ~/.screen/exchange
+# leader =: forgets (unlinks) the screen exchange file used, goes back to using ~/.screen/exchange
 
 # F1,F2,F3...: explained below (TODO, show explanation here)
 
@@ -144,20 +147,33 @@ bind 0 select 10
 # LOGGING (leader H) AND HARDCOPY (leader h) CONFIGURARION
 ################################################################
 
-# Make sure the folder .screen exists
+# Make sure folders .screen/hardcopy and .screen/log exist
 exec bash -c "mkdir -p $HOME/.screen"
+exec bash -c "mkdir -p $HOME/.screen/hardcopy"
+exec bash -c "mkdir -p $HOME/.screen/log"
 
 # Change directory where hardcopies are saved
 # Hardcopies are saved with leader h
-hardcopydir "$HOME/.screen"
+hardcopydir "$HOME/.screen/hardcopy"
+
+# # Append instead of overwriting hardcopy files
+# hardcopy_append on
 
 # Save log files as screenlog.date.time.shell_number
 # Log files are created with leader H
-logfile "$HOME/.screen/screenlog.%Y%m%d.%c.%n"
+logfile "$HOME/.screen/log/screenlog.%Y%m%d.%c.%n"
 
 # Add timestamp to logging every 10min of inactivity
 logtstamp on
 logtstamp after 600
+logtstamp string "\n-- SCREEN [%Y/%m/%d %02c:%s] %n:%t --\n"
+
+################################################################
+# BUFFER CONFIGURARION
+################################################################
+
+# Change the filename used for reading and writing with the paste buffer
+bufferfile '$HOME/.screen/exchange'
 
 ################################################################
 # LEADER (CTRL-C) KEYBINDINGS
@@ -425,3 +441,44 @@ bind / resize max
 # 
 # multiuser on
 # acladd shopqi
+# 
+# # Supress trailing blank lines when scrolling up in the history buffer
+# compacthist on
+# 
+# bind u windowlist -b
+# bind K kill
+# 
+# # Clear scrollback buffer
+# bind F eval 'scrollback 0' 'scrollback 10000' 'echo "Scrollback buffer cleared"'
+# 
+# # don't remove windows from the window list as soon as window process exits.
+# zombie kr #  k: destory window, r: resurrect window
+# 
+# # echo command name whenever a window is created or resurrected.
+# verbose on
+# 
+# # changes the kind of messages to the nethack-style.
+# nethack on
+# 
+# # disables vbell toggle binding to use ^G as cancel
+# bind ^G
+# 
+# # window re-numbering
+# # override default `N'(number) mapping
+# bind N colon 'number '
+#
+# # shortcut of screen sub-command with title option.
+# bind s colon 'screen -t '
+# 
+# # switch window encoding
+# bind ^U eval 'encoding utf8'  'info'
+# bind ^E eval 'encoding eucjp' 'info'
+# 
+# # switch focus to other region(like vi)
+# # orverride default `k'(kill), `t'(time), `b'(break) mappings.
+# bind j focus down
+# bind k focus up
+# bind t focus top
+# bind b focus bottom
+# 
+# More here! (this is a great source: https://gist.github.com/libitte/5449336)
