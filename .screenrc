@@ -148,9 +148,7 @@ bind 0 select 10
 ################################################################
 
 # Make sure folders .screen/hardcopy and .screen/log exist
-exec bash -c "mkdir -p $HOME/.screen"
-exec bash -c "mkdir -p $HOME/.screen/hardcopy"
-exec bash -c "mkdir -p $HOME/.screen/log"
+exec bash -c "mkdir -p $HOME/.screen $HOME/.screen/hardcopy $HOME/.screen/log"
 
 # Change directory where hardcopies are saved
 # Hardcopies are saved with leader h
@@ -166,7 +164,7 @@ logfile "$HOME/.screen/log/screenlog.%Y%m%d.%c.%n"
 # Add timestamp to logging every 10min of inactivity
 logtstamp on
 logtstamp after 600
-logtstamp string "\n-- SCREEN [%Y/%m/%d %02c:%s] %n:%t --\n"
+logtstamp string "-- %n:%t -- 600 s inactivity -- %Y/%m/%d %02c:%s --\n"
 
 ################################################################
 # BUFFER CONFIGURARION
@@ -235,9 +233,9 @@ bindkey "^[OP" writebuf
 bindkey "^[[11~" writebuf
 
 # F2 creates new tab [gnome-terminal]
-bindkey "^[OQ" screen
+bindkey "^[OQ" screen 1
 # F2 creates new tab [putty]
-bindkey "^[[12~" screen
+bindkey "^[[12~" screen 1
 
 # F3, F4
 # Switch windows with F3 (prev) and F4 (next) [gnome-terminal]
