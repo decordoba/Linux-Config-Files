@@ -275,10 +275,11 @@ alias s1='screen -dr s1'
 alias s2='screen -dr s2'
 alias s3='screen -dr s3'
 alias s4='screen -dr s4'
-alias screen1='screen -S s1'
-alias screen2='screen -S s2'
-alias screen3='screen -S s3'
-alias screen4='screen -S s4'
+# Creating more than one screen called s1/s2/s3/s4 is prevented
+alias screen1='s1 > /dev/null || screen -S s1'
+alias screen2='s2 > /dev/null || screen -S s2'
+alias screen3='s3 > /dev/null || screen -S s3'
+alias screen4='s4 > /dev/null || screen -S s4'
 
 # Set mv and cp to be interactive: ask before overwritting
 alias mv='mv -i'
