@@ -185,67 +185,75 @@ export LS_COLORS
 # We can use 2 or 3 suffixes at the same time, in any order, like llag, lsta, lllgt, latg, etc.
 alias l='ls'  # ls typo
 alias ll='ls -lh'  # long listing format + size in human-readable format (K, M, G)
-alias lll='ll --color=always | less -R'  # ll for many files (pipe into less)
+lll_func () { ll --color=always "$@" | less -R }
+alias lll='lll_func'  # ll for many files (pipe into less)
 alias lsa='ls -A'  # do not ignore entries starting with .
 alias la='lsa'
 alias lla='ll -A'
-alias llla='lla --color=always | less -R'
+llla_func () { lla --color=always "$@" | less -R }
+alias llla='llla_func'
 alias lst='ls -tr'  # sort oldest first
 alias lt='lst'
 alias llt='ll -tr'
-alias lllt='llt --color=always | less -R'
+lllt_func () { llt --color=always "$@" | less -R }
+alias lllt='lllt_func'
 alias lsat='lsa -tr'
 alias lsta='lsa -tr'
 alias lat='la -tr'
 alias lta='la -tr'
 alias llat='lla -tr'
 alias llta='lla -tr'
-alias lllat='llat --color=always | less -R'
-alias lllta='llta --color=always | less -R'
+lllat_func () { llat --color=always "$@" | less -R }
+alias lllat='lllat_func'
+alias lllta='lllat_func'
 alias lsg='ls --group-directories-first'  # show folders first, then files
 alias lg='lsg'
 alias llg='ll --group-directories-first'
-alias lllg='llg --color=always | less -R'
+lllg_func () { llg --color=always "$@" | less -R }
+alias lllg='lllg_func'
 alias lsag='lsg -A'
 alias lsga='lsg -A'
 alias lag='lg -A'
 alias lga='lg -A'
 alias llag='llg -A'
 alias llga='llg -A'
-alias lllag='llag --color=always | less -R'
-alias lllga='llga --color=always | less -R'
+lllag_func () { llag --color=always "$@" | less -R }
+alias lllag='lllag_func'
+alias lllga='lllag_func'
 alias lstg='lsg -tr'
 alias lsgt='lsg -tr'
 alias ltg='lg -tr'
 alias lgt='lg -tr'
 alias lltg='llg -tr'
 alias llgt='llg -tr'
-alias llltg='lltg --color=always | less -R'
-alias lllgt='llgt --color=always | less -R'
+llltg_func () { lltg --color=always "$@" | less -R }
+alias llltg='llltg_func'
+alias lllgt='llltg_func'
 alias lstga='lstg -A'
 alias ltga='ltg -A'
 alias lltga='lltg -A'
-alias llltga='lltga --color=always | less -R'
+llltga_func () { lltga --color=always "$@" | less -R }
+alias llltga='llltga_func'
 alias lstag='lstg -A'
 alias ltag='ltg -A'
 alias lltag='lltg -A'
-alias llltag='lltga --color=always | less -R'
+alias llltag='llltga_func'
 alias lsatg='lstg -A'
 alias latg='ltg -A'
 alias llatg='lltg -A'
-alias lllatg='lltga --color=always | less -R'
+alias lllatg='llltga_func'
 alias lsagt='lstg -A'
 alias lagt='ltg -A'
 alias llagt='lltg -A'
-alias lllagt='lltga --color=always | less -R'
+alias lllagt='llltga_func'
 alias lsgat='lstg -A'
 alias lgat='ltg -A'
 alias llgat='lltg -A'
-alias lllgat='lltga --color=always | less -R'
+alias lllgat='llltga_func'
 alias lsgta='lstg -A'
 alias lgta='ltg -A'
 alias llgta='lltg -A'
-alias lllgta='lltga --color=always | less -R'
+alias lllgta='llltga_func'
 
 # Aliases to navigate back faster
 alias ..='cd ..'
