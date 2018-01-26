@@ -443,7 +443,7 @@ repeat() {  # repeat a command n times. If n is 0, repeat forever
 # Use: 'mkcd my_new_folder'
 mkcd() {  # create folder(s) and cd into the last one
   local funcname=${FUNCNAME[0]}
-  if [ $# < 1 ]; then
+  if [ $# -lt 1 ]; then
     echo "Usage: $funcname <dir(cd here)>"
     echo "Usage: $funcname <dir1> [dir2] [dir3(cd here)]"
   else
