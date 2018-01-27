@@ -518,33 +518,33 @@ oldest() {  # get oldest folder, or Nth oldest folder
 }
 # Use: 'cdn' or 'cdn 3'  # cdn for cd newest
 cdn() {  # cd into newest folder, or cd into Nth newest folder
-  local n
+  local n funcname=${FUNCNAME[0]}
   n="$(newest $@)"
   if [[ $n == "" ]]; then
-    echo "Usage: cdn      # cd into newest folder"
-    echo "       cdn [N]  # cd into Nth newest folder (N should be number > 0)"
+    echo "Usage: $funcname      # cd into newest folder"
+    echo "       $funcname [N]  # cd into Nth newest folder (N should be number > 0)"
     return 1
   fi
   cd $n
 }
 # Use: 'cdo' or 'cdo 3'  # cdo for cd oldest
 cdo() {  # cd into oldest folder, or cd into Nth oldest folder
-  local n
+  local n funcname=${FUNCNAME[0]}
   n="$(oldest $@)"
   if [[ $n == "" ]]; then
-    echo "Usage: cdo      # cd into oldest folder"
-    echo "       cdo [N]  # cd into Nth oldest folder (N should be number > 0)"
+    echo "Usage: $funcname      # cd into oldest folder"
+    echo "       $funcname [N]  # cd into Nth oldest folder (N should be number > 0)"
     return 1
   fi
   cd $n
 }
 # Use: 'rmn' or 'rmn 3'  # rmn for rm newest
 rmn() {  # rm newest folder, or rm Nth newest folder
-  local n
+  local n funcname=${FUNCNAME[0]}
   n="$(newest $@)"
   if [[ $n == "" ]]; then
-    echo "Usage: rmn      # rm newest folder"
-    echo "       rmn [N]  # rm Nth newest folder (N should be number > 0)"
+    echo "Usage: $funcname      # rm newest folder"
+    echo "       $funcname [N]  # rm Nth newest folder (N should be number > 0)"
     return 1
   fi
   echo "Removed folder: $n"
@@ -552,11 +552,11 @@ rmn() {  # rm newest folder, or rm Nth newest folder
 }
 # Use: 'rmo' or 'rmo 3'  # rmo for rm oldest
 rmo() {  # rm oldest folder, or rm Nth oldest folder
-  local n
+  local n funcname=${FUNCNAME[0]}
   n="$(oldest $@)"
   if [[ $n == "" ]]; then
-    echo "Usage: rmo      # rm oldest folder"
-    echo "       rmo [N]  # rm Nth oldest folder (N should be number > 0)"
+    echo "Usage: $funcname      # rm oldest folder"
+    echo "       $funcname [N]  # rm Nth oldest folder (N should be number > 0)"
     return 1
   fi
   echo "Removed folder: $n"
@@ -564,11 +564,11 @@ rmo() {  # rm oldest folder, or rm Nth oldest folder
 }
 # Use: 'lsn' or 'lsn 3'  # lsn for ls newest
 lsn() {  # ls into newest folder, or ls into Nth newest folder
-  local n
+  local n funcname=${FUNCNAME[0]}
   n="$(newest $@)"
   if [[ $n == "" ]]; then
-    echo "Usage: lsn      # ls into newest folder"
-    echo "       lsn [N]  # ls into Nth newest folder (N should be number > 0)"
+    echo "Usage: $funcname      # ls into newest folder"
+    echo "       $funcname [N]  # ls into Nth newest folder (N should be number > 0)"
     return 1
   fi
   echo "Folder: $n"
@@ -576,11 +576,11 @@ lsn() {  # ls into newest folder, or ls into Nth newest folder
 }
 # Use: 'lso' or 'lso 3'  # lso for ls oldest
 lso() {  # ls into oldest folder, or ls into Nth oldest folder
-  local n
+  local n funcname=${FUNCNAME[0]}
   n="$(oldest $@)"
   if [[ $n == "" ]]; then
-    echo "Usage: lso      # ls into oldest folder"
-    echo "       lso [N]  # ls into Nth oldest folder (N should be number > 0)"
+    echo "Usage: $funcname      # ls into oldest folder"
+    echo "       $funcname [N]  # ls into Nth oldest folder (N should be number > 0)"
     return 1
   fi
   echo "Folder: $n"
@@ -588,11 +588,11 @@ lso() {  # ls into oldest folder, or ls into Nth oldest folder
 }
 # Use: 'lln' or 'lln 3'  # lln for ll newest
 lln() {  # ll into newest folder, or ll into Nth newest folder
-  local n
+  local n funcname=${FUNCNAME[0]}
   n="$(newest $@)"
   if [[ $n == "" ]]; then
-    echo "Usage: lln      # ll into newest folder"
-    echo "       lln [N]  # ll into Nth newest folder (N should be number > 0)"
+    echo "Usage: $funcname      # ll into newest folder"
+    echo "       $funcname [N]  # ll into Nth newest folder (N should be number > 0)"
     return 1
   fi
   echo "Folder: $n"
@@ -600,11 +600,11 @@ lln() {  # ll into newest folder, or ll into Nth newest folder
 }
 # Use: 'llo' or 'llo 3'  # llo for ll oldest
 llo() {  # ll into oldest folder, or ll into Nth oldest folder
-  local n
+  local n funcname=${FUNCNAME[0]}
   n="$(oldest $@)"
   if [[ $n == "" ]]; then
-    echo "Usage: llo      # ll into oldest folder"
-    echo "       llo [N]  # ll into Nth oldest folder (N should be number > 0)"
+    echo "Usage: $funcname      # ll into oldest folder"
+    echo "       $funcname [N]  # ll into Nth oldest folder (N should be number > 0)"
     return 1
   fi
   echo "Folder: $n"
@@ -612,11 +612,11 @@ llo() {  # ll into oldest folder, or ll into Nth oldest folder
 }
 # Use: 'llln' or 'llln 3'  # llln for lll newest
 llln() {  # lll into newest folder, or lll into Nth newest folder
-  local n
+  local n funcname=${FUNCNAME[0]}
   n="$(newest $@)"
   if [[ $n == "" ]]; then
-    echo "Usage: llln      # lll into newest folder"
-    echo "       llln [N]  # lll into Nth newest folder (N should be number > 0)"
+    echo "Usage: $funcname      # lll into newest folder"
+    echo "       $funcname [N]  # lll into Nth newest folder (N should be number > 0)"
     return 1
   fi
   echo "Folder: $n"
@@ -624,11 +624,11 @@ llln() {  # lll into newest folder, or lll into Nth newest folder
 }
 # Use: 'llo' or 'llo 3'  # llo for ll oldest
 lllo() {  # lll into oldest folder, or lll into Nth oldest folder
-  local n
+  local n funcname=${FUNCNAME[0]}
   n="$(oldest $@)"
   if [[ $n == "" ]]; then
-    echo "Usage: lllo      # lll into oldest folder"
-    echo "       lllo [N]  # lll into Nth oldest folder (N should be number > 0)"
+    echo "Usage: $funcname      # lll into oldest folder"
+    echo "       $funcname [N]  # lll into Nth oldest folder (N should be number > 0)"
     return 1
   fi
   echo "Folder: $n"
@@ -636,7 +636,7 @@ lllo() {  # lll into oldest folder, or lll into Nth oldest folder
 }
 # Use: 'cpn' or 'cpn 3'  # cpn for cp newest
 cpn() {  # cp newest folder, or cp Nth newest folder
-  local n re args
+  local n re args funcname=${FUNCNAME[0]}
   re='^[0-9]+$'
   if ! [[ $1 =~ $re ]] ; then
     n="$(newest)"
@@ -646,8 +646,8 @@ cpn() {  # cp newest folder, or cp Nth newest folder
     args="${@:2}"
   fi
   if [[ $n == "" ]] || [[ $args == "" ]] ; then
-    echo "Usage:   cpn location      # cp newest folder into location"
-    echo "         cpn [N] location  # cp Nth newest folder into location (N should be number > 0)"
+    echo "Usage:   $funcname <location>      # cp newest folder into location"
+    echo "         $funcname [N] <location>  # cp Nth newest folder into location (N should be number > 0)"
     echo "Warning: if location is a number, the argument N is mandatory."
     return 1
   fi
@@ -656,7 +656,7 @@ cpn() {  # cp newest folder, or cp Nth newest folder
 }
 # Use: 'cpo' or 'cpo 3'  # cpo for cp oldest
 cpo() {  # cp oldest folder, or cp Nth oldest folder
-  local n re args
+  local n re args funcname=${FUNCNAME[0]}
   re='^[0-9]+$'
   if ! [[ $1 =~ $re ]] ; then
     n="$(oldest)"
@@ -666,8 +666,8 @@ cpo() {  # cp oldest folder, or cp Nth oldest folder
     args="${@:2}"
   fi
   if [[ $n == "" ]] || [[ $args == "" ]] ; then
-    echo "Usage:   cpo location      # cp oldest folder into location"
-    echo "         cpo [N] location  # cp Nth oldest folder into location (N should be number > 0)"
+    echo "Usage:   $funcname <location>      # cp oldest folder into location"
+    echo "         $funcname [N] <location>  # cp Nth oldest folder into location (N should be number > 0)"
     echo "Warning: if location is a number, the argument N is mandatory."
     return 1
   fi
@@ -676,7 +676,7 @@ cpo() {  # cp oldest folder, or cp Nth oldest folder
 }
 # Use: 'mvn' or 'mvn 3'  # mvn for mv newest
 mvn() {  # mv newest folder, or mv Nth newest folder
-  local n re args
+  local n re args funcname=${FUNCNAME[0]}
   re='^[0-9]+$'
   if ! [[ $1 =~ $re ]] ; then
     n="$(newest)"
@@ -686,8 +686,8 @@ mvn() {  # mv newest folder, or mv Nth newest folder
     args="${@:2}"
   fi
   if [[ $n == "" ]] || [[ $args == "" ]] ; then
-    echo "Usage:   mvn location      # mv newest folder into location"
-    echo "         mvn [N] location  # mv Nth newest folder into location (N should be number > 0)"
+    echo "Usage:   $funcname <location>      # mv newest folder into location"
+    echo "         $funcname [N] <location>  # mv Nth newest folder into location (N should be number > 0)"
     echo "Warning: if location is a number, the argument N is mandatory."
     return 1
   fi
@@ -696,7 +696,7 @@ mvn() {  # mv newest folder, or mv Nth newest folder
 }
 # Use: 'mvo' or 'mvo 3'  # mvo for mv oldest
 mvo() {  # mv oldest folder, or mv Nth oldest folder
-  local n re args
+  local n re args funcname=${FUNCNAME[0]}
   re='^[0-9]+$'
   if ! [[ $1 =~ $re ]] ; then
     n="$(oldest)"
@@ -706,8 +706,8 @@ mvo() {  # mv oldest folder, or mv Nth oldest folder
     args="${@:2}"
   fi
   if [[ $n == "" ]] || [[ $args == "" ]] ; then
-    echo "Usage:   mvo location      # mv oldest folder into location"
-    echo "         mvo [N] location  # mv Nth oldest folder into location (N should be number > 0)"
+    echo "Usage:   $funcname <location>      # mv oldest folder into location"
+    echo "         $funcname [N] <location>  # mv Nth oldest folder into location (N should be number > 0)"
     echo "Warning: if location is a number, the argument N is mandatory."
     return 1
   fi
@@ -768,10 +768,10 @@ remindme() {  # show pop up with reminder after time
 
 # Use: 'addssh user@example.com ssh_alias' or 'addssh user@example.com'
 addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
-  local user hostname host found hostname_tmp user_tmp path_config host_line i
+  local user hostname host found hostname_tmp user_tmp path_config host_line i funcname=${FUNCNAME[0]}
   if [ $# -lt 1 ]; then
-    echo "Usage: add user@hostname              # add SSH user and hostname to .ssh/config. SSH alias is assigned automatically (recommended)"
-    echo "       add user@hostname [ssh_alias]  # add SSH user and hostname to .ssh/confid, and use SSH alias to access it"
+    echo "Usage: $funcname <user@hostname>              # add SSH user and hostname to .ssh/config. SSH alias is assigned automatically (recommended)"
+    echo "       $funcname <user@hostname> [ssh_alias]  # add SSH user and hostname to .ssh/confid, and use SSH alias to access it"
     return 1
   fi
   user=${1%%@*}
