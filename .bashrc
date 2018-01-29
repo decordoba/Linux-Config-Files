@@ -438,7 +438,7 @@ repeat() {  # repeat a command n times. If n is 0, repeat forever
   local i max funcname=${FUNCNAME[0]}
   if [ $# -lt 2 ]; then
     echo "Usage: $funcname <N> <command>  # Repeat command N times"
-    echo "Usage: $funcname 0 <command>    # Repeat command forever"
+    echo "       $funcname 0 <command>    # Repeat command forever"
     return 1
   fi
   max=$1
@@ -458,7 +458,7 @@ mkcd() {  # create folder(s) and cd into the last one
   local funcname=${FUNCNAME[0]}
   if [ $# -lt 1 ]; then
     echo "Usage: $funcname <dir(cd here)>"
-    echo "Usage: $funcname <dir1> [dir2] [dir3(cd here)]"
+    echo "       $funcname <dir1> [dir2] [dir3(cd here)]"
   else
     mkdir -p "$@" || return
     shift $(($# - 1))  # put last argument in $1
@@ -836,7 +836,7 @@ addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
 # Use: 'hddunlock' or 'hddunlock /dev/sdb1' or 'hddunlock /dev/sdb1 folder_name'
 default_hdd_name='data'
 default_device='/dev/sdc1'
-hddunlock() {
+hddunlock() {  # unlock an encrypted hard drive partition
   if [ $# -lt 1 ]; then
     device=default_device
   else
@@ -875,7 +875,7 @@ hddunlock() {
   echo Unlocked!
 }
 # Use: 'hddlock' or 'hddlock folder_name' (expects a folder unlocked with hddunlock)
-hddlock() {
+hddlock() {  # lock an encrypted hard drive partition
   if [ $# -lt 1 ]; then
     hdd_name=default_hdd_name
   else
@@ -970,8 +970,8 @@ showlscolors() {  # Show available LS_COLORS and formats and their numbers
   printf '            \e[1m\\e[4;35;103m\e[0m  \e[4;35;103mUNDERLINED (4) PURPLE text (35) on YELLOW background (103)              \e[0m\n'
   printf '  \e[1m\\e[0;38;5;208;48;5;56m\e[0m  \e[0;38;5;208;48;5;56mDEFAULT (0) ORANGE_208 text (38;5;208) on VIOLET_56 background (48;5;56)\e[0m\n'
 }
-
-showextensions () {
+# Use: 'showextensions'
+showextensions () {  # Show all extensions with colors
   ( # Run in a subshell so it won't crash current color settings
     dircolors -b >/dev/null
     IFS=:
