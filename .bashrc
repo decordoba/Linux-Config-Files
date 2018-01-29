@@ -728,16 +728,42 @@ mvo() {  # mv oldest folder, or mv Nth oldest folder
   mv $n $args
 }
 
-# Use: 'bu my_config_file.cfg'
+# Use: 'bu my_config_file.cfg' or 'bu file1 folder2'
 bu () {  # create backup file
-  if [ $# -lt 1 ]; then
-    echo "Usage: bu file             # create backup in current folder"
-    echo "       bu file [anything]  # create backup in .backups folder"
-  elif [ $# -lt 2 ]; then
-    cp $1 `basename $1`_`date +%Y%m%d%H%M`.backup ;  # in same folder
+  local m flag="" funcname=${FUNCNAME[0]}
+  local -i ret=0
+  if [ -z "$1" ]; then
+    echo "Usage: $funcname <file>                   # create backup of a file or a folder"
+    echo "       $funcname -h <file>                # create backup in current folder"
+    echo "       $funcname -b <file>                # create backup in ~/.backups folder"
+    echo "       $funcname <file1> [file2] [file3]  # create backup of multiple files"
   else
-    cp $1 ~/.backup/`basename $1`_`date +%Y%m%d%H%M`.backup ;  # in .backups folder
+    for n in $@ ; do
+      if [[ ${n:0:1} == '-' ]]; then
+        flag=${n:1}
+        case "$flag" in
+          h|b)  ;;
+          *)    echo "$funcname: invalid argument '-$n'"
+                return 1 ;;
+        esac
+      elif [ -e "$n" ] ; then
+        m=$n
+        [[ $flag == h ]] && m="$(basename $n)"
+        [[ $flag == b ]] && m="$HOME/.backups/$(basename $n)"
+        if [ -d "$n" ] ; then
+          tar -czf "${m}_$(date +%Y%m%d-%H%M).bak.tgz" $n
+        else
+          cp $n "${m}_$(date +%Y%m%d-%H%M).bak"  # in same folder
+        fi
+        flag=""
+      else
+        echo "$funcname: '$n' - file does not exist"
+        ret=1
+        flag=""
+      fi
+    done
   fi
+  return $ret
 }
 
 # Use: 'calc \(3^2 + 4^2\)^0.5'  # sorry, parenthesis must be escaped, unless formula is surrounded by ""
