@@ -859,21 +859,22 @@ addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
 # The device should have been previously encrypted with cryptsetup
 # See: https://askubuntu.com/questions/500981/how-to-encrypt-external-devices
 # It is assumed that there is a /$hdd_name folder, if it doesn't exist the device won't be mounted
-# Use: 'hddunlock' or 'hddunlock /dev/sdb1' or 'hddunlock /dev/sdb1 folder_name'
+# Find out the name of your device with lsblk, gnome-disks or other utilities, or check /dev/disk/
 default_hdd_name='data'
 default_device='/dev/sdc1'
+# Use: 'hddunlock' or 'hddunlock /dev/sdb1' or 'hddunlock /dev/sdb1 folder_name'
 hddunlock() {  # unlock an encrypted hard drive partition
   if [ $# -lt 1 ]; then
-    device=default_device
+    device=$default_device
   else
     device=$1
   fi
   if [ $# -lt 2 ]; then
-    hdd_name=default_hdd_name
+    hdd_name=$default_hdd_name
   else
     hdd_name=$2
   fi
-  folder=/$hdd_name
+  folder=/media/$USER/$hdd_name
   hdd_name=${hdd_name//\//_}
   if [ ! -d $folder ]; then
     echo The folder $folder does not exist. Create it to mount $device there.
@@ -903,11 +904,11 @@ hddunlock() {  # unlock an encrypted hard drive partition
 # Use: 'hddlock' or 'hddlock folder_name' (expects a folder unlocked with hddunlock)
 hddlock() {  # lock an encrypted hard drive partition
   if [ $# -lt 1 ]; then
-    hdd_name=default_hdd_name
+    hdd_name=$default_hdd_name
   else
     hdd_name=$1
   fi
-  folder=/$hdd_name
+  folder=/media/$USER/$hdd_name
   hdd_name=${hdd_name//\//_}
   echo Unmounting $folder...
   sudo umount $folder
