@@ -875,6 +875,9 @@ hddunlock() {  # unlock an encrypted hard drive partition
     hdd_name=$2
   fi
   folder=/media/$USER/$hdd_name
+  if [[ $hdd_name == /* ]] ; then
+    folder=$hdd_name
+  fi
   hdd_name=${hdd_name//\//_}
   if [ ! -d $folder ]; then
     echo The folder $folder does not exist. Create it to mount $device there.
@@ -909,11 +912,14 @@ hddlock() {  # lock an encrypted hard drive partition
     hdd_name=$1
   fi
   folder=/media/$USER/$hdd_name
+  if [[ $hdd_name == /* ]] ; then
+    folder=$hdd_name
+  fi
   hdd_name=${hdd_name//\//_}
   echo Unmounting $folder...
   sudo umount $folder
   if [ $? -ne 0 ]; then
-    echo Failed to mount $folder. Make sure no terminal or file manager are inside $folder.
+    echo Failed to unmount $folder. Make sure no terminal or file manager are inside $folder.
     return 1
   fi
   echo Locking $hdd_name...
