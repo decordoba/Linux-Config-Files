@@ -954,6 +954,10 @@ showcolors() {  # Show available colors in terminal
       fi
     fi
   done
+  if [ $# -lt 1 ]; then
+    echo "Use '${FUNCNAME[0]} [N]' to show a wider color palette."
+    echo "Example: '${FUNCNAME[0]} 256' shows all 256 colors."
+  fi
 }
 # Use: 'showlscolors'
 showlscolors() {  # Show available LS_COLORS and formats and their numbers
