@@ -53,23 +53,18 @@ shopt -s extglob
 # Uncomment to expand non-matching globs to zero arguments instead of to themselves
 #shopt -s nullglob
 
-bash_version="${BASH_VERSINFO[0]}${BASH_VERSINFO[1]}"
-if [ $bash_version -ge 40 ]; then
-  # Interprets [a-d] as [abcd]. To match a literal -, include it as 1st or last char
-  if [ $bash_version -ge 43 ]; then
-    shopt -s globasciiranges  # Requires bash 4.3
-  fi
+# Interprets [a-d] as [abcd]. To match a literal -, include it as 1st or last char
+shopt -s globasciiranges 2> /dev/null  # Requires bash 4.3
 
-  # The pattern "**" used in a pathname expansion context will match all files,
-  # directories and subdirectories. Acts like * but also matches subdirectories.
-  # Example use: 'ls **' (instead of 'ls *') shows all directories and subdirectories
-  shopt -s globstar  # Requires bash 4.0
+# The pattern "**" used in a pathname expansion context will match all files,
+# directories and subdirectories. Acts like * but also matches subdirectories.
+# Example use: 'ls **' (instead of 'ls *') shows all directories and subdirectories
+shopt -s globstar 2> /dev/null  # Requires bash 4.0
 
-  # A command name that is the name of a directory is executed as if it were the argument to the cd command
-  # Type a folder name to cd automatically to it, no need to write cd before it
-  shopt -s autocd  # warning! new directory will not be saved to cd history if used
-fi
-unset bash_version
+# A command name that is the name of a directory is executed as if it were the argument to the cd command
+# Type a folder name to cd automatically to it, no need to write cd before it
+# Warning! Directories visited will not be saved to cd history (using cd_func) if used
+shopt -s autocd 2> /dev/null  # Requires bash 4.0
 
 # Make vim the default editor
 export EDITOR=vim  # Normally VISUAL will be called 1st, if it fails EDITOR will be
