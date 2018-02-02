@@ -498,7 +498,7 @@ newest() {  # get newest folder, or Nth newest folder
     fi
   fi
   # if current directory contains at least one folder
-  if ! [[ "$(find . -maxdepth 0 -empty)" == "." ]] && ! [[ "$(find * -maxdepth 0 -type d)" == "" ]]; then
+  if ! [[ "$(find . -maxdepth 0 -empty)" = "." ]] && ! [[ "$(find * -maxdepth 0 -type d)" = "" ]]; then
     echo "$(ls -trd */ | tail -n $idx | head -n 1)"
   else
     echo "."
@@ -518,7 +518,7 @@ oldest() {  # get oldest folder, or Nth oldest folder
     fi
   fi
   # if current directory contains at least one folder
-  if ! [[ "$(find . -maxdepth 0 -empty)" == "." ]] && ! [[ "$(find * -maxdepth 0 -type d)" == "" ]]; then
+  if ! [[ "$(find . -maxdepth 0 -empty)" = "." ]] && ! [[ "$(find * -maxdepth 0 -type d)" = "" ]]; then
     echo "$(ls -trd */ | head -n $idx | tail -n 1)"
   else
     echo "."
@@ -528,7 +528,7 @@ oldest() {  # get oldest folder, or Nth oldest folder
 cdn() {  # cd into newest folder, or cd into Nth newest folder
   local n funcname=${FUNCNAME[0]}
   n="$(newest $@)"
-  if [[ $n == "" ]]; then
+  if [[ $n = "" ]]; then
     echo "Usage: $funcname      # cd into newest folder"
     echo "       $funcname [N]  # cd into Nth newest folder (N should be number > 0)"
     return 1
@@ -539,7 +539,7 @@ cdn() {  # cd into newest folder, or cd into Nth newest folder
 cdo() {  # cd into oldest folder, or cd into Nth oldest folder
   local n funcname=${FUNCNAME[0]}
   n="$(oldest $@)"
-  if [[ $n == "" ]]; then
+  if [[ $n = "" ]]; then
     echo "Usage: $funcname      # cd into oldest folder"
     echo "       $funcname [N]  # cd into Nth oldest folder (N should be number > 0)"
     return 1
@@ -550,7 +550,7 @@ cdo() {  # cd into oldest folder, or cd into Nth oldest folder
 rmn() {  # rm newest folder, or rm Nth newest folder
   local n funcname=${FUNCNAME[0]}
   n="$(newest $@)"
-  if [[ $n == "" ]]; then
+  if [[ $n = "" ]]; then
     echo "Usage: $funcname      # rm newest folder"
     echo "       $funcname [N]  # rm Nth newest folder (N should be number > 0)"
     return 1
@@ -562,7 +562,7 @@ rmn() {  # rm newest folder, or rm Nth newest folder
 rmo() {  # rm oldest folder, or rm Nth oldest folder
   local n funcname=${FUNCNAME[0]}
   n="$(oldest $@)"
-  if [[ $n == "" ]]; then
+  if [[ $n = "" ]]; then
     echo "Usage: $funcname      # rm oldest folder"
     echo "       $funcname [N]  # rm Nth oldest folder (N should be number > 0)"
     return 1
@@ -574,7 +574,7 @@ rmo() {  # rm oldest folder, or rm Nth oldest folder
 lsn() {  # ls into newest folder, or ls into Nth newest folder
   local n funcname=${FUNCNAME[0]}
   n="$(newest $@)"
-  if [[ $n == "" ]]; then
+  if [[ $n = "" ]]; then
     echo "Usage: $funcname      # ls into newest folder"
     echo "       $funcname [N]  # ls into Nth newest folder (N should be number > 0)"
     return 1
@@ -586,7 +586,7 @@ lsn() {  # ls into newest folder, or ls into Nth newest folder
 lso() {  # ls into oldest folder, or ls into Nth oldest folder
   local n funcname=${FUNCNAME[0]}
   n="$(oldest $@)"
-  if [[ $n == "" ]]; then
+  if [[ $n = "" ]]; then
     echo "Usage: $funcname      # ls into oldest folder"
     echo "       $funcname [N]  # ls into Nth oldest folder (N should be number > 0)"
     return 1
@@ -598,7 +598,7 @@ lso() {  # ls into oldest folder, or ls into Nth oldest folder
 lln() {  # ll into newest folder, or ll into Nth newest folder
   local n funcname=${FUNCNAME[0]}
   n="$(newest $@)"
-  if [[ $n == "" ]]; then
+  if [[ $n = "" ]]; then
     echo "Usage: $funcname      # ll into newest folder"
     echo "       $funcname [N]  # ll into Nth newest folder (N should be number > 0)"
     return 1
@@ -610,7 +610,7 @@ lln() {  # ll into newest folder, or ll into Nth newest folder
 llo() {  # ll into oldest folder, or ll into Nth oldest folder
   local n funcname=${FUNCNAME[0]}
   n="$(oldest $@)"
-  if [[ $n == "" ]]; then
+  if [[ $n = "" ]]; then
     echo "Usage: $funcname      # ll into oldest folder"
     echo "       $funcname [N]  # ll into Nth oldest folder (N should be number > 0)"
     return 1
@@ -622,7 +622,7 @@ llo() {  # ll into oldest folder, or ll into Nth oldest folder
 llln() {  # lll into newest folder, or lll into Nth newest folder
   local n funcname=${FUNCNAME[0]}
   n="$(newest $@)"
-  if [[ $n == "" ]]; then
+  if [[ $n = "" ]]; then
     echo "Usage: $funcname      # lll into newest folder"
     echo "       $funcname [N]  # lll into Nth newest folder (N should be number > 0)"
     return 1
@@ -634,7 +634,7 @@ llln() {  # lll into newest folder, or lll into Nth newest folder
 lllo() {  # lll into oldest folder, or lll into Nth oldest folder
   local n funcname=${FUNCNAME[0]}
   n="$(oldest $@)"
-  if [[ $n == "" ]]; then
+  if [[ $n = "" ]]; then
     echo "Usage: $funcname      # lll into oldest folder"
     echo "       $funcname [N]  # lll into Nth oldest folder (N should be number > 0)"
     return 1
@@ -653,7 +653,7 @@ cpn() {  # cp newest folder, or cp Nth newest folder
     n="$(newest $1)"
     args="${@:2}"
   fi
-  if [[ $n == "" ]] || [[ $args == "" ]] ; then
+  if [[ $n = "" ]] || [[ $args = "" ]] ; then
     echo "Usage:   $funcname <location>      # cp newest folder into location"
     echo "         $funcname [N] <location>  # cp Nth newest folder into location (N should be number > 0)"
     echo "Warning: if location is a number, the argument N is mandatory."
@@ -673,7 +673,7 @@ cpo() {  # cp oldest folder, or cp Nth oldest folder
     n="$(oldest $1)"
     args="${@:2}"
   fi
-  if [[ $n == "" ]] || [[ $args == "" ]] ; then
+  if [[ $n = "" ]] || [[ $args = "" ]] ; then
     echo "Usage:   $funcname <location>      # cp oldest folder into location"
     echo "         $funcname [N] <location>  # cp Nth oldest folder into location (N should be number > 0)"
     echo "Warning: if location is a number, the argument N is mandatory."
@@ -693,7 +693,7 @@ mvn() {  # mv newest folder, or mv Nth newest folder
     n="$(newest $1)"
     args="${@:2}"
   fi
-  if [[ $n == "" ]] || [[ $args == "" ]] ; then
+  if [[ $n = "" ]] || [[ $args = "" ]] ; then
     echo "Usage:   $funcname <location>      # mv newest folder into location"
     echo "         $funcname [N] <location>  # mv Nth newest folder into location (N should be number > 0)"
     echo "Warning: if location is a number, the argument N is mandatory."
@@ -713,7 +713,7 @@ mvo() {  # mv oldest folder, or mv Nth oldest folder
     n="$(oldest $1)"
     args="${@:2}"
   fi
-  if [[ $n == "" ]] || [[ $args == "" ]] ; then
+  if [[ $n = "" ]] || [[ $args = "" ]] ; then
     echo "Usage:   $funcname <location>      # mv oldest folder into location"
     echo "         $funcname [N] <location>  # mv Nth oldest folder into location (N should be number > 0)"
     echo "Warning: if location is a number, the argument N is mandatory."
@@ -734,7 +734,7 @@ bu () {  # create backup file
     echo "       $funcname <file1> [file2] [file3]  # create backup of multiple files"
   else
     for n in $@ ; do
-      if [[ ${n:0:1} == '-' ]]; then
+      if [[ ${n:0:1} = '-' ]]; then
         flag=${n:1}
         case "$flag" in
           h|b)  ;;
@@ -743,8 +743,8 @@ bu () {  # create backup file
         esac
       elif [ -e "$n" ] ; then
         m=$n
-        [[ $flag == h ]] && m="$(basename $n)"
-        [[ $flag == b ]] && m="$HOME/.backups/$(basename $n)"
+        [[ $flag = h ]] && m="$(basename $n)"
+        [[ $flag = b ]] && m="$HOME/.backups/$(basename $n)"
         if [ -d "$n" ] ; then
           tar -czf "${m}_$(date +%Y%m%d-%H%M).bak.tgz" $n
         else
@@ -815,15 +815,15 @@ addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
   i=0
   while IFS='' read -r line ; do
     i=$((i + 1))
-    if [[ $line == User\ * ]]; then
+    if [[ $line = User\ * ]]; then
       user_tmp=${line#*User\ }
-    elif [[ $line == HostName\ * ]]; then
+    elif [[ $line = HostName\ * ]]; then
       hostname_tmp=${line#*HostName\ }
-    elif [[ $line == Host\ * ]]; then
+    elif [[ $line = Host\ * ]]; then
       host_line=$i
     fi
     if [[ ! -z $hostname_tmp && ! -z $user_tmp ]]; then
-      if [[ $hostname == $hostname_tmp && $user == $user_tmp ]]; then
+      if [[ $hostname = $hostname_tmp && $user = $user_tmp ]]; then
         found=1
         break
       fi
@@ -835,7 +835,7 @@ addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
     host="${2}"
   fi
 
-  if [[ $found == 0 ]]; then
+  if [[ $found = 0 ]]; then
     echo "Host ${host}" >> $path_config
     echo "HostName ${hostname}" >> $path_config
     echo "User ${user}" >> $path_config
@@ -870,7 +870,7 @@ hddunlock() {  # unlock an encrypted hard drive partition
     hdd_name=$2
   fi
   folder=/media/$USER/$hdd_name
-  if [[ $hdd_name == /* ]] ; then
+  if [[ $hdd_name = /* ]] ; then
     folder=$hdd_name
   fi
   hdd_name=${hdd_name//\//_}
@@ -907,7 +907,7 @@ hddlock() {  # lock an encrypted hard drive partition
     hdd_name=$1
   fi
   folder=/media/$USER/$hdd_name
-  if [[ $hdd_name == /* ]] ; then
+  if [[ $hdd_name = /* ]] ; then
     folder=$hdd_name
   fi
   hdd_name=${hdd_name//\//_}
@@ -1021,7 +1021,7 @@ cd_func () {  # Navigate to folders in history with cd_func -3 (3rd most recent 
   local new_dir n  # strings
   local -i i  # integers
   # print numbered directories history if 'cd --'
-  if [[ $1 ==  "--" ]]; then
+  if [[ $1 = "--" ]]; then
     dirs -v
     return 0
   fi
@@ -1029,7 +1029,7 @@ cd_func () {  # Navigate to folders in history with cd_func -3 (3rd most recent 
   new_dir=$1
   [[ -z $1 ]] && new_dir=$HOME
   # if 'cd -N', extract Nth most recent directory from dirs history
-  if [[ ${new_dir:0:1} == '-' ]]; then
+  if [[ ${new_dir:0:1} = '-' ]]; then
     n=${new_dir:1}
     [[ -z $n ]] && n=1
     n=$(dirs +$n)  # returns nth element in dirs and prints it
@@ -1037,7 +1037,7 @@ cd_func () {  # Navigate to folders in history with cd_func -3 (3rd most recent 
     new_dir=$n
   fi
   # substitute '~' by ${HOME} (necessary to remove old occurrences)
-  [[ ${new_dir:0:1} == '~' ]] && new_dir="${HOME}${new_dir:1}"
+  [[ ${new_dir:0:1} = '~' ]] && new_dir="${HOME}${new_dir:1}"
   # change to new_dir and add it to the top of the stack
   pushd "${new_dir}" > /dev/null  # adds new_dir to dirs and navigates there
   [[ $? -ne 0 ]] && return 1
@@ -1046,8 +1046,8 @@ cd_func () {  # Navigate to folders in history with cd_func -3 (3rd most recent 
   for ((i=1; i<=10; i++)); do
     n=$(dirs +${i} 2>/dev/null)
     [[ $? -ne 0 ]] && continue
-    [[ ${n:0:1} == '~' ]] && n="${HOME}${n:1}"
-    if [[ "${n}" == "${new_dir}" ]]; then
+    [[ ${n:0:1} = '~' ]] && n="${HOME}${n:1}"
+    if [[ "${n}" = "${new_dir}" ]]; then
       popd -n +$i 2>/dev/null 1>/dev/null
       i=i-1
     fi
