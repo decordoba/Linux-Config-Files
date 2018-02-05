@@ -77,7 +77,7 @@ hardstatus alwayslastline
 # %{-}%+w shows window numbers and names after the current window in white
 # %=%{g}] adds padding to fill line
 # [ %{B}%c %{g}] shows the time in blue
-hardstatus string '%{= g}[ %{G}%H%? %1`%? %{g}][%= %{r}%-w%{+b R} %n %t%?(%u)%? %{-}%+w %=%{g}][ %{y}Load: %l %{g}][ %{B}%Y-%m-%d %{W}%c %{g}]'
+hardstatus string '%{= g}[%{G} %H%? %1`%? %{g}][%{r}%= %-w%{+b R} %n %t%?(%u)%? %{-}%+w %=%{g}][%{y} Load: %l %{g}][%{B} %Y-%m-%d %{W}%c %{g}]'
 # %{= g} clears all attributes, and paints dark green the following text (here [)
 # [ %{G}%H%? writes the hostname in bright green
 # %1`%? %{g}] shows a %1 argument if it exists
