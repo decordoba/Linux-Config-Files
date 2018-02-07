@@ -58,6 +58,7 @@ set menu-complete-display-prefix on
 set completion-prefix-display-length 20
 
 # Use Vi (not Emacs) style editing. Vi mode is in insert mode by default, ESC to enter command mode
+# In this case, all commands in emacs also work in vi-insert, creating a vi-emacs hybrid
 set editing-mode vi
 
 ################################################################
@@ -172,7 +173,7 @@ set keymap emacs
 
 
 
-# Other commands yet to be labelled
+# Other commands yet to be labeled
 "\e\C-i": dynamic-complete-history
 "\C-g": abort
 "\C-x\C-g": abort
@@ -337,8 +338,79 @@ set keymap vi-insert
 "\eOF": end-of-line
 "\e[H": beginning-of-line
 "\e[F": end-of-line
+# Ctrl+A and Ctrl+E keys go to beginning and end of line
+"\C-a": beginning-of-line
+"\C-e": end-of-line
+# Alt+B and Alt+F move one word to the left or right
+"\eb": backward-word
+"\ef": forward-word
+# Ctrl+B and Ctrl+F keys move cursor left and right
+"\C-f": forward-char
+"\C-b": backward-char
+# Ctrl+U and Ctrl+X-BACKSPACE delete (cut) the line backward: from the cursor position -1 to the beginning of the line
+"\C-u": unix-line-discard
+"\C-x\C-?": backward-kill-line
+# Ctrl+K deletes (cuts) the line forward: from the cursor position to the end of the line
+"\C-k": kill-line
+# Ctrl+W and Alt+BACKSPACE delete (cut) a word backard: from the cursor position -1 to the previous space
+"\C-w": unix-word-rubout
+"\e\C-h": backward-kill-word
+"\e\C-?": backward-kill-word
+# Alt+D deletes (cuts) a word forward: from the cursor position to the next space
+"\ed": kill-word
+# Ctrl+N and Ctrl+P cycle through completions forward and backward
+"\C-n": menu-complete  # default emacs: next-history
+"\C-p": menu-complete-backward  # default emacs: previous-history
+# Ctrl+R searches history in reverse, Ctrl+S searches history forward
+"\C-r": reverse-search-history
+"\C-s": forward-search-history
+# Ctrl+X-Ctrl+U and Ctrl+_(Ctrl+Shift+-) undoes last change
+"\C-x\C-u": undo
+"\C-_": undo
+# Ctrl+Y pastes whatever we have copied in command mode, or in insert mode with Ctrl+U or Ctrl+W
+"\C-y": yank
+# Alt+. and Alt+_ paste last argument passed to previous command (or nth last argument if digits are passed)
+"\e.": yank-last-arg
+"\e_": yank-last-arg
+# Alt+Ctrl+Y paste the first argument passed to previous command (or nth argument if digits are passed)
+"\e\C-y": yank-nth-arg
+# Alt+. and Alt+_ write last command in history. Pressing keys more than once writes older history entries
+"\e.": insert-last-argument
+"\e_": insert-last-argument
+# Ctrl+T swaps the current char and the previous char and moves cursor one position forward
+"\C-t": transpose-chars
+# Alt+T swaps the current word and the previous word and moves cursor to the space after last word
+"\et": transpose-words
+# Ctrl+V and Ctrl+Q followed by any non-graphic character inserts that character. E.g. C-v ENTER writes ^M
+"\C-v": quoted-insert
+"\C-q": quoted-insert
+# Ctrl+L clears screen (same as running 'clear' in bash)
+"\C-l": clear-screen
+# Alt+C capitalizes first letter of word, makes rest of word lowercase and moves to the end of word
+"\ec": capitalize-word
+# Alt+U and Alt+L make whole word from cursor to end of the word uppercase (U) or lowercase (L)
+"\eu": upcase-word
+"\el": downcase-word
+# Ctrl+X-Ctrl+V shows the shell version
+"\C-x\C-v": display-shell-version
+# Alt+\ deletes all adjacent spaces and tabs around cursor
+"\e\\": delete-horizontal-space
+# Ctrl+J and Ctrl+M are equivalent to ENTER (accept line)
+"\C-j": accept-line
+"\C-m": accept-line
+# Ctrl+H and Ctrl+? are equivalent to BACKSPACE (delete back character)
+"\C-h": backward-delete-char
+"\C-?": backward-delete-char
+# Ctrl+I is equivalent to TAB (start auto-complete)
+"\C-i": complete
+# Shift-TAB cycles through available completions
+"\e[Z": menu-complete
+# Alt+ESC auto-completes too (like TAB)
+"\e\e": complete
 # Delete key deletes a character
 "\e[3~": delete-char
+# Ctrl+D key deletes a character
+"\C-d": delete-char  # default vi-insert: vi-eof-maybe
 # Up and down keys navigate through history (gnome-terminal and putty codes)
 "\e[A": previous-history
 "\e[B": next-history
@@ -349,34 +421,126 @@ set keymap vi-insert
 "\e[D": backward-char
 "\eOC": forward-char
 "\eOD": backward-char
-# Ctrl+N and Ctrl+P cycle through completions forward and backward
-"\C-n": menu-complete
-"\C-p": menu-complete-backward
-# Ctrl+R searches history in reverse, Ctrl+S searches history forward
-"\C-r": reverse-search-history
-"\C-s": forward-search-history
-# Ctrl+T transposes the current char with the previous char and moves cursor one position forward
-"\C-t": transpose-chars
-# Ctrl+V followed by any non-graphic character inserts that character. E.g. C-v ENTER writes ^M
-"\C-v": quoted-insert
-# Ctrl+U deletes (cuts) line from cursor position -1 to beginning of line
-"\C-u": unix-line-discard
-# Ctrl+W deletes (cuts) word from cursor position -1 to previous space
-"\C-w": unix-word-rubout
-# Ctrl+Y pastes whatever we have copied in command mode, or in insert mode with Ctrl+U or Ctrl+W
-"\C-y": yank
-# Ctrl+J and Ctrl+M are equivalent to ENTER (accept line)
-"\C-j": accept-line
-"\C-m": accept-line
-# Ctrl+D writes an endofline character if there is text on the line
-"\C-d": vi-eof-maybe
-# Ctrl+H and Ctrl+? are equivalent to BACKSPACE (delete back character)
-"\C-h": backward-delete-char
-"\C-?": backward-delete-char
-# Ctrl+I is equivalent to TAB (start auto-complete)
-"\C-i": complete
-# Shift-TAB cycles through available completions
-"\e[Z": menu-complete
+# Alt+< and Alt+> got to first and last line in the history
+"\e<": beginning-of-history
+"\e>": end-of-history
+
+
+
+
+
+# Other commands yet to be labeled
+"\e\C-i": dynamic-complete-history
+"\C-g": abort
+"\C-x\C-g": abort
+"\e\C-g": abort
+"\C-xe": call-last-kbd-macro
+"\C-]": character-search
+"\e\C-]": character-search-backward
+"\e!": complete-command
+"\e/": complete-filename
+"\e@": complete-hostname
+"\e{": complete-into-braces
+"\e~": complete-username
+"\e$": complete-variable
+"\C-x\C-e": edit-and-execute-command
+"\C-x)": end-kbd-macro
+"\C-x\C-x": exchange-point-and-mark
+"\eg": glob-complete-word
+"\C-x*": glob-expand-word
+"\C-xg": glob-list-expansions
+"\e^": history-expand-line
+"\e#": insert-comment
+"\e*": insert-completions
+"\en": non-incremental-forward-search-history
+"\ep": non-incremental-reverse-search-history
+"\C-o": operate-and-get-next
+"\C-x!": possible-command-completions
+"\e=": possible-completions
+"\e?": possible-completions
+"\C-x/": possible-filename-completions
+"\C-x@": possible-hostname-completions
+"\C-x~": possible-username-completions
+"\C-x$": possible-variable-completions
+"\C-x\C-r": re-read-init-file
+"\e\C-r": revert-line
+"\er": revert-line
+"\C-@": set-mark
+"\e ": set-mark
+"\e\C-e": shell-expand-line
+"\C-x(": start-kbd-macro
+"\e&": tilde-expand
+"\ey": yank-pop
+
+# Typing a number while pressing Alt repeats the next command N times
+# e.g. Alt+7-Alt+F advances the cursor 7 words
+# Passing a negative number to a formward command will make it act backwards, and viceversa
+# e.g. Alt+[-7]-Alt+F moves the cursor 7 words backwards
+# In some commands like yank-nth-arg and yank-last-arg the number will be used as argument
+"\e-": digit-argument
+"\e0": digit-argument
+"\e1": digit-argument
+"\e2": digit-argument
+"\e3": digit-argument
+"\e4": digit-argument
+"\e5": digit-argument
+"\e6": digit-argument
+"\e7": digit-argument
+"\e8": digit-argument
+"\e9": digit-argument
+# All Ctrl+X-capital_letter combinations do the same as their Ctrl+X-lowercase_letter version
+"\C-xA": do-lowercase-version
+"\C-xB": do-lowercase-version
+"\C-xC": do-lowercase-version
+"\C-xD": do-lowercase-version
+"\C-xE": do-lowercase-version
+"\C-xF": do-lowercase-version
+"\C-xG": do-lowercase-version
+"\C-xH": do-lowercase-version
+"\C-xI": do-lowercase-version
+"\C-xJ": do-lowercase-version
+"\C-xK": do-lowercase-version
+"\C-xL": do-lowercase-version
+"\C-xM": do-lowercase-version
+"\C-xN": do-lowercase-version
+"\C-xO": do-lowercase-version
+"\C-xP": do-lowercase-version
+"\C-xQ": do-lowercase-version
+"\C-xR": do-lowercase-version
+"\C-xS": do-lowercase-version
+"\C-xT": do-lowercase-version
+"\C-xU": do-lowercase-version
+"\C-xV": do-lowercase-version
+"\C-xW": do-lowercase-version
+"\C-xX": do-lowercase-version
+"\C-xY": do-lowercase-version
+"\C-xZ": do-lowercase-version
+# All ALT+capital_letter combinations (except "\eO") do the same as their lowercase version
+"\eA": do-lowercase-version
+"\eB": do-lowercase-version
+"\eC": do-lowercase-version
+"\eD": do-lowercase-version
+"\eE": do-lowercase-version
+"\eF": do-lowercase-version
+"\eG": do-lowercase-version
+"\eH": do-lowercase-version
+"\eI": do-lowercase-version
+"\eJ": do-lowercase-version
+"\eK": do-lowercase-version
+"\eL": do-lowercase-version
+"\eM": do-lowercase-version
+"\eN": do-lowercase-version
+"\eP": do-lowercase-version
+"\eQ": do-lowercase-version
+"\eR": do-lowercase-version
+"\eS": do-lowercase-version
+"\eT": do-lowercase-version
+"\eU": do-lowercase-version
+"\eV": do-lowercase-version
+"\eW": do-lowercase-version
+"\eX": do-lowercase-version
+"\eY": do-lowercase-version
+"\eZ": do-lowercase-version
 
 # Option-up/option-down should also apply to insert mode
 ## "\e\e[A": history-search-backward
