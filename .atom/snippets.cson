@@ -1,0 +1,250 @@
+# Your snippets
+#
+# Atom snippets allow you to enter a simple prefix in the editor and hit tab to
+# expand the prefix into a larger code block with templated values.
+#
+# You can create a new snippet in this file by typing "snip" and then hitting
+# tab.
+#
+# An example CoffeeScript snippet to expand log to console.log:
+#
+# '.source.coffee':
+#   'Console log':
+#     'prefix': 'log'
+#     'body': 'console.log $1'
+#
+# Each scope (e.g. '.source.coffee' above) can only be declared once.
+#
+# This file uses CoffeeScript Object Notation (CSON).
+# If you are unfamiliar with CSON, you can read more about it in the
+# Atom Flight Manual.
+
+'.source.js':
+  'console.log':
+    'prefix': 'log'
+    'body': 'console.log(${1:"crash"});$2'
+  'console.error':
+    'prefix': 'error'
+    'body': 'console.error(${1:"crash"});$2'
+
+'.source.python':
+  # Default language-python snippets: https://github.com/atom/language-python/blob/master/snippets/language-python.cson
+  # Some of the defaults are overriden here
+
+  # Headers (Typing #! TAB also works)
+  '#!/usr/bin/env python':
+    'prefix': 'env'
+    'body': '#!/usr/bin/env python'
+  '#!/usr/bin/env python3':
+      'prefix': 'env3'
+      'body': '#!/usr/bin/env python3'
+  '#!/usr/bin/env python ':  #! TAB will fill header
+    'prefix': '#!'
+    'body': '#!/usr/bin/env python'
+  '# -*- coding: utf-8 -*-':
+    'prefix': 'enc'
+    'body': '# -*- coding: utf-8 -*-'
+
+  # Create line if __name__ == "__main__":
+  'if __name__ == "__main__"':
+      'prefix': 'ifmain'
+      'body': '''
+      if __name__ == "__main__":
+          ${1:main()}
+      $2
+      '''
+  'if __name__ == ...':
+    'prefix': 'ifname'
+    'body': '''
+    if __name__ == ${1:"__main__"}:
+        ${2:main()}
+    $3
+    '''
+
+  # Class definitions
+  'Class Definition':
+    'prefix': 'class'
+    'body': '''
+    class ${1:ClassName}(object):
+        """${7:Docstring for ${1:ClassName}.}"""
+        def ${2:__init__}(self, ${3:arg}):
+            """${6:Docstring for ${2:__init__}.}"""
+            ${5:self.${3:arg} = ${3:arg}}
+        $8
+    $9
+    '''
+  'Subclass Definition':
+    'prefix': 'subclass'
+    'body': '''
+    class ${1:ClassName}(${2:object}):
+        """${8:Docstring for ${1:ClassName}.}"""
+        def ${3:__init__}(self, ${4:arg}):
+            """${7:Docstring for ${3:__init__}.}"""
+            super(${1:ClassName}, self).__init__($5)
+            ${6:self.${4:arg} = ${4:arg}}
+        $9
+    $10
+    '''
+
+  # Function definitions inside and outside a class
+  'Function Definition':
+    'prefix': 'def'
+    'body': '''
+    def ${1:fname}(${2:arg}):
+        """${4:Docstring for ${1:fname}.}"""
+        ${3:pass}
+    $5
+    '''
+  'Class Function':
+    'prefix': 'defclass'
+    'body': '''
+    def ${1:__${2:init}__}(self, ${3:arg}):
+        """${5:Docstring for ${1:__${2:init}__}.}"""
+        ${4:self.${3:arg} = ${3:arg}}
+    $6
+    '''
+  'Function with self Argument':  # same as defclass
+    'prefix': 'defself'
+    'body': '''
+    def ${1:__${2:init}__}(self, ${3:arg}):
+        """${5:Docstring for ${1:__${2:init}__}.}"""
+        ${4:self.${3:arg} = ${3:arg}}
+    $6
+    '''
+  '__init__ Function':
+    'prefix': 'definit'
+    'body': '''
+    def __init__(self, ${1:arg}):
+        """${3:Docstring for __init__.}"""
+        ${2:self.${1:arg} = ${1:arg}}
+    $4
+    '''
+
+  # Useful functions: print, input, range, len, zip
+  'print()':
+    'prefix': 'print'
+    'body': 'print(${1:"$2"${3:.format($4)}})$5'
+  'input()':
+    'prefix': 'input'
+    'body': 'input(${1:"$2"${3:.format($4)}})$5'
+  'range()':
+    'prefix': 'range'
+    'body': 'range(${1:len($2)})$3'
+  'len()':
+    'prefix': 'len'
+    'body': 'len($1)$2'
+  'zip()':
+    'prefix': 'zip'
+    'body': 'zip(${1:${2:variiable1}, ${3:variable2}})$4'
+
+  # Put parenthesis in types
+  'int()':
+    'prefix': 'int'
+    'body': 'int($1)$2'
+  'float()':
+    'prefix': 'float'
+    'body': 'float($1)$2'
+  'str()':
+    'prefix': 'str'
+    'body': 'str($1)$2'
+  'list()':
+    'prefix': 'list'
+    'body': 'list($1)$2'
+  'dict()':
+    'prefix': 'dict'
+    'body': 'dict($1)$2'
+  'set()':
+    'prefix': 'set'
+    'body': 'set($1)$2'
+  'tuple()':
+    'prefix': 'tuple'
+    'body': 'tuple($1)$2'
+
+  # For loops
+  'for value in variable':
+    'prefix': 'for'
+    'body':'''
+    for ${1:value} in ${2:variable}:
+        ${3:pass}
+    $4
+    '''
+  'for i, value in enumerate(variable)':
+    'prefix': 'forenum'
+    'body':'''
+    for ${1:i}, ${2:value} in enumerate(${3:variable}):
+        ${4:pass}
+    $5
+    '''
+
+  # One liners
+  '[value for value in variable]':
+    'prefix': 'listline'
+    'body': '[${1:value} for ${2:value} in ${3:variable}]$4'
+  '[value if condition else value for value in variable]':
+    'prefix': 'listifelseline'
+    'body': '[${1:value} if ${2:condition} else ${3:value} for ${4:value} in ${5:variable}]$6'
+  '[value for value in variable if condition]':
+    'prefix': 'listifline'
+    'body': '[${1:value} for ${2:value} in ${3:variable} if ${4:condition}]$5'
+  '{key: value for key, value in variable}':
+    'prefix': 'dictline'
+    'body': '{${1:key}: ${2:value} for ${3:key}, ${4:value} in ${5:variable}}$6'
+  '{key: value if condition else key: value for key, value in variable}':
+    'prefix': 'dictifelseline'
+    'body': '{${1:key}: ${2:value} if ${3:condition} else ${4:key}: ${5:value} for ${6:key}, ${7:value} in ${8:variable}}$9'
+  '{key: value for key, value in variable if condition}':
+    'prefix': 'dictifline'
+    'body': '{${1:key}: ${2:value} for ${3:key}, ${4:value} in ${5:variable} if ${6:condition}}$7'
+  '{value for value in variable}':
+    'prefix': 'setline'
+    'body': '{${1:value} for ${2:value} in ${3:variable}}$4'
+  '{value if condition else value for value in variable}':
+    'prefix': 'setifelseline'
+    'body': '{${1:value} if ${2:condition} else ${3:value} for ${4:value} in ${5:variable}}$6'
+  '{value for value in variable if condition}':
+    'prefix': 'setifline'
+    'body': '{${1:value} for ${2:value} in ${3:variable} if ${4:condition}}$5'
+
+  # Imports
+  'import':
+    'prefix': 'im'
+    'body': 'import ${1:package/module}'
+  'from package import ...':
+    'prefix': 'from'
+    'body': 'from ${1:package/module} import ${2:names}'
+  'import re':
+    'prefix': 'imre'
+    'body': 'import re'
+  'import os':
+    'prefix': 'imos'
+    'body': 'import os'
+  'import sys':
+    'prefix': 'imsys'
+    'body': 'import sys'
+  'import functools':
+    'prefix': 'imfu'
+    'body': 'import functools'
+  'import itertools':
+    'prefix': 'imit'
+    'body': 'import itertools'
+  'import numpy':
+    'prefix': 'imnp'
+    'body': 'import numpy as np'
+  'import pandas':
+    'prefix': 'impd'
+    'body': 'import pandas as pd'
+  'import matplotlib pyplot':
+    'prefix': 'implt'
+    'body': 'from matplotlib import pyplot as plt'
+  'import BeautifulSoup':
+    'prefix': 'imbs'
+    'body': 'from bs4 import BeautifulSoup'
+  'import datetime':
+    'prefix': 'imdt'
+    'body': 'from datetime import datetime'
+  'import math':
+    'prefix': 'immath'
+    'body': 'import math'
+  'import string':
+    'prefix': 'imstr'
+    'body': 'import string'
