@@ -1,0 +1,46 @@
+"*":
+  "atom-beautify":
+    python:
+      max_line_length: 99
+      sort_imports: true
+  "autocomplete-plus":
+    consumeSuffix: false
+    enableAutoActivation: false
+    minimumWordLength: 2
+  "autocomplete-python":
+    showTooltips: true
+    suggestionPriority: 1
+    useKite: false
+    useSnippets: "required"
+  core:
+    telemetryConsent: "no"
+  editor:
+    preferredLineLength: 100
+    showIndentGuide: false
+  "exception-reporting":
+    userId: "d1f9848b-2b7a-4195-aba2-21bdebdfdf38"
+  "highlight-selected":
+    ignoreCase: true
+    minimumLength: 1
+  "linter-flake8":
+    maxLineLength: 99
+  "linter-ui-default":
+    panelHeight: 147
+  minimap:
+    plugins:
+      "highlight-selected": true
+      "highlight-selectedDecorationsZIndex": 0
+      linter: true
+      linterDecorationsZIndex: 0
+      pigments: true
+      pigmentsDecorationsZIndex: 0
+  "python-tools": {}
+
+".gfm.source":
+  editor:
+    softWrap: true
+
+".python.source":
+  editor:
+    showIndentGuide: true
+    tabLength: 4

@@ -1,0 +1,3 @@
+# In autocomplete, if escaping dialog, do not enter normal mode in vim
+'atom-text-editor.vim-mode-plus.insert-mode.autocomplete-active':
+  'escape': 'autocomplete-plus:cancel'
