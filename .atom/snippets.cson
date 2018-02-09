@@ -120,7 +120,7 @@
     $4
     '''
 
-  # Useful functions: print, input, range, len, zip
+  # Useful functions: print, input, range, len, zip, type
   'print()':
     'prefix': 'print'
     'body': 'print(${1:"$2"${3:.format($4)}})$5'
@@ -135,7 +135,50 @@
     'body': 'len($1)$2'
   'zip()':
     'prefix': 'zip'
-    'body': 'zip(${1:${2:variiable1}, ${3:variable2}})$4'
+    'body': 'zip(${1:${2:variable1}, ${3:variable2}})$4'
+  'type()':
+    'prefix': 'type'
+    'body': 'type($1)$2'
+
+  # List methods, add parenthesis
+  'append()':
+    'prefix': 'append'
+    'body': 'append($1)$2'
+  'clear()':
+    'prefix': 'clear'
+    'body': 'clear($1)$2'
+  'copy()':
+    'prefix': 'copy'
+    'body': 'copy($1)$2'
+  'count()':
+    'prefix': 'count'
+    'body': 'count($1)$2'
+  'extend()':
+    'prefix': 'extend'
+    'body': 'extend($1)$2'
+  'index()':
+    'prefix': 'index'
+    'body': 'index($1)$2'
+  'insert()':
+    'prefix': 'insert'
+    'body': 'insert($1)$2'
+  'pop()':
+    'prefix': 'pop'
+    'body': 'pop($1)$2'
+  'remove()':
+    'prefix': 'remove'
+    'body': 'remove($1)$2'
+  'reverse()':
+    'prefix': 'reverse'
+    'body': 'reverse($1)$2'
+  'sort()':
+    'prefix': 'sort'
+    'body': 'sort($1)$2'
+  # TODO: Dictionary methods, add parenthesis
+  # TODO: Set methods, add parenthesis
+  # TODO: Tuple methods, add parenthesis
+  # TODO: String methods, add parenthesis
+  # TODO: Number methods, add parenthesis
 
   # Put parenthesis in types
   'int()':
