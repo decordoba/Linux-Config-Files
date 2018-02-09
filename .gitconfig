@@ -19,6 +19,32 @@
         # show files in repo and count number of lines
         lines = ls-files | xargs wc -l'
 
+        # TODO: check this awesome source: https://gist.github.com/robmiller/6018582
+
+        # TODO: find a way to make commits incorporate icons easily. Probably using this: https://stackoverflow.com/questions/7005513/pass-an-argument-to-a-git-alias-command
+        # :art:               when improving the format/structure of the code
+        # :newspaper:         when creating a new file
+        # :rocket:            when improving performance
+        # :books:             when writing docs
+		# :pencil2:	          when performing minor changes/fixing the code or language
+        # :bug:               when fixing a bug
+        # :tada: 	          initial commit
+        # :bookmark: 	      version tags / releasing
+        # :sparkles:          when adding a feature
+        # :fire:              when removing features/code
+        # :construction:      work in progress
+        # :wrench:            when changing configuration files
+        # :handshake:      	  when merge files
+        # :speaker:           when adding logging
+        # :mute:              when reducing logging
+        # :white_check_mark:  when adding tests
+        # :lock:              when dealing with security
+        # :arrow_up:          when upgrading dependencies
+        # :arrow_down:        when downgrading dependencies
+        # :heavy_plus_sign:   when adding dependencies
+        # :heavy_minus_sign:  when removind dependencies
+
+
 [core]
         whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
         excludesfile = $HOME/git/.gitignore
