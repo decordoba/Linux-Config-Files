@@ -1,3 +1,13 @@
-# In autocomplete, if escaping dialog, do not enter normal mode in vim
 'atom-text-editor.vim-mode-plus.insert-mode.autocomplete-active':
+  # In autocomplete, if escaping dialog, do not enter normal mode in vim
   'escape': 'autocomplete-plus:cancel'
+  # In autocomplete, escape dialog with ctrl-k (unused) too
+  'ctrl-k': 'autocomplete-plus:cancel'
+
+'atom-text-editor.vim-mode-plus.insert-mode':
+  # jk to escape to vi-command-mode
+  'j k': 'vim-mode-plus:activate-normal-mode'
+
+'atom-workspace':
+  # Enable-disable vim-mode use with shortcut
+  'ctrl-alt-v': 'user:toggle-vim-mode-plus'
