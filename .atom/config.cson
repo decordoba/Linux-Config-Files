@@ -11,6 +11,11 @@
     useKite: false
     useSnippets: "required"
   core:
+    disabledPackages: [
+      "rainbow"
+      "emmet"
+      "atom-live-server"
+    ]
     telemetryConsent: "no"
   editor:
     preferredLineLength: 100
