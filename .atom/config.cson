@@ -5,10 +5,8 @@
       sort_imports: true
   "autocomplete-plus":
     consumeSuffix: false
-    enableAutoActivation: false
     minimumWordLength: 2
   "autocomplete-python":
-    showTooltips: true
     suggestionPriority: 1
     useKite: false
     useSnippets: "required"
@@ -22,10 +20,12 @@
   "highlight-selected":
     ignoreCase: true
     minimumLength: 1
+  linter: {}
   "linter-flake8":
     maxLineLength: 99
   "linter-ui-default":
     panelHeight: 147
+    showPanel: true
   minimap:
     plugins:
       "highlight-selected": true
@@ -35,12 +35,25 @@
       pigments: true
       pigmentsDecorationsZIndex: 0
   "python-tools": {}
-
+  "vim-mode-plus":
+    keymapBackslashToInnerCommentOrParagraphWhenToggleLineCommentsIsPending: true
+    keymapPToPutWithAutoIndent: true
+    keymapSToSelect: true
+    keymapYToYankToLastCharacterOfLine: true
+    reuseFindForRepeatFind: true
+    startInInsertMode: true
+    useSmartcaseForFind: true
+    useSmartcaseForSearch: true
+".console.python.text":
+  editor:
+    tabLength: 4
 ".gfm.source":
   editor:
     softWrap: true
-
 ".python.source":
   editor:
     showIndentGuide: true
+    tabLength: 4
+".python.text.traceback":
+  editor:
     tabLength: 4
