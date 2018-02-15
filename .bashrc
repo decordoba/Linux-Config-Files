@@ -353,6 +353,7 @@ alias tmp='pushd $(mktemp -d)'  # create tmp dir (removed on boot) and cd into i
 alias server="start http://localhost:8000 && python -m SimpleHTTPServer"  # serve current folder in localhost:8000
 alias bell='tput bel && tput flash'  # play bell sound and show flash in terminal
 alias man='man_func'  # allow colored manuals
+alias debug='[[ ! $- =~ x ]] && { set -o nounset -o xtrace; echo Debug mode ON; } || { set +o nounset +o xtrace; echo Debug mode OFF; }'  # toggle bash 'debug mode'
 
 # Add an "alert" alias for long running commands. It will show a pop-up once the task is over
 # Use: 'sleep 10; alert' or 'python slow_script.py args; alert'
