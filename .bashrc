@@ -152,7 +152,7 @@ fi
 # Paint sticky folders in bold, (folders should always be bold)
 # Paint files I use the most (.py, .m, etc.) in the colors I like
 # Make sure gitconfig is in bold, same as viminfo and rc files
-# Use the function 'showextensions' to see the colors used
+# Tip: Use the function 'showextensions' to see the color used for every extension
 LS_COLORS=$LS_COLORS'ln=1;36:'  # bold cyan
 LS_COLORS=$LS_COLORS'di=1;38;5;33:'  # bold blue
 LS_COLORS=$LS_COLORS'ow=1;38;5;63:'  # bold purple, close to di blue but differentiable
@@ -165,6 +165,9 @@ LS_COLORS=$LS_COLORS'*.m=38;5;213:'  # pink
 LS_COLORS=$LS_COLORS'*.gitconfig=1:'  # white
 color=196  # bright red
 LS_COLORS=$LS_COLORS"*.7z=38;5;$color:*.a=38;5;$color:*.arj=38;5;$color:*.bz2=38;5;$color:*.cpio=38;5;$color:*.gz=38;5;$color:*.lrz=38;5;$color:*.lz=38;5;$color:*.lzma=38;5;$color:*.lzo=38;5;$color:*.rar=38;5;$color:*.s7z=38;5;$color:*.sz=38;5;$color:*.tar=38;5;$color:*.tgz=38;5;$color:*.xz=38;5;$color:*.z=38;5;$color:*.Z=38;5;$color:*.zip=38;5;$color:*.zipx=38;5;$color:*.zoo=38;5;$color:*.zpaq=38;5;$color:*.zz=38;5;$color:"
+LS_COLORS=$LS_COLORS'*.npy=38;5;210:'  # light red
+LS_COLORS=$LS_COLORS'*.npz=38;5;210:'  # light red
+LS_COLORS=$LS_COLORS'*.pkl=38;5;216:'  # light orange
 unset color
 export LS_COLORS
 
