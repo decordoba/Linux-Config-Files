@@ -1,0 +1,414 @@
+#!/usr/bin/env bash
+
+#
+# Author: Daniel de Cordoba Gil
+# Github: https://github.com/decordoba
+#
+# Instructions:
+# * Source this file in your ~/.bash_profile, ~/.bashrc, or interactive startup file.
+# * Set PROMPT_COMMAND to 'setprompt' with your preferred arguments to use as default:
+#   ->  PROMPT_COMMAND='setprompt'
+#   ->  PROMPT_COMMAND='setprompt --complete --newline'
+#   ->  PROMPT_COMMAND='setprompt --hide_git'
+# * Create aliases to easily change between different prompts:
+#   ->  alias promptshort="PROMPT_COMMAND='setprompt --shortpath'"
+#   ->  alias promptlong="PROMPT_COMMAND='setprompt'"
+#   ->  alias promptnewline="PROMPT_COMMAND='setprompt --newline'"
+#   ->  alias promptfull="PROMPT_COMMAND='setprompt --complete'"
+#   ->  alias ps1short="promptshort"
+#   ->  alias ps1long="promptlong"
+#   ->  alias ps1newline="promptnewline"
+#   ->  alias ps1full="promptfull"
+# * Create new arguments with your preferred prompt configuration (line 200), so you can run:
+#   ->  PROMPT_COMMAND='setprompt --my_config'
+# * Any comments and suggestions are welcome, and feel free to submit pull requests.
+# * Enjoy!
+#
+# Instructions for dummies:
+# * Save this file in your $HOME folder with the name 'prompt.sh'.
+# * Edit your ~/.bash_profile or ~/.bashrc file, and add these lines at the end:
+#   ->  source $HOME/prompt.sh
+#   ->  PROMPT_COMMAND='setprompt'
+#   ->  alias promptshort="PROMPT_COMMAND='setprompt --shortpath'"
+#   ->  alias promptlong="PROMPT_COMMAND='setprompt'"
+#   ->  alias promptnewline="PROMPT_COMMAND='setprompt --newline'"
+#   ->  alias promptfull="PROMPT_COMMAND='setprompt --complete'"
+# * Save the file.
+# * Open a new terminal and you will see the changes.
+# * Try the different prompt modes running:
+#   ->  promptfull
+#   ->  promptshort
+#   ->  promptnewline
+#   ->  promptlong
+# * You can also create your own configuration for your personalized prompt:
+#   ->  Add a new configuration argument by adding a new case in line 200.
+#   ->  For example, lets add an option called --my_config which will show the
+#       date and time in red and yellow, change the date format to YYYY/MM/DD,
+#       show the CPU usage, and only show the git status but not the branch.
+#         case "$token" in
+#           --my_config)
+#             date_show=1
+#             date_color=$CUSTOMRED1
+#             date_format="+%Y/%m/%d"
+#             time_show=1
+#             time_color=$CUSTOMYELLOW1
+#             cpu_show=1
+#             git_status_show=1
+#             git_branch_show=0
+#             ;;
+#   ->  Now try it out running:
+#         PROMPT_COMMAND='setprompt --my_config'
+#   ->  If you like it, add the above command to your .bashrc.
+#   ->  Many thing can be configured using the multiple variables:
+#       To show the date and time, set date_show=1 and time_show=1.
+#       To see the size of the current folder and the number of files in it,
+#       set size_show=1 and numfiles_show=1.
+#       To show the CPU being used, the number of jobs, and the number of TCP
+#       connections used, set cpu_show=1, jobs_show=1 and net_show=1.
+#       Other things can be easily changed, like colors, separation characters,
+#       behaviors, formats of different parts, etc.
+# * Enjoy!
+
+setprompt() {
+  # Must come first, captures outcome of previous command
+  local LAST_COMMAND=$?
+
+  # Define basic colors
+  local BLACK="\[\033[0;30m\]"
+  local DARKGRAY="\[\033[1;30m\]"
+  local RED="\[\033[0;31m\]"
+  local LIGHTRED="\[\033[1;31m\]"
+  local GREEN="\[\033[0;32m\]"
+  local LIGHTGREEN="\[\033[1;32m\]"
+  local YELLOW="\[\033[0;33m\]"
+  local LIGHTYELLOW="\[\033[1;33m\]"
+  local BLUE="\[\033[0;34m\]"
+  local LIGHTBLUE="\[\033[1;34m\]"
+  local MAGENTA="\[\033[0;35m\]"
+  local LIGHTMAGENTA="\[\033[1;35m\]"
+  local CYAN="\[\033[0;36m\]"
+  local LIGHTCYAN="\[\033[1;36m\]"
+  local LIGHTGRAY="\[\033[0;37m\]"
+  local WHITE="\[\033[1;37m\]"
+  local NOCOLOR="\[\033[0m\]"
+  # Define custom colors
+  local CUSTOMBLUE1="\[\033[1;38;5;33m\]"
+  local CUSTOMGREEN1="\[\033[1;38;5;40m\]"
+  local CUSTOMYELLOW1="\[\033[1;38;5;226m\]"
+  local CUSTOMRED1="\[\033[1;38;5;196m\]"
+
+  # Config variables to change easily the status bar
+  # Error codes
+  local errors_show=1
+  # Separators date & time
+  local sep1_color=$DARKGRAY
+  local sep1_midcolor=$LIGHTCYAN
+  local sep1_open='['
+  local sep1_close=']'
+  local sep1_middle=' '
+  # Date
+  local date_show=0
+  local date_color=$LIGHTCYAN
+  local date_format="+%a %-d %b"  # i.e. Mon 5 Apr
+  # Time
+  local time_show=0
+  local time_color=$LIGHTCYAN
+  local time_format="+%H:%M:%S"  # i.e. 00:00:00
+  # Separators cpu, jobs & network
+  local sep2_color=$DARKGRAY
+  local sep2_midcolor=$DARKGRAY
+  local sep2_open='['
+  local sep2_close=']'
+  local sep2_middle1=':'
+  local sep2_middle2=':'
+  # CPU
+  local cpu_show=0
+  local cpu_color=$LIGHTMAGENTA
+  local cpu_format='CPU ${cpu}%'  # i.e. CPU 15.2%
+  # Jobs
+  local jobs_show=0
+  local jobs_color=$LIGHTMAGENTA
+  local jobs_format='Jobs \j'  # i.e. Jobs 10
+  # Network
+  local net_show=0
+  local net_color=$LIGHTMAGENTA
+  local net_format='Net ${net}'  # i.e. Net 10
+  # Separators user & hostname
+  local sep3_color=$NOCOLOR
+  local sep3_local_midcolor=$CUSTOMGREEN1
+  local sep3_remote_midcolor=$CUSTOMYELLOW1
+  local sep3_open=''
+  local sep3_close=':'
+  local sep3_middle='@'
+  # User
+  local user_show=1
+  local user_local_color=$CUSTOMGREEN1
+  local user_remote_color=$CUSTOMYELLOW1
+  # Hostname
+  local hostname_show=1
+  local hostname_local_show=1
+  local hostname_local_color=$CUSTOMGREEN1
+  local hostname_remote_color=$CUSTOMYELLOW1
+  # Separators git_branch, git_status & git_sha1
+  local sep4_open='['
+  local sep4_close=']'
+  local sep4_middle1='('
+  local sep4_middle2=')'
+  local sep4_middle3=':'
+  local sep4_suffix_color=$NOCOLOR
+  local sep4_suffix=''
+  # Git
+  local git_show=1
+  local git_branch_show=1
+  local git_status_show=1
+  local git_sha1_show=0
+  local git_color_on_status=1
+  local git_color_on_branch=0
+  local git_clean_color=$GREEN  # No changes to commit, the may be untracked files
+  local git_add_color=$RED  # Unstaged changes, no changes to commit (before git add)
+  local git_commit_color=$YELLOW  # Changes to be commited (after git add, before git commit)
+  # Separators path
+  local sep5_color=$LIGHTGRAY
+  local sep5_midcolor=$DARKGRAY
+  local sep5_open=''
+  local sep5_close=''
+  # Path to current folder
+  local path_show=1
+  local path_color=$CUSTOMBLUE1  # $LIGHTBLUE
+  local path_format='\w'  # \W: path short, \w: path long
+  # Separators size and numfiles
+  local sep6_color=$DARKGRAY
+  local sep6_midcolor=$DARKGRAY
+  local sep6_open='['
+  local sep6_close=']'
+  local sep6_middle=':'
+  # Size contents folder
+  local size_show=0
+  local size_color=$LIGHTYELLOW
+  # Number of files in folder
+  local numfiles_show=0
+  local numfiles_color=$LIGHTYELLOW
+  # Prompt symbol, new line before it
+  local newline_prompt=0
+  local normal_color=$NOCOLOR
+  local normal_symbol='$'
+  local root_color=$NOCOLOR
+  local root_symbol='#'
+
+  # Modify what PS1 looks like with arguments
+  while [[ $# -gt 0 ]] ; do
+    local token="$1" ; shift
+    case "$token" in
+      --shortpath)  # Change path to short
+        path_format='\W'
+        ;;
+      --newline)  # Add new line after prompt
+        newline_prompt=1
+        ;;
+      --hide_git) # Hide info git
+        git_show=0
+        ;;
+      --complete)  # Show everything
+        date_show=1
+        time_show=1
+        cpu_show=1
+        jobs_show=1
+        net_show=1
+        user_show=1
+        hostname_show=1
+        git_show=1
+        git_branch_show=1
+        git_status_show=1
+        git_sha1_show=1
+        path_show=1
+        size_show=1
+        numfiles_show=1
+        sep3_open='['
+        sep5_close=']'
+        sep3_color=$DARKGRAY
+        sep5_color=$DARKGRAY
+        ;;
+      *)
+        true # Ignore everything else
+        ;;
+    esac
+  done
+
+  # Show error exit code if there is one
+  if [[ $LAST_COMMAND != 0  && $errors_show -eq 1 ]]; then
+    PS1="${LIGHTRED}ERROR ${LAST_COMMAND}:${RED} "
+    if [[ $LAST_COMMAND == 1 ]]; then
+      PS1+="General error"
+    elif [ $LAST_COMMAND == 2 ]; then
+      PS1+="Missing keyword, command, or permission problem"
+    elif [ $LAST_COMMAND == 126 ]; then
+      PS1+="Permission problem, or command is not an executable"
+    elif [ $LAST_COMMAND == 127 ]; then
+      PS1+="Command not found"
+    elif [ $LAST_COMMAND == 128 ]; then
+      PS1+="Invalid argument to exit"
+    elif [ $LAST_COMMAND == 129 ]; then
+      PS1+="Fatal error signal 1: SIGHUP"
+    elif [ $LAST_COMMAND == 130 ]; then
+      PS1+="Script terminated by Control-C: SIGINT"
+    elif [ $LAST_COMMAND == 131 ]; then
+      PS1+="Fatal error signal 3: SIGQUIT"
+    elif [ $LAST_COMMAND == 132 ]; then
+      PS1+="Fatal error signal 4: SIGILL"
+    elif [ $LAST_COMMAND == 133 ]; then
+      PS1+="Fatal error signal 5: SIGTRAP"
+    elif [ $LAST_COMMAND == 134 ]; then
+      PS1+="Fatal error signal 6: SIGIOT"
+    elif [ $LAST_COMMAND == 135 ]; then
+      PS1+="Fatal error signal 7: SIGBUS"
+    elif [ $LAST_COMMAND == 136 ]; then
+      PS1+="Fatal error signal 8: SIGFPE"
+    elif [ $LAST_COMMAND == 137 ]; then
+      PS1+="Fatal error signal 9: SIGKILL"
+    elif [ $LAST_COMMAND == 148 ]; then
+      PS1+="Fatal error signal 20: SIGTSTP"
+    elif [[ $LAST_COMMAND -ge 129 && $LAST_COMMAND -le 158 ]]; then
+        PS1+="Fatal error signal $(echo $LAST_COMMAND - 128 | bc -l)"
+    elif [ $LAST_COMMAND -gt 255 ]; then
+      PS1+="Exit status out of range"
+    else
+      PS1+="Unknown error code"
+    fi
+    PS1+="${NOCOLOR}\n"
+  else
+    PS1=""
+  fi
+
+  # Date & Time (config variables start with date_, time_ and sep1_)
+  if [[ $date_show -eq 1 || $time_show -eq 1 ]] ; then
+    PS1+="${sep1_color}${sep1_open}"
+    [[ $date_show -eq 1 ]] && PS1+="${date_color}$(date "$date_format")"  # Date
+    [[ $date_show -eq 1  && $time_show -eq 1 ]] && PS1+="${sep1_midcolor}${sep1_middle}"
+    [[ $time_show -eq 1 ]] && PS1+="${time_color}$(date "$time_format")"  # Time
+    PS1+="${sep1_color}${sep1_close}"
+  fi
+
+  # CPU & Jobs & Net (config variables start with cpu_, jobs_, net_ and sep2_)
+  if [[ $cpu_show -eq 1 || $jobs_show -eq 1 || $net_show -eq 1 ]] ; then
+    PS1+="${sep2_color}${sep2_open}"
+    if [[ $cpu_show -eq 1 ]] ; then
+      # Result of columns (2+4)/(2+4+5) in cpu row in /proc/stat
+      local cpu="$(grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage}' | awk '{printf("%.1f\n", $1)}')"
+      PS1+="${cpu_color}$(eval "echo $cpu_format")"  # CPU
+    fi
+    [[ $cpu_show -eq 1  && $jobs_show -eq 1 ]] && PS1+="${sep2_midcolor}${sep2_middle1}"
+    [[ $jobs_show -eq 1 ]] && PS1+="${jobs_color}${jobs_format}"  # Jobs
+    [[ $jobs_show -eq 1  && $net_show -eq 1 ]] && PS1+="${sep2_midcolor}${sep2_middle2}"
+    if [[ $net_show -eq 1 ]] ; then
+      # Number of lines in /proc/net/tcp that start with a number
+      local net="$(awk '/^ *[0-9]/ {c++} END {print c}' /proc/net/tcp)"
+      PS1+="${net_color}$(eval "echo $net_format")"
+    fi
+    PS1+="${sep2_color}${sep2_close}"
+  fi
+
+  # User & Hostname
+  if [[ $user_show -eq 1 || $hostname_show -eq 1 ]] ; then
+    PS1+="${sep3_color}${sep3_open}"
+    [ ! -z "$(echo $SSH_CLIENT)$(echo $SSH2_CLIENT)" ]
+    local remote_connection=$?  # Store the result of previous command
+    if [[ $user_show -eq 1 ]] ; then
+      local user_color=$user_local_color; [ $remote_connection -eq 0 ] && user_color=$user_remote_color
+      PS1+="${user_color}\u"  # User
+    fi
+    if [[ $hostname_show -eq 1 ]] ; then
+      if [[ $remote_connection -eq 0 || $hostname_local_show -eq 1 ]]; then
+        if [[ $user_show -eq 1 ]] ; then
+          local sep3_midcolor=$sep3_local_midcolor; [ $remote_connection -eq 0 ] && sep3_midcolor=$sep3_remote_midcolor
+          PS1+="${sep3_midcolor}${sep3_middle}"
+        fi
+        local hostname_color=$hostname_local_color; [ $remote_connection -eq 0 ] && hostname_color=$hostname_remote_color
+        PS1+="${hostname_color}\h"  # Hostname
+      fi
+    fi
+    PS1+="${sep3_color}${sep3_close}"
+  fi
+
+  # Git branch
+  if [[ $git_show -eq 1 && -n "$(command -v git 2>&1)" ]] ; then
+    local branch="$(git symbolic-ref -q HEAD 2>/dev/null)"
+    if [[ -n $branch ]] ; then  # If we are in a git repo
+      branch="${branch##refs/heads/}"
+      local status="$(git status 2>/dev/null)"
+      local git_color=$git_clean_color
+      if [[ $git_color_on_status -eq 1 ]] ; then
+        [[ "$status" = *"Changes not staged for commit:"* ]] && git_color=$git_add_color
+        [[ "$status" = *"Changes to be committed:"* ]] && git_color=$git_commit_color
+      elif [[ $git_color_on_branch -eq 1 ]] ; then
+        case "${branch:-"(no branch)"}" in
+          production|prod) git_color=$LIGHTRED ;;
+          master|deploy)   git_color=$RED ;;
+          stage|staging)   git_color=$YELLOW ;;
+          dev|development) git_color=$BLUE ;;
+          next)            git_color=$CYAN ;;
+          *)               git_color=$GREEN ;;
+        esac
+      fi
+      PS1+="${git_color}${sep4_open}"
+      [[ $git_branch_show -eq 1 ]] && PS1+="$branch"
+      if [[ $git_status_show -eq 1 ]] ; then
+        local suffix=""
+        [[ "$status" = *deleted:* ]] && suffix="${suffix}-"
+        [[ "$status" = *"Untracked files:"* || "$status" = *"new file:"* ]] && suffix="${suffix}+"
+        [[ "$status" = *modified:* ]] && suffix="${suffix}*"
+        [[ $git_branch_show -eq 1 && -n $suffix ]] && PS1+="${sep4_middle1}"
+        PS1+="$suffix"
+        [[ $git_branch_show -eq 1 && -n $suffix ]] && PS1+="${sep4_middle2}"
+      fi
+      [[ $git_status_show -eq 1 && $git_sha1_show -eq 1 ]] && PS1+="${sep4_middle3}"
+      [[ $git_sha1_show -eq 1 ]] && PS1+="$(git rev-parse --short --quiet HEAD)"
+      PS1+="${sep4_close}"
+      PS1+="${sep4_suffix_color}${sep4_suffix}"
+    fi
+  fi
+
+  # Current directory
+  if [[ $path_show -eq 1 ]] ; then
+    PS1+="${sep5_color}${sep5_open}"
+    PS1+="${path_color}${path_format}"  # Path to current directory
+    PS1+="${sep5_color}${sep5_close}"
+  fi
+
+  # Total size of files in current directory
+  if [[ $size_show -eq 1 || $numfiles_show -eq 1 ]] ; then
+    PS1+="${sep6_color}${sep6_open}"
+    if [[ $size_show -eq 1 ]] ; then
+      local size="$(du -csh * .[!.]* 2>/dev/null | sort -hr | awk 'NR==1 {print $1}')"
+      PS1+="${size_color}${size}"  # Size of current folder
+    fi
+    [[ $size_show -eq 1  && $numfiles_show -eq 1 ]] && PS1+="${sep6_midcolor}${sep6_middle}"
+    if [[ $numfiles_show -eq 1 ]] ; then
+      local numfiles="$(ls -1A | wc -l)"
+      PS1+="${numfiles_color}${numfiles}"  # Number of files in folder
+    fi
+    PS1+="${sep6_color}${sep6_close}"
+  fi
+
+  # Skip to the next line if newline_prompt is 1
+  [[ $newline_prompt -eq 1 ]] && PS1+="\n"
+
+  if [[ $EUID -ne 0 ]]; then
+    # Normal user
+    PS1+="${normal_color}${normal_symbol}"
+  else
+    # Root user
+    PS1+="${root_color}${root_symbol}"
+  fi
+  PS1+="${NOCOLOR} "
+
+  # PS2 is used to continue a command using the \ character
+  # PS2="> "
+
+  # PS3 is used to enter a number choice in a script (i.e. when using select)
+  # PS3='Please enter a number from the above list. #? '
+
+  # PS4 is used for tracing a script in debug mode
+  # PS4="++ "
+}
+
+PROMPT_COMMAND='setprompt'
