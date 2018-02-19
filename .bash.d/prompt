@@ -171,7 +171,7 @@ setprompt() {
   local git_sha1_show=0
   local git_color_on_status=1
   local git_color_on_branch=0
-  local git_clean_color=$GREEN  # No changes to commit, there may be untracked files
+  local git_clean_color=$GREEN  # No changes to commit, there may be untracked files (after git stash)
   local git_add_color=$RED  # Unstaged changes, no changes to commit (before git add)
   local git_commit_color=$YELLOW  # Changes to be commited (after git add, before git commit)
   # Separators path
