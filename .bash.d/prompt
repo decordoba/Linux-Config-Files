@@ -9,7 +9,7 @@
 # * Set PROMPT_COMMAND to 'setprompt' with your preferred arguments to use as default:
 #   ->  PROMPT_COMMAND='setprompt'
 #   ->  PROMPT_COMMAND='setprompt --complete --newline'
-#   ->  PROMPT_COMMAND='setprompt --hide_git'
+#   ->  Available arguments: --complete, --newline, --shortpath, --hidegit, --nocolor
 # * Create aliases to easily change between different prompts:
 #   ->  alias promptshort="PROMPT_COMMAND='setprompt --shortpath'"
 #   ->  alias promptlong="PROMPT_COMMAND='setprompt'"
@@ -19,7 +19,7 @@
 #   ->  alias ps1long="promptlong"
 #   ->  alias ps1newline="promptnewline"
 #   ->  alias ps1full="promptfull"
-# * Create new arguments with your preferred prompt configuration (line 200), so you can run:
+# * Create new arguments with your preferred prompt configuration (line 205), so you can run:
 #   ->  PROMPT_COMMAND='setprompt --my_config'
 # * Any comments and suggestions are welcome, and feel free to submit pull requests.
 # * Enjoy!
@@ -41,7 +41,7 @@
 #   ->  promptnewline
 #   ->  promptlong
 # * You can also create your own configuration for your personalized prompt:
-#   ->  Add a new configuration argument by adding a new case in line 200.
+#   ->  Add a new configuration argument by adding a new case in line 205.
 #   ->  For example, lets add an option called --my_config which will show the
 #       date and time in red and yellow, change the date format to YYYY/MM/DD,
 #       show the CPU usage, and only show the git status but not the branch.
@@ -73,29 +73,36 @@ setprompt() {
   # Must come first, captures outcome of previous command
   local LAST_COMMAND=$?
 
-  # Define basic colors
-  local BLACK="\[\033[0;30m\]"
-  local DARKGRAY="\[\033[1;30m\]"
-  local RED="\[\033[0;31m\]"
-  local LIGHTRED="\[\033[1;31m\]"
-  local GREEN="\[\033[0;32m\]"
-  local LIGHTGREEN="\[\033[1;32m\]"
-  local YELLOW="\[\033[0;33m\]"
-  local LIGHTYELLOW="\[\033[1;33m\]"
-  local BLUE="\[\033[0;34m\]"
-  local LIGHTBLUE="\[\033[1;34m\]"
-  local MAGENTA="\[\033[0;35m\]"
-  local LIGHTMAGENTA="\[\033[1;35m\]"
-  local CYAN="\[\033[0;36m\]"
-  local LIGHTCYAN="\[\033[1;36m\]"
-  local LIGHTGRAY="\[\033[0;37m\]"
-  local WHITE="\[\033[1;37m\]"
-  local NOCOLOR="\[\033[0m\]"
-  # Define custom colors
-  local CUSTOMBLUE1="\[\033[1;38;5;33m\]"
-  local CUSTOMGREEN1="\[\033[1;38;5;40m\]"
-  local CUSTOMYELLOW1="\[\033[1;38;5;226m\]"
-  local CUSTOMRED1="\[\033[1;38;5;196m\]"
+  if [[ ! "$*" = *--nocolor* ]] ; then
+    # Define basic colors
+    local BLACK="\[\033[0;30m\]"
+    local DARKGRAY="\[\033[1;30m\]"
+    local RED="\[\033[0;31m\]"
+    local LIGHTRED="\[\033[1;31m\]"
+    local GREEN="\[\033[0;32m\]"
+    local LIGHTGREEN="\[\033[1;32m\]"
+    local YELLOW="\[\033[0;33m\]"
+    local LIGHTYELLOW="\[\033[1;33m\]"
+    local BLUE="\[\033[0;34m\]"
+    local LIGHTBLUE="\[\033[1;34m\]"
+    local MAGENTA="\[\033[0;35m\]"
+    local LIGHTMAGENTA="\[\033[1;35m\]"
+    local CYAN="\[\033[0;36m\]"
+    local LIGHTCYAN="\[\033[1;36m\]"
+    local LIGHTGRAY="\[\033[0;37m\]"
+    local WHITE="\[\033[1;37m\]"
+    local NOCOLOR="\[\033[0m\]"
+    # Define custom colors
+    local CUSTOMBLUE1="\[\033[1;38;5;33m\]"
+    local CUSTOMGREEN1="\[\033[1;38;5;40m\]"
+    local CUSTOMYELLOW1="\[\033[1;38;5;226m\]"
+    local CUSTOMRED1="\[\033[1;38;5;196m\]"
+  else
+    local b="\[\033[1m\]" n="\[\033[0m\]"
+    local BLACK=$n RED=$n GREEN=$n YELLOW=$n BLUE=$n MAGENTA=$n CYAN=$n LIGHTGRAY=$n NOCOLOR=$n
+    local DARKGRAY=$b LIGHTRED=$b LIGHTGREEN=$b LIGHTYELLOW=$b LIGHTBLUE=$b LIGHTMAGENTA=$b LIGHTCYAN=$b WHITE=$b
+    local CUSTOMBLUE1=$b CUSTOMGREEN1=$b CUSTOMYELLOW1=$b CUSTOMRED1=$b
+  fi
 
   # Config variables to change easily the status bar
   # Error codes
@@ -164,7 +171,7 @@ setprompt() {
   local git_sha1_show=0
   local git_color_on_status=1
   local git_color_on_branch=0
-  local git_clean_color=$GREEN  # No changes to commit, the may be untracked files
+  local git_clean_color=$GREEN  # No changes to commit, there may be untracked files
   local git_add_color=$RED  # Unstaged changes, no changes to commit (before git add)
   local git_commit_color=$YELLOW  # Changes to be commited (after git add, before git commit)
   # Separators path
@@ -205,7 +212,7 @@ setprompt() {
       --newline)  # Add new line after prompt
         newline_prompt=1
         ;;
-      --hide_git) # Hide info git
+      --hidegit) # Hide info git
         git_show=0
         ;;
       --complete)  # Show everything
@@ -411,4 +418,5 @@ setprompt() {
   # PS4="++ "
 }
 
-PROMPT_COMMAND='setprompt'
+# This shold go in your .bashrc or .bash_profile
+# PROMPT_COMMAND='setprompt'
