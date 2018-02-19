@@ -94,7 +94,7 @@ setprompt() {
     local NOCOLOR="\[\033[0m\]"
     # Define custom colors
     local CUSTOMBLUE1="\[\033[1;38;5;33m\]"
-    local CUSTOMGREEN1="\[\033[1;38;5;40m\]"
+    local CUSTOMGREEN1="\[\033[1;38;5;46m\]"
     local CUSTOMYELLOW1="\[\033[1;38;5;226m\]"
     local CUSTOMRED1="\[\033[1;38;5;196m\]"
   else
