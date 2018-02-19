@@ -100,26 +100,31 @@ case "$TERM" in
   xterm-color|*-256color|*-16color) color_prompt=yes;;
 esac
 
-# Format prompt as user@host:path$
-# Show color on prompt or not depending on the color_prompt variable
-# Create aliases to change between long prompt, short prompt and two lines prompt
-# long shows full path, short shows only current sub-folder, line adds new line after path
+[[ -f .bash.d/prompt ]] && source ~/.bash.d/prompt
+
+# Format prompt as user@host:[branch]path$. Show color depending on the color_prompt variable
+# Create aliases to change between long prompt (full path), short prompt (current subfolder only),
+# newline prompt (full path, newline before $), and full prompt (prompt shows a lot more info)
 if [ "$color_prompt" = yes ]; then
-  # user@host are green(32m), path is light_blue(94m)
   PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\$ '
-  alias ps1short="PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\W\[\033[00m\]\$ '"
-  alias ps1long="PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\$ '"
-  alias ps1line="PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\]\n\$ '"
+  PROMPT_COMMAND='setprompt'
+  alias promptshort="PROMPT_COMMAND='setprompt --shortpath'"
+  alias promptlong="PROMPT_COMMAND='setprompt'"
+  alias promptnewline="PROMPT_COMMAND='setprompt --newline'"
+  alias promptfull="PROMPT_COMMAND='setprompt --complete'"
 else
   PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-  alias ps1short="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\W\$ '"
-  alias ps1long="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '"
-  alias ps1line="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\n\$ '"
+  PROMPT_COMMAND='setprompt --nocolor'
+  alias promptshort="PROMPT_COMMAND='setprompt --shortpath --nocolor'"
+  alias promptlong="PROMPT_COMMAND='setprompt --nocolor'"
+  alias promptnewline="PROMPT_COMMAND='setprompt --newline --nocolor'"
+  alias promptfull="PROMPT_COMMAND='setprompt --complete --nocolor'"
 fi
 unset color_prompt
-alias pathshort="ps1short"
-alias pathlong="ps1long"
-alias pathline="ps1line"
+alias ps1short="promptshort"
+alias ps1long="promptlong"
+alias ps1newline="promptnewline"
+alias ps1full="promptfull"
 
 # If this is an xterm set the title (the text on top of the terminal window) to user@host:dir
 case "$TERM" in
