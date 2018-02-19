@@ -84,7 +84,9 @@ export IGNOREEOF='2'
 export LESS="-iMFXR"
 
 # Set variable identifying the chroot you work in (used in the prompt below)
-# will only be set if we are in a chrooted debian system inside our system
+# If the variable $debian_chroot is empty and the file /etc/debian_chroot exists
+# and is readable, the variable is set to the content of the file /etc/chroot
+# debian_chroot will only be set if we are in a chrooted debian system inside our system
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
   debian_chroot=$(cat /etc/debian_chroot)
 fi
@@ -361,7 +363,7 @@ alias tmp='pushd $(mktemp -d)'  # create tmp dir (removed on boot) and cd into i
 alias server="start http://localhost:8000 && python -m SimpleHTTPServer"  # serve current folder in localhost:8000
 alias bell='tput bel && tput flash'  # play bell sound and show flash in terminal
 alias man='man_func'  # allow colored manuals
-alias debug='[[ ! $- =~ x ]] && { set -o nounset -o xtrace; echo Debug mode ON; } || { set +o nounset +o xtrace; echo Debug mode OFF; }'  # toggle bash 'debug mode'
+alias debug='[[ ! $- =~ x ]] && { export OLD_PROMPT_COMMAND=$PROMPT_COMMAND; PROMPT_COMMAND=""; export OLD_PS1=$PS1; PS1="\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\] \[\033[01;31m\][DEBUG MODE]\[\033[00m\]\n\$ "; set -o nounset -o xtrace; echo Debug mode ON; } || { set +o nounset +o xtrace; PROMPT_COMMAND=$OLD_PROMPT_COMMAND; PS1=$OLD_PS1; unset OLD_PROMPT_COMMAND; unset OLD_PS1; echo Debug mode OFF; }'  # toggle bash 'debug mode'
 
 # Add an "alert" alias for long running commands. It will show a pop-up once the task is over
 # Use: 'sleep 10; alert' or 'python slow_script.py args; alert'
