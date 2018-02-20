@@ -363,6 +363,7 @@ alias tmp='pushd $(mktemp -d)'  # create tmp dir (removed on boot) and cd into i
 alias server="start http://localhost:8000 && python -m SimpleHTTPServer"  # serve current folder in localhost:8000
 alias bell='tput bel && tput flash'  # play bell sound and show flash in terminal
 alias man='man_func'  # allow colored manuals
+alias bu='backup'
 alias debug='[[ ! $- =~ x ]] && { export OLD_PROMPT_COMMAND=$PROMPT_COMMAND; PROMPT_COMMAND=""; export OLD_PS1=$PS1; PS1="\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;94m\]\w\[\033[00m\] \[\033[01;31m\][DEBUG MODE]\[\033[00m\]\n\$ "; set -o nounset -o xtrace; echo Debug mode ON; } || { set +o nounset +o xtrace; PROMPT_COMMAND=$OLD_PROMPT_COMMAND; PS1=$OLD_PS1; unset OLD_PROMPT_COMMAND; unset OLD_PS1; echo Debug mode OFF; }'  # toggle bash 'debug mode'
 
 # Add an "alert" alias for long running commands. It will show a pop-up once the task is over
@@ -734,8 +735,8 @@ mvo() {  # mv oldest folder, or mv Nth oldest folder
   mv $n $args
 }
 
-# Use: 'bu my_config_file.cfg' or 'bu file1 folder2'
-bu () {  # create backup file
+# Use: 'backup my_config_file.cfg' or 'backup file1 folder2'
+backup () {  # create backup file
   local m flag="" funcname=${FUNCNAME[0]}
   local -i ret=0
   if [ -z "$1" ]; then
