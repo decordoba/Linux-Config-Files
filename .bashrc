@@ -102,7 +102,7 @@ case "$TERM" in
   xterm-color|*-256color|*-16color) color_prompt=yes;;
 esac
 
-[[ -f .bash.d/prompt ]] && source ~/.bash.d/prompt
+[[ -f $HOME/.bash.d/prompt ]] && source $HOME/.bash.d/prompt
 
 # Format prompt as user@host:[branch]path$. Show color depending on the color_prompt variable
 # Create aliases to change between long prompt (full path), short prompt (current subfolder only),
