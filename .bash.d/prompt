@@ -344,7 +344,7 @@ setprompt() {
       local status="$(git status 2>/dev/null)"
       local git_color=$git_clean_color
       if [[ $git_color_on_status -eq 1 ]] ; then
-        [[ "$status" = *"Changes not staged for commit:"* ]] && git_color=$git_add_color
+        [[ "$status" = *"Changes not staged for commit:"* || "$status" = *"Unmerged paths:"* ]] && git_color=$git_add_color
         [[ "$status" = *"Changes to be committed:"* ]] && git_color=$git_commit_color
       elif [[ $git_color_on_branch -eq 1 ]] ; then
         case "${branch:-"(no branch)"}" in
@@ -363,6 +363,7 @@ setprompt() {
         [[ "$status" = *deleted:* ]] && suffix="${suffix}-"
         [[ "$status" = *"Untracked files:"* || "$status" = *"new file:"* ]] && suffix="${suffix}+"
         [[ "$status" = *modified:* ]] && suffix="${suffix}*"
+        [[ "$status" = *"Unmerged paths:"* ]] && suffix="${suffix}~"
         [[ $git_branch_show -eq 1 && -n $suffix ]] && PS1+="${sep4_middle1}"
         PS1+="$suffix"
         [[ $git_branch_show -eq 1 && -n $suffix ]] && PS1+="${sep4_middle2}"
