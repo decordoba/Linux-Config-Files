@@ -69,3 +69,4 @@
         added = green bold
         changed = yellow bold
         untracked = red bold
+        unmerged = cyan bold

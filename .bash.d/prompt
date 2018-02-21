@@ -171,9 +171,10 @@ setprompt() {
   local git_sha1_show=0
   local git_color_on_status=1
   local git_color_on_branch=0
-  local git_clean_color=$GREEN  # No changes to commit, there may be untracked files (after git stash)
-  local git_add_color=$RED  # Unstaged changes, no changes to commit (before git add)
-  local git_commit_color=$YELLOW  # Changes to be commited (after git add, before git commit)
+  local git_clean_color=$GREEN  # No changes to commit, there may be untracked files (obtained after git stash)
+  local git_add_color=$RED  # Unstaged changes, no changes to commit (obtained before git add)
+  local git_conflict_color=$CYAN  # If there was a conflict when merging (obtained after conflicting git stash pop, or conflicting git push)
+  local git_commit_color=$YELLOW  # Changes to be commited (obtained after git add, but before git commit)
   # Separators path
   local sep5_color=$LIGHTGRAY
   local sep5_midcolor=$DARKGRAY
@@ -344,7 +345,8 @@ setprompt() {
       local status="$(git status 2>/dev/null)"
       local git_color=$git_clean_color
       if [[ $git_color_on_status -eq 1 ]] ; then
-        [[ "$status" = *"Changes not staged for commit:"* || "$status" = *"Unmerged paths:"* ]] && git_color=$git_add_color
+        [[ "$status" = *"Changes not staged for commit:"* ]] && git_color=$git_add_color
+        [[ "$status" = *"Unmerged paths:"* ]] && git_color=$git_conflict_color
         [[ "$status" = *"Changes to be committed:"* ]] && git_color=$git_commit_color
       elif [[ $git_color_on_branch -eq 1 ]] ; then
         case "${branch:-"(no branch)"}" in
