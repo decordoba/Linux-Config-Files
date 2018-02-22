@@ -346,7 +346,7 @@ alias fuck='sudo $(history -p \!\!)'  # rerun last command with sudo
 # Aliases to print stuff
 alias path='echo -e ${PATH//:/\\n}'  # print each PATH entry on a separate line
 alias lscolors='echo -e ${LS_COLORS//:/\\n}'  # print each entry in LS_COLORS on a separate line
-alias hr="printf '%*s\n' \"${COLUMNS:-$(tput cols)}\" '' | tr ' ' ="  # print a separator line
+alias hr="printf '%*s\n' \"\${COLUMNS:-\$(tput cols)}\" '' | tr ' ' ="  # print a separator line
 
 # IP related aliases
 alias p4='ping 4.2.2.2 -c 4'  # check if we have access to the internet
