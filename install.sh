@@ -51,7 +51,7 @@ create_ln_and_backup () {
   elif [ ! -e "$full_destination" ] ; then
     ln -s "$full_origin" "$full_destination"
     echo Symlink created in \'"$full_destination"\'.
-  elif [[ ! -L "$full_destination" || $(full_path $(readlink -f "$full_destination")) != "$full_origin" ]] ; then
+  elif [ ! -L "$full_destination" ] || [ $(full_path $(readlink -f "$full_destination")) != "$full_origin" ] ; then
     if [ ! -d "$PATH_BACKUPS" ] ; then
       mkdir -p "$PATH_BACKUPS"
       echo Backup folder created in \'"$PATH_BACKUPS"\'.
@@ -76,25 +76,25 @@ create_ln_and_backup () {
 # If there is any error in $1, writes warning and returns 1.
 install_or_update_repo() {
   local folder
-  if [ $# -lt 1 ]; then
+  if [ $# -lt 1 ] ; then
     folder="$PATH_DOTFILES"
   else
     folder="$1"
   fi
-  if [[ ! -e "$folder" || -z "$folder" ]]; then
+  if [ ! -e "$folder" ] || [ -z "$folder" ] ; then
     echo Installing dotfiles in \'"$folder"\'.
     git clone https://github.com/$REPOSITORY_URL "$folder"
-  elif [ ! -d "$folder" ]; then
-    warn "ERROR: '$folder' already exists. Remove it and try again."
+  elif [ ! -d "$folder" ] ; then
+    warn "ERROR: '$folder' already exists (and is not a folder). Remove it and try again."
     return 1
   else
     local current_path=$(pwd)
     cd "$folder"
-    if [[ $(git config --get remote.origin.url) == *$REPOSITORY_URL ]] ; then
+    if [[ "$(git config --get remote.origin.url)" = *$REPOSITORY_URL ]] ; then
       echo Updating dotfiles in \'"$folder"\'.
       git pull origin master
     else
-      warn "ERROR: '$folder' already exists. Remove it and try again."
+      warn "ERROR: '$folder' already exists (and does not contain the right repo). Remove it and try again."
       return 1
     fi
     cd "$current_path"
@@ -102,10 +102,10 @@ install_or_update_repo() {
 }
 
 # Clone or update repo
-install_or_update_repo "$PATH_DOTFILES" || return 1
+install_or_update_repo "$PATH_DOTFILES" || exit 1
 
 # Make sure not to overwrite backup folder
-if [[ -e "$PATH_BACKUPS" && ! -z "$PATH_BACKUPS" ]] ; then
+if [ -e "$PATH_BACKUPS" ] && [ ! -z "$PATH_BACKUPS" ] ; then
   now="$(date +%F_%T)"
   PATH_BACKUPS="$PATH_BACKUPS"_"${now//[:]/-}"
   unset now
@@ -114,7 +114,9 @@ fi
 # Create and backup symlinks
 create_ln_and_backup "$PATH_DOTFILES"/.bashrc $HOME/.bashrc
 create_ln_and_backup "$PATH_DOTFILES"/.bash_profile $HOME/.bash_profile
+create_ln_and_backup "$PATH_DOTFILES"/.bash.d $HOME/.bash.d
 create_ln_and_backup "$PATH_DOTFILES"/.screenrc $HOME/.screenrc
+create_ln_and_backup "$PATH_DOTFILES"/.inputrc $HOME/.inputrc
 create_ln_and_backup "$PATH_DOTFILES"/.gitconfig $HOME/.gitconfig
 mkdir -p $HOME/.vim
 create_ln_and_backup "$PATH_DOTFILES"/.vim/vimrc $HOME/.vim/vimrc
