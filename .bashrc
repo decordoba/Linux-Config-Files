@@ -21,7 +21,7 @@ HISTSIZE=10000
 HISTFILESIZE=20000
 
 # Save date and time when commands were used in history
-HISTTIMEFORMAT="%F %T "
+export HISTTIMEFORMAT="%F %T  "
 
 # Append to the history file, don't overwrite it
 shopt -s histappend
