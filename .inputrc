@@ -145,12 +145,17 @@ set keymap emacs
 # Ctrl+H and Ctrl+? are equivalent to BACKSPACE (delete back character)
 "\C-h": backward-delete-char
 "\C-?": backward-delete-char
-# Ctrl+I is equivalent to TAB (start auto-complete)
+# Ctrl+I is equivalent to TAB (start auto-complete). Attempts completion treating text as variable (if it begins with '$'), username (if it begins with '~'), hostname (if it begins with '@'), or command (including aliases and functions) in turn. If none produces a match, filename completion is attempted.
 "\C-i": complete
-# Shift-TAB cycles through available completions
-"\e[Z": menu-complete
 # Alt+ESC auto-completes too (like TAB)
 "\e\e": complete
+# Shift-TAB cycles through available completions
+"\e[Z": menu-complete
+# Alt+? and Alt+= list possible completions (like TAB) but don't perform completion even if there is only one possibility
+"\e?": possible-completions
+"\e=": possible-completions
+# Insert as text all possible completions, like the ones generated with Alt+?
+"\e*": insert-completions
 # Delete key deletes a character
 "\e[3~": delete-char
 # Ctrl+D key deletes a character
@@ -168,49 +173,62 @@ set keymap emacs
 # Alt+< and Alt+> got to first and last line in the history
 "\e<": beginning-of-history
 "\e>": end-of-history
+# Ctrl+SPACE (same as C-@) and Alt+SPACE set mark where the cursor is (navigate to last mark with C+X-C+X)
+"\C-@": set-mark
+"\e ": set-mark
+# Ctrl+X-Ctrl+X saves current cursor position (called point) to mark, and navigates to last mark
+"\C-x\C-x": exchange-point-and-mark
+# Attempt autocomplete: insert completion if only one choice, list possibilities if multiple choices
+# Alt+! attempts autocomplete of commands (including aliases and functions) on text before cursor
+"\e!": complete-command
+# Alt+/ attempts autocomplete of filenames on text before cursor
+"\e/": complete-filename
+# Alt+@ attempts autocomplete of hostnames on text before cursor
+"\e@": complete-hostname
+# Alt+~ attempts autocomplete of usernames on text before cursor
+"\e~": complete-username
+# Alt+$ attempts autocomplete of variables on text before cursor
+"\e$": complete-variable
+# List possible completions: list possibilities if one or multiple choices, do not insert possible completions
+# Ctrl+X-! lists possible completions of commands (including aliases and functions) on text before cursor
+"\C-x!": possible-command-completions
+# Ctrl+X-/ lists possible completions of filenames on text before cursor
+"\C-x/": possible-filename-completions
+# Ctrl+X-@ lists possible completions of hostnames on text before cursor
+"\C-x@": possible-hostname-completions
+# Ctrl+X-~ lists possible completions of usernames on text before cursor
+"\C-x~": possible-username-completions
+# Ctrl+X-$ lists possible completions of variables on text before cursor
+"\C-x$": possible-variable-completions
+# Alt+TAB attempts completion on text before cursor, against lines from history for completion matches
+"\e\C-i": dynamic-complete-history
+# Alt+{ inserts list of filename autocompletions as text in a trie (it's a data structure, Google it!) inside {braces}
+"\e{": complete-into-braces
 
 
 
 
 
 # Other commands yet to be labeled
-"\e\C-i": dynamic-complete-history
 "\C-g": abort
 "\C-x\C-g": abort
 "\e\C-g": abort
 "\C-xe": call-last-kbd-macro
 "\C-]": character-search
 "\e\C-]": character-search-backward
-"\e!": complete-command
-"\e/": complete-filename
-"\e@": complete-hostname
-"\e{": complete-into-braces
-"\e~": complete-username
-"\e$": complete-variable
 "\C-x\C-e": edit-and-execute-command
 "\C-x)": end-kbd-macro
-"\C-x\C-x": exchange-point-and-mark
 "\eg": glob-complete-word
 "\C-x*": glob-expand-word
 "\C-xg": glob-list-expansions
 "\e^": history-expand-line
 "\e#": insert-comment
-"\e*": insert-completions
 "\en": non-incremental-forward-search-history
 "\ep": non-incremental-reverse-search-history
 "\C-o": operate-and-get-next
-"\C-x!": possible-command-completions
-"\e=": possible-completions
-"\e?": possible-completions
-"\C-x/": possible-filename-completions
-"\C-x@": possible-hostname-completions
-"\C-x~": possible-username-completions
-"\C-x$": possible-variable-completions
 "\C-x\C-r": re-read-init-file
 "\e\C-r": revert-line
 "\er": revert-line
-"\C-@": set-mark
-"\e ": set-mark
 "\e\C-e": shell-expand-line
 "\C-x(": start-kbd-macro
 "\e&": tilde-expand
@@ -289,6 +307,12 @@ set keymap emacs
 # # Option-up/option-down should also apply to insert mode
 ## "\e\e[A": history-search-backward
 ## "\e\e[B": history-search-forward
+
+# # Make Ctrl+w (already used!) to cut region and Alt+w to copy region (region = from cursor to mark)
+# "\C-w": kill-region
+# "\ew": copy-region-as-kill
+
+
 
 ################################################################
 # KEYMAP CONFIGURATION VI-COMMAND
