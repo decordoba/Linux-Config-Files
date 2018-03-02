@@ -4,6 +4,7 @@ atom-keyboard-macros-vim@0.1.6
 atom-live-server@2.2.0
 autocomplete-python@1.10.5
 busy-signal@1.4.3
+clipboard-plus@0.5.1
 color-picker@2.2.5
 emmet@2.4.3
 file-icons@2.1.16
@@ -13,8 +14,9 @@ linter@2.2.0
 linter-flake8@2.3.0
 linter-jscs@4.1.3
 linter-jshint@3.1.6
-linter-ui-default@1.6.10
-minimap@4.29.7
+linter-ui-default@1.7.1
+minimap@4.29.8
+minimap-find-and-replace@4.5.2
 minimap-highlight-selected@4.6.1
 minimap-linter@2.1.3
 minimap-pigments@0.2.2
@@ -24,8 +26,10 @@ python-indent@1.1.4
 python-isort@0.0.7
 python-tools@0.6.9
 rainbow-tabs@2.5.1
+relative-numbers@0.9.0
 script@3.17.3
 todo-show@2.1.0
+vim-mode-clipboard-plus@0.2.0
 vim-mode-plus@1.28.0
 vim-mode-plus-keymaps-for-surround@0.2.1
 
