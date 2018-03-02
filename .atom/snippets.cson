@@ -120,7 +120,7 @@
     $4
     '''
 
-  # Useful functions: print, input, range, len, zip, type
+  # Useful functions used on various structures: print, input, range, len, zip, type, enumerate...
   'print()':
     'prefix': 'print'
     'body': 'print(${1:"$2"${3:.format($4)}})$5'
@@ -139,8 +139,43 @@
   'type()':
     'prefix': 'type'
     'body': 'type($1)$2'
+  'enumerate()':
+    'prefix': 'enumerate'
+    'body': 'enumerate($1)$2'
+  'any()':  # Returns True if any element of an iterable is True
+    'prefix': 'any'
+    'body': 'any($1)$2'
+  'all()':  # Returns True if all elements of an iterable are True
+    'prefix': 'all'
+    'body': 'all($1)$2'
+  'max()':
+    'prefix': 'max'
+    'body': 'max($1)$2'
+  'min()':
+    'prefix': 'min'
+    'body': 'min($1)$2'
+  'sum()':
+    'prefix': 'sum'
+    'body': 'sum($1)$2'
+  'sorted()':
+    'prefix': 'sorted'
+    'body': 'sorted($1)$2'
+  'slice()':  # Creates a slice object specified by a range passed
+    'prefix': 'slice'
+    'body': 'slice($1)$2'
+  # TODO: Add the elements below (used for strings and lists) as the above list
+  # ascii()	Returns String Containing Printable Representation
+  # bytearray()	returns array of given byte size
+  # bytes()	returns immutable bytes object
+  # compile()	Returns a Python code object
+  # complex()	Creates a Complex Number
+  # filter()	constructs iterator from elements which are true
+  # iter()	returns iterator for an object
+  # map()	Applies Function and Returns a List
+  # ord()	returns Unicode code point for Unicode character
+  # reversed()	returns reversed iterator of a sequence
 
-  # List methods, add parenthesis
+  # List methods, add to autocomplete and add parenthesis
   'append()':
     'prefix': 'append'
     'body': 'append($1)$2'
@@ -174,11 +209,139 @@
   'sort()':
     'prefix': 'sort'
     'body': 'sort($1)$2'
+  # String methods (except ones already written for other data strucutres), add to autocomplete and add parenthesis
+  'capitalize()':
+   'prefix': 'capitalize'
+   'body': 'capitalize($1)$2'
+  'center()':
+   'prefix': 'center'
+   'body': 'center($1)$2'
+  'casefold()':
+   'prefix': 'casefold'
+   'body': 'casefold($1)$2'
+  'endswith()':
+   'prefix': 'endswith'
+   'body': 'endswith($1)$2'
+  'expandtabs()':
+   'prefix': 'expandtabs'
+   'body': 'expandtabs($1)$2'
+  'encode()':
+   'prefix': 'encode'
+   'body': 'encode($1)$2'
+  'find()':
+   'prefix': 'find'
+   'body': 'find($1)$2'
+  'format()':
+   'prefix': 'format'
+   'body': 'format($1)$2'
+  'isalnum()':
+   'prefix': 'isalnum'
+   'body': 'isalnum($1)$2'
+  'isalpha()':
+   'prefix': 'isalpha'
+   'body': 'isalpha($1)$2'
+  'isdecimal()':
+   'prefix': 'isdecimal'
+   'body': 'isdecimal($1)$2'
+  'isdigit()':
+   'prefix': 'isdigit'
+   'body': 'isdigit($1)$2'
+  'isidentifier()':
+   'prefix': 'isidentifier'
+   'body': 'isidentifier($1)$2'
+  'islower()':
+   'prefix': 'islower'
+   'body': 'islower($1)$2'
+  'isnumeric()':
+   'prefix': 'isnumeric'
+   'body': 'isnumeric($1)$2'
+  'isprintable()':
+   'prefix': 'isprintable'
+   'body': 'isprintable($1)$2'
+  'isspace()':
+   'prefix': 'isspace'
+   'body': 'isspace($1)$2'
+  'istitle()':
+   'prefix': 'istitle'
+   'body': 'istitle($1)$2'
+  'isupper()':
+   'prefix': 'isupper'
+   'body': 'isupper($1)$2'
+  'join()':
+   'prefix': 'join'
+   'body': 'join($1)$2'
+  'ljust()':
+   'prefix': 'ljust'
+   'body': 'ljust($1)$2'
+  'rjust()':
+   'prefix': 'rjust'
+   'body': 'rjust($1)$2'
+  'lower()':
+   'prefix': 'lower'
+   'body': 'lower($1)$2'
+  'upper()':
+   'prefix': 'upper'
+   'body': 'upper($1)$2'
+  'swapcase()':
+   'prefix': 'swapcase'
+   'body': 'swapcase($1)$2'
+  'lstrip()':
+   'prefix': 'lstrip'
+   'body': 'lstrip($1)$2'
+  'rstrip()':
+   'prefix': 'rstrip'
+   'body': 'rstrip($1)$2'
+  'strip()':
+   'prefix': 'strip'
+   'body': 'strip($1)$2'
+  'partition()':
+   'prefix': 'partition'
+   'body': 'partition($1)$2'
+  'maketrans()':
+   'prefix': 'maketrans'
+   'body': 'maketrans($1)$2'
+  'rpartition()':
+   'prefix': 'rpartition'
+   'body': 'rpartition($1)$2'
+  'translate()':
+   'prefix': 'translate'
+   'body': 'translate($1)$2'
+  'replace()':
+   'prefix': 'replace'
+   'body': 'replace($1)$2'
+  'rfind()':
+   'prefix': 'rfind'
+   'body': 'rfind($1)$2'
+  'rindex()':
+   'prefix': 'rindex'
+   'body': 'rindex($1)$2'
+  'split()':
+   'prefix': 'split'
+   'body': 'split($1)$2'
+  'rsplit()':
+   'prefix': 'rsplit'
+   'body': 'rsplit($1)$2'
+  'splitlines()':
+   'prefix': 'splitlines'
+   'body': 'splitlines($1)$2'
+  'startswith()':
+   'prefix': 'startswith'
+   'body': 'startswith($1)$2'
+  'title()':
+   'prefix': 'title'
+   'body': 'title($1)$2'
+  'zfill()':
+   'prefix': 'zfill'
+   'body': 'zfill($1)$2'
+  'format_map()':
+   'prefix': 'format_map'
+   'body': 'format_map($1)$2'
+
   # TODO: Dictionary methods, add parenthesis
   # TODO: Set methods, add parenthesis
   # TODO: Tuple methods, add parenthesis
-  # TODO: String methods, add parenthesis
   # TODO: Number methods, add parenthesis
+  # TODO: Info here: https://www.programiz.com/python-programming/methods
 
   # Put parenthesis in types
   'int()':
@@ -187,6 +350,9 @@
   'float()':
     'prefix': 'float'
     'body': 'float($1)$2'
+  'bool()':
+    'prefix': 'bool'
+    'body': 'bool($1)$2'
   'str()':
     'prefix': 'str'
     'body': 'str($1)$2'
@@ -291,3 +457,6 @@
   'import string':
     'prefix': 'imstr'
     'body': 'import string'
+  'import argparse':
+    'prefix': 'imarg'
+    'body': 'import argparse'
