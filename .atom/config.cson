@@ -7,9 +7,11 @@
     consumeSuffix: false
     minimumWordLength: 2
   "autocomplete-python":
+    fuzzyMatcher: false
     suggestionPriority: 1
     useKite: false
     useSnippets: "required"
+  "clipboard-plus": {}
   core:
     disabledPackages: [
       "rainbow"
@@ -30,9 +32,10 @@
     maxLineLength: 99
   "linter-ui-default":
     panelHeight: 147
-    showPanel: true
   minimap:
     plugins:
+      "find-and-replace": true
+      "find-and-replaceDecorationsZIndex": 0
       "highlight-selected": true
       "highlight-selectedDecorationsZIndex": 0
       linter: true
@@ -40,6 +43,10 @@
       pigments: true
       pigmentsDecorationsZIndex: 0
   "python-tools": {}
+  "vim-mode":
+    useClipboardAsDefaultRegister: true
+  "vim-mode-clipboard-plus":
+    useVimModePlus: true
   "vim-mode-plus":
     keymapBackslashToInnerCommentOrParagraphWhenToggleLineCommentsIsPending: true
     keymapPToPutWithAutoIndent: true
@@ -47,6 +54,7 @@
     keymapYToYankToLastCharacterOfLine: true
     reuseFindForRepeatFind: true
     startInInsertMode: true
+    useClipboardAsDefaultRegister: true
     useSmartcaseForFind: true
     useSmartcaseForSearch: true
 ".console.python.text":
