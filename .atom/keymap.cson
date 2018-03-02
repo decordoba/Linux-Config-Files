@@ -9,5 +9,24 @@
   'j k': 'vim-mode-plus:activate-normal-mode'
 
 'atom-workspace':
-  # Enable-disable vim-mode use with shortcut
+  # Enable-disable vim-mode use with ctrl-alt-v shortcut
   'ctrl-alt-v': 'user:toggle-vim-mode-plus'
+
+# Fix problem with vim macros, without it typing 'q' does not work
+'atom-text-editor.vim-mode-plus:not(.insert-mode)':
+  'q': 'atom-keyboard-macros-vim:toggle_record_macro_vim'
+  '@': 'atom-keyboard-macros-vim:execute_macro_vim'
+  'Q': 'atom-keyboard-macros:call_last_kbd_macro'
+
+# When doing ctrl-c without anything selected, don't copy the line
+'body':
+  'cmd-c': 'editor:copy-selection'  # mac os
+  'ctrl-c': 'editor:copy-selection'  # linux and windows
+
+# ctrl-shift-v shows clipboard history
+'.platform-darwin atom-text-editor:not([mini])':
+  'cmd-shift-v': 'clipboard-plus:toggle'
+'.platform-win32 atom-text-editor:not([mini])':
+  'ctrl-shift-v': 'clipboard-plus:toggle'
+'.platform-linux atom-text-editor:not([mini])':
+  'ctrl-shift-v': 'clipboard-plus:toggle'
