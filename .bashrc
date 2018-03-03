@@ -395,12 +395,6 @@ bind 'set show-all-if-ambiguous On'
 bind 'set bell-style none'
 
 # Make SSH automatically complete hostname (if it is in history or config)
-if [ ! -d $HOME/.ssh ]; then
-  mkdir $HOME/.ssh
-  touch $HOME/.ssh/config
-elif [ ! -f $HOME/.ssh/config ]; then
-  touch $HOME/.ssh/config
-fi
 # TODO: What if ruby does not exist!
 complete -o default -o nospace -W "$(/usr/bin/env ruby -ne 'puts $_.split(/[,\s]+/)[1..-1].reject{|host| host.match(/\*|\?/)} if $_.match(/^\s*Host\s+/);' < $HOME/.ssh/config)" scp sftp ssh
 
@@ -816,8 +810,10 @@ remindme() {  # show pop up with reminder after time
 addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
   local user hostname host found hostname_tmp user_tmp path_config host_line i funcname=${FUNCNAME[0]}
   if [ $# -lt 1 ]; then
-    echo "Usage: $funcname <user@hostname>              # add SSH user and hostname to .ssh/config. SSH alias is assigned automatically (recommended)"
-    echo "       $funcname <user@hostname> [ssh_alias]  # add SSH user and hostname to .ssh/confid, and use SSH alias to access it"
+    echo "Usage: $funcname <user@hostname>          # add SSH user and hostname to .ssh/config"
+    echo "                                       # SSH alias assigned automatically (recommended)"
+    echo "       $funcname <user@hostname> [alias]  # add SSH user and hostname to .ssh/config"
+    echo "                                       # saves with chosen SSH alias"
     return 1
   fi
   user=${1%%@*}
@@ -825,6 +821,13 @@ addssh() {  # Add ssh user and host to ~/.ssh/config to toggle autocomplete
   path_config=$HOME/.ssh/config
   found=0
   i=0
+  if [ ! -d "$(dirname "$path_config")" ]; then
+    mkdir "$(dirname "$path_config")"
+  fi
+  if [ ! -f "$path_config" ]; then
+    touch "$path_config"
+    chmod 600 "$path_config"  # Requires permission 600 to avoid permission error after reboot
+  fi
   while IFS='' read -r line ; do
     i=$((i + 1))
     if [[ $line = User\ * ]]; then
@@ -1119,3 +1122,5 @@ welcome() {  # Display welcome message with username, calendar, up time, etc.
   echo -e ""
 }
 welcome  # See welcome message every time the bashrc is loaded
+
+export PATH=$PATH:/home/ddecor/.local/lib/python3.5/site-packages
