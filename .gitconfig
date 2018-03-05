@@ -10,9 +10,10 @@
         br = branch
         # 'git commit -m' that does not require double quotes (""). i.e.: git cim My awesome comit.
         cim = "!f() { local tmp=\"$*\"; git commit -m \"$tmp\"; }; f"
-        # show git log but nicer, run with -p to see changes in every commit
-        lg = log --graph --pretty=format:'%C(yellow)%h%Creset%C(yellow bold)%d%Creset %s %C(green bold)(%cr) %C(cyan)[%an]%Creset' --abbrev-commit
+        # show git log but nicer and in one line, run with -p to see changes in every commit
         hist = log --pretty=format:'%C(yellow bold)%h%Creset %C(yellow)%ad%Creset %C(red)|%Creset %s%C(green bold)%d%Creset %C(cyan)[%an]%Creset' --graph --date=short
+        # show git log in a really colorfull way, perfect to run with -p to see changes in every commit
+        lg = log --graph --pretty=format:'%C(magenta bold)%H%Creset %C(green bold)(%cr)%Creset%C(yellow bold)%d%Creset %C(cyan bold)%s%Creset %C(blue bold)[%an]%Creset' --abbrev-commit
         # get info from a hash
         type = cat-file -t # expects hash (number in git hist)
         dump = cat-file -p # expects hash (number in git hist)
