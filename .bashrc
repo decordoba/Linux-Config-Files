@@ -896,7 +896,7 @@ hddunlock() {  # unlock an encrypted hard drive partition
   echo Unlocking device $device, naming it $hdd_name...
   sudo cryptsetup luksOpen $device $hdd_name
   if [ $? -ne 0 ]; then
-    echo Failed to unlock $device.
+    echo Failed to unlock $device. Make sure $device exists, or choose another device with \'${FUNCNAME[0]} /dev/sdXN\'.
     return 1
   fi
   echo Mounting $device to folder $folder...
@@ -1123,4 +1123,3 @@ welcome() {  # Display welcome message with username, calendar, up time, etc.
 }
 welcome  # See welcome message every time the bashrc is loaded
 
-export PATH=$PATH:/home/ddecor/.local/lib/python3.5/site-packages
