@@ -3,11 +3,13 @@
         email = danieldecordobagil@hotmail.com
 
 [alias]
+        # basic abreviations: co, ci, st, br
         co = checkout
         ci = commit
-        cim = commit -m
         st = status
         br = branch
+        # 'git commit -m' that does not require double quotes (""). i.e.: git cim My awesome comit.
+        cim = "!f() { local tmp=\"$*\"; git commit -m \"$tmp\"; }; f"
         # show git log but nicer, run with -p to see changes in every commit
         lg = log --graph --pretty=format:'%C(yellow)%h%Creset%C(yellow bold)%d%Creset %s %C(green bold)(%cr) %C(cyan)[%an]%Creset' --abbrev-commit
         hist = log --pretty=format:'%C(yellow bold)%h%Creset %C(yellow)%ad%Creset %C(red)|%Creset %s%C(green bold)%d%Creset %C(cyan)[%an]%Creset' --graph --date=short
@@ -43,7 +45,6 @@
         # :arrow_down:        when downgrading dependencies
         # :heavy_plus_sign:   when adding dependencies
         # :heavy_minus_sign:  when removind dependencies
-
 
 [core]
         whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
