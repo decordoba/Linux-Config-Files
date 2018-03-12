@@ -4,8 +4,11 @@
       max_line_length: 99
       sort_imports: true
   "autocomplete-plus":
+    backspaceTriggersAutocomplete: true
+    confirmCompletion: "enter"
     consumeSuffix: false
     minimumWordLength: 2
+    useCoreMovementCommands: false
   "autocomplete-python":
     fuzzyMatcher: false
     suggestionPriority: 1
@@ -18,8 +21,12 @@
       "emmet"
       "atom-live-server"
     ]
+    packagesWithKeymapsDisabled: [
+      "hey-pane"
+    ]
     telemetryConsent: "no"
   editor:
+    autoIndentOnPaste: false
     preferredLineLength: 100
     showIndentGuide: false
   "exception-reporting":
