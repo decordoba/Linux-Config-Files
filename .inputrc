@@ -160,16 +160,30 @@ set keymap emacs
 "\e[3~": delete-char
 # Ctrl+D key deletes a character
 "\C-d": delete-char  # default vi-insert: vi-eof-maybe
-# Up and down keys navigate through history (gnome-terminal and putty codes)
+# Up and down arrow keys navigate through history
 "\e[A": previous-history
 "\e[B": next-history
-"\eOB": next-history
-"\eOA": previous-history
-# Left and right keys move left and right in text (gnome-terminal and putty codes)
+# Left and right arrow keys move left and right in text
 "\e[C": forward-char
 "\e[D": backward-char
-"\eOC": forward-char
-"\eOD": backward-char
+# Ctrl+left and Ctrl+right (arrow) keys move to next or previous word
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+"\eOC": forward-word
+"\eOD": backward-word
+"\e[5C": forward-word
+"\e[5D": backward-word
+"\e\e[C": forward-word
+"\e\e[D": backward-word
+# Ctrl+up and Ctrl+down (arrow) keys navigate in history based on text before cursor (line prefix)
+"\e[1;5A": history-search-backward
+"\e[1;5B": history-search-forward
+"\eOA": history-search-backward
+"\eOB": history-search-forward
+"\e[5A": history-search-backward
+"\e[5B": history-search-forward
+"\e\e[A": history-search-backward
+"\e\e[B": history-search-forward
 # Alt+< and Alt+> got to first and last line in the history
 "\e<": beginning-of-history
 "\e>": end-of-history
@@ -304,9 +318,6 @@ set keymap emacs
 "\eY": do-lowercase-version
 "\eZ": do-lowercase-version
 
-# # Option-up/option-down should also apply to insert mode
-## "\e\e[A": history-search-backward
-## "\e\e[B": history-search-forward
 
 # # Make Ctrl+w (already used!) to cut region and Alt+w to copy region (region = from cursor to mark)
 # "\C-w": kill-region
@@ -336,6 +347,25 @@ set keymap vi-command
 # to set plain up/down to do a history search by default.
 ## "\e\e[A": history-search-backward
 ## "\e\e[B": history-search-forward
+
+# Ctrl+left and Ctrl+right (arrow) keys move to next or previous word
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+"\eOC": forward-word
+"\eOD": backward-word
+"\e[5C": forward-word
+"\e[5D": backward-word
+"\e\e[C": forward-word
+"\e\e[D": backward-word
+# Ctrl+up and Ctrl+down (arrow) keys navigate in history based on text before cursor (line prefix)
+"\e[1;5A": history-search-backward
+"\e[1;5B": history-search-forward
+"\eOA": history-search-backward
+"\eOB": history-search-forward
+"\e[5A": history-search-backward
+"\e[5B": history-search-forward
+"\e\e[A": history-search-backward
+"\e\e[B": history-search-forward
 
 ################################################################
 # KEYMAP CONFIGURATION VI-INSERT
@@ -435,16 +465,30 @@ set keymap vi-insert
 "\e[3~": delete-char
 # Ctrl+D key deletes a character
 "\C-d": delete-char  # default vi-insert: vi-eof-maybe
-# Up and down keys navigate through history (gnome-terminal and putty codes)
+# Up and down arrow keys navigate through history
 "\e[A": previous-history
 "\e[B": next-history
-"\eOB": next-history
-"\eOA": previous-history
-# Left and right keys move left and right in text (gnome-terminal and putty codes)
+# Left and right arrow keys move left and right in text
 "\e[C": forward-char
 "\e[D": backward-char
-"\eOC": forward-char
-"\eOD": backward-char
+# Ctrl+left and Ctrl+right (arrow) keys move to next or previous word
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+"\eOC": forward-word
+"\eOD": backward-word
+"\e[5C": forward-word
+"\e[5D": backward-word
+"\e\e[C": forward-word
+"\e\e[D": backward-word
+# Ctrl+up and Ctrl+down (arrow) keys navigate in history based on text before cursor (line prefix)
+"\e[1;5A": history-search-backward
+"\e[1;5B": history-search-forward
+"\eOA": history-search-backward
+"\eOB": history-search-forward
+"\e[5A": history-search-backward
+"\e[5B": history-search-forward
+"\e\e[A": history-search-backward
+"\e\e[B": history-search-forward
 # Alt+< and Alt+> got to first and last line in the history
 "\e<": beginning-of-history
 "\e>": end-of-history
