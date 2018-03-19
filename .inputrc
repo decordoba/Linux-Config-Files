@@ -218,6 +218,12 @@ set keymap emacs
 "\e\C-i": dynamic-complete-history
 # Alt+{ inserts list of filename autocompletions as text in a trie (it's a data structure, Google it!) inside {braces}
 "\e{": complete-into-braces
+# Ctrl+X-( starts recording the characters typed in the keyboard
+"\C-x(": start-kbd-macro
+# Ctrl+X-) stops recording and saves as a macro the characters typed since Ctrl-X-(
+"\C-x)": end-kbd-macro
+# Ctrl-X-E plays the last saved macro (types the characters combination in the same order)
+"\C-xe": call-last-kbd-macro
 
 
 
@@ -227,11 +233,9 @@ set keymap emacs
 "\C-g": abort
 "\C-x\C-g": abort
 "\e\C-g": abort
-"\C-xe": call-last-kbd-macro
 "\C-]": character-search
 "\e\C-]": character-search-backward
 "\C-x\C-e": edit-and-execute-command
-"\C-x)": end-kbd-macro
 "\eg": glob-complete-word
 "\C-x*": glob-expand-word
 "\C-xg": glob-list-expansions
@@ -244,7 +248,6 @@ set keymap emacs
 "\e\C-r": revert-line
 "\er": revert-line
 "\e\C-e": shell-expand-line
-"\C-x(": start-kbd-macro
 "\e&": tilde-expand
 "\ey": yank-pop
 
