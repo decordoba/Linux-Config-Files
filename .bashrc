@@ -343,6 +343,9 @@ alias vsrc="vim $HOME/.bashrc"  # edit source file
 alias bashrc="vsrc"
 alias vimrc="vim $HOME/.vim/vimrc"  # edit vim source file
 alias gitconfig="vim $HOME/.gitconfig"  # edit gitconfig file
+alias inputrc="vim $HOME/.inputrc"  # edit inputrc file
+alias screenrc="vim $HOME/.screenrc"  # edit screenrc file
+
 
 # Xdg-open aliases (open anything with its default program, and start graphical file manager)
 alias start="xdg-open"  # run a file as if double clicked. Also opens file manager
