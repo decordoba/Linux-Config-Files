@@ -170,11 +170,22 @@ LS_COLORS=$LS_COLORS'*.py=38;5;41:'  # green
 LS_COLORS=$LS_COLORS'*.pyc=38;5;240:'  # dark gray
 LS_COLORS=$LS_COLORS'*.m=38;5;213:'  # pink
 LS_COLORS=$LS_COLORS'*.gitconfig=1:'  # white
-color=196  # bright red
+LS_COLORS=$LS_COLORS'*.bash_profile=1:'  # white
+color=196  # bright red (used for traditional compressed files like .zip or .tar)
 LS_COLORS=$LS_COLORS"*.7z=38;5;$color:*.a=38;5;$color:*.arj=38;5;$color:*.bz2=38;5;$color:*.cpio=38;5;$color:*.gz=38;5;$color:*.lrz=38;5;$color:*.lz=38;5;$color:*.lzma=38;5;$color:*.lzo=38;5;$color:*.rar=38;5;$color:*.s7z=38;5;$color:*.sz=38;5;$color:*.tar=38;5;$color:*.tgz=38;5;$color:*.xz=38;5;$color:*.z=38;5;$color:*.Z=38;5;$color:*.zip=38;5;$color:*.zipx=38;5;$color:*.zoo=38;5;$color:*.zpaq=38;5;$color:*.zz=38;5;$color:"
 LS_COLORS=$LS_COLORS'*.npy=38;5;210:'  # light red
 LS_COLORS=$LS_COLORS'*.npz=38;5;210:'  # light red
 LS_COLORS=$LS_COLORS'*.pkl=38;5;216:'  # light orange
+LS_COLORS=$LS_COLORS'*.pickle=38;5;216:'  # light orange
+LS_COLORS=$LS_COLORS'*.h5=38;5;216:'  # light orange
+LS_COLORS=$LS_COLORS'*.hdf5=38;5;216:'  # light orange
+LS_COLORS=$LS_COLORS'*.h4=38;5;216:'  # light orange
+LS_COLORS=$LS_COLORS'*.hdf4=38;5;216:'  # light orange
+color=165  # violet (used for files that show documents, like .pdf or .cbr (shows comics))
+LS_COLORS=$LS_COLORS"*.cbr=38;5;$color:*.cbz=38;5;$color:*.chm=38;5;$color:*.djvu=38;5;$color:*.pdf=38;5;$color:*.PDF=38;5;$color:"
+color=178  # orangeish yellow (used for human readable data files like .json or .yaml)
+LS_COLORS=$LS_COLORS"*.cson=38;5;$color:*.json=38;5;$color:*.msg=38;5;$color:*.rss=38;5;$color:*.xml=38;5;$color:*.yaml=38;5;$color:*.yml=38;5;$color:"
+
 unset color
 export LS_COLORS
 
