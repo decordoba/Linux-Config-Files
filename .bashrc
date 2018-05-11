@@ -1137,3 +1137,26 @@ welcome() {  # Display welcome message with username, calendar, up time, etc.
 }
 welcome  # See welcome message every time the bashrc is loaded
 
+
+function _git_daniel() {
+  local icons_path="$HOME/.git/git_icons.cfg"
+  icons_path="$HOME/Documents/Linux-Config-Files/git_icons.cfg"
+  local cur prev aliases icons help_messages
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  prev="${COMP_WORDS[COMP_CWORD-1]}"
+  aliases="$(awk '{print $1}' $icons_path)"
+  icons="$(awk '{print $2}' $icons_path)"
+  help_messages="$(awk '{ for(i=3; i<=NF; i++) printf "%s",$i (i==NF?ORS:OFS) }' $icons_path)"
+  if [ "$COMP_CWORD" -eq 2 ] ; then
+    if [[ ${cur} == :* ]] ; then
+      # This returns the array of elements in ${opts} matching the current word in ${cur}
+      COMPREPLY=( $(compgen -W "${icons}" -- ${cur}) )
+    else
+      # This returns the array of elements in ${opts} matching the current word in ${cur}
+      COMPREPLY=( $(compgen -W "${aliases}" -- ${cur}) )
+    fi
+    return 0
+  fi
+  #_git_branch
+}
