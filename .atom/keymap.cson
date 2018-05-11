@@ -7,16 +7,43 @@
 'atom-text-editor.vim-mode-plus.insert-mode':
   # jk to escape to vi-command-mode
   'j k': 'vim-mode-plus:activate-normal-mode'
+  # My favourites shortcuts with double capitals in insert mode
+  'shift-I shift-I': 'vim-mode-plus:insert-at-start-of-target'  # Go to beginning line
+  'shift-A shift-A': 'vim-mode-plus:insert-after-end-of-line'  # Go to end of line
+  'shift-P shift-P': 'vim-mode-plus:put-before'  # Paste text
+  'shift-W shift-W': 'vim-mode-plus:move-to-next-word'  # Move to next word (like w)
+  'shift-B shift-B': 'vim-mode-plus:move-to-previous-word'  # Move to previous word (like b)
+  'shift-E shift-E': 'vim-mode-plus:move-to-end-of-word'  # Move to next word (like e)
+  'shift-O shift-O': 'vim-mode-plus:insert-below-with-newline'  # Create newline below and go there
+  'shift-Y shift-Y': 'vim-mode-plus:yank'  # Copy full line (Requires 4 key-presses)
+  'shift-D shift-D': 'vim-mode-plus:delete'  # Delete full line (Requires 4 key-presses)
+  'shift-J shift-J': 'vim-mode-plus:move-down'  # Move down
+  'shift-K shift-K': 'vim-mode-plus:move-up'  # Move up
+  'shift-H shift-H': 'vim-mode-plus:move-left'  # Move left
+  'shift-L shift-L': 'vim-mode-plus:move-right'  # Move right
 
 'atom-workspace':
   # Enable-disable vim-mode use with ctrl-alt-v shortcut
   'ctrl-alt-v': 'user:toggle-vim-mode-plus'
+  # Move cursor to previous or next point in history with ctrl-; (prev) and ctrl-' (next)
+  'ctrl-;': 'cursor-history:prev'
+  'ctrl-\'': 'cursor-history:next'
+  'ctrl-alt-;': 'cursor-history:prev-within-editor'
+  'ctrl-alt-\'': 'cursor-history:next-within-editor'
 
-# Fix problem with vim macros, without it typing 'q' does not work
 'atom-text-editor.vim-mode-plus:not(.insert-mode)':
+  # Fix problem with vim macros, without it typing 'q' does not work
   'q': 'atom-keyboard-macros-vim:toggle_record_macro_vim'
   '@': 'atom-keyboard-macros-vim:execute_macro_vim'
   'Q': 'atom-keyboard-macros:call_last_kbd_macro'
+  # Prevent tab from inserting a TAB char in normal mode, instead indent line
+  'tab': 'vim-mode-plus:indent'
+  'shift-tab': 'vim-mode-plus:outdent'
+
+'atom-text-editor.vim-mode-plus.visual-mode':
+  # Copy and cut selection with ctrl-c and ctrl-x, but only if text is selected
+  'ctrl-c': 'vim-mode-plus:yank'
+  'ctrl-x': 'vim-mode-plus:delete'
 
 # When doing ctrl-c without anything selected, don't copy the line
 'body':
@@ -30,3 +57,21 @@
   'ctrl-shift-v': 'clipboard-plus:toggle'
 '.platform-linux atom-text-editor:not([mini])':
   'ctrl-shift-v': 'clipboard-plus:toggle'
+
+# accept autocompletions with ENTER, move around with tab and shift-tab
+'body atom-text-editor.autocomplete-active':
+  'ctrl-p': 'autocomplete-plus:move-up'
+  'ctrl-n': 'autocomplete-plus:move-down'
+  'pageup': 'autocomplete-plus:page-up'
+  'pagedown': 'autocomplete-plus:page-down'
+  'home': 'autocomplete-plus:move-to-top'
+  'end': 'autocomplete-plus:move-to-bottom'
+  'tab': 'autocomplete-plus:move-down'
+  'shift-tab': 'autocomplete-plus:move-up'
+  'down': 'autocomplete-plus:move-down'
+  'up': 'autocomplete-plus:move-up'
+
+# ctrl-shift-alt-k expands current pane, or brings it back to normal
+'atom-text-editor':
+  'shift-cmd-k': 'hey-pane:toggle-focus-of-active-pane'
+  'shift-ctrl-alt-k': 'hey-pane:toggle-focus-of-active-pane'
